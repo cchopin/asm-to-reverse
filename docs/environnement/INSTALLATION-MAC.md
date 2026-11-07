@@ -1,6 +1,6 @@
 # Installer l'environnement sur Mac
 
-Le cours utilise un Linux x86-64. Sur Mac, il tourne dans un conteneur Docker, décrit par le [Dockerfile](Dockerfile) de ce dossier. Le conteneur contient tous les outils du cours : gcc 13 (le même que celui des listings), GDB avec GEF, strace, ltrace, objdump, Python avec z3, YARA, pefile, UPX.
+Le cours utilise un Linux x86-64. Sur Mac, il tourne dans un conteneur Docker, décrit par le [Dockerfile](Dockerfile) de ce dossier. Le conteneur contient tous les outils du cours, y compris ceux des chapitres d'approfondissement : gcc 13 (le même que celui des listings) et les bibliothèques 32 bits (`gcc-multilib`), NASM, GDB avec GEF, strace, ltrace, objdump, UPX, Frida, et Python avec z3, angr, YARA et pefile. Vous avez ainsi sous la main, dans le conteneur, les outils des chapitres sur l'analyse dynamique (Frida), la résolution automatique (z3 et angr), le packing (UPX) et les règles YARA.
 
 Ghidra, en revanche, s'installe directement sur macOS.
 

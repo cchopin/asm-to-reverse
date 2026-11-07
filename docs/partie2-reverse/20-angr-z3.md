@@ -4,7 +4,7 @@
     Approfondissement de la partie 2. Jusqu'ici, on résolvait les crackmes à la main. Parfois, il est plus rapide de **laisser une machine chercher** : un solveur de contraintes (`z3`) ou un moteur d'exécution symbolique (`angr`) trouve l'entrée qui mène au succès. Ce chapitre présente les deux, et surtout quand les employer.
 
 !!! note "Note sur l'environnement"
-    `z3` est installé dans le conteneur : les exemples `z3` sont réels et testés. `angr` ne l'est pas (c'est un gros paquet) : son exemple est fourni en script commenté, à exécuter sur votre machine (`pip install angr`). Les scripts sont dans `angr-z3/`.
+    Les exemples `z3` ci-dessous sont réels et testés. `z3` et `angr` sont tous deux fournis dans l'image du laboratoire (`reverse-lab`, voir l'installation sur Mac) : vous pouvez y rejouer directement les scripts z3 comme les scripts angr, sans rien installer de plus. Les scripts sont dans `angr-z3/`.
 
 ## 20.1 L'idée : l'exécution symbolique
 
@@ -84,7 +84,7 @@ En pratique : z3 quand on comprend la vérification et qu'on sait l'écrire en �
 
 ## Exercices gradués
 
-Scripts dans `angr-z3/`. Les exercices z3 sont testables ici ; ceux avec angr sont à faire sur votre machine (`pip install angr`).
+Scripts dans `angr-z3/`. Les exercices z3 comme ceux avec angr sont jouables directement dans l'image du laboratoire (`reverse-lab`), où les deux outils sont fournis.
 
 **Exercice 20.1 (niveau 1)** Lancer `solve_crack05.py` et vérifier qu'il donne `9218`. Modifier une contrainte (par exemple la somme à 21) et observer si z3 répond encore `sat`.
 
@@ -94,7 +94,7 @@ Scripts dans `angr-z3/`. Les exercices z3 sont testables ici ; ceux avec angr so
 
 **Exercice 20.4 (niveau 3)** Écrire un check volontairement pénible à inverser (plusieurs XOR, additions et rotations enchaînés sur chaque octet), calculer la cible pour un mot choisi, puis laisser z3 retrouver le mot à partir de la seule cible et des contraintes.
 
-**Exercice 20.5 (niveau 3, sur votre machine)** Installer angr et résoudre un petit crackme avec `solve_angr.py` : relever les adresses `find` (succès) et `avoid` (échec) dans le désassemblage, lancer l'exploration, récupérer l'entrée gagnante. Comparer le temps et l'effort avec la résolution manuelle.
+**Exercice 20.5 (niveau 3)** Installer angr et résoudre un petit crackme avec `solve_angr.py` : relever les adresses `find` (succès) et `avoid` (échec) dans le désassemblage, lancer l'exploration, récupérer l'entrée gagnante. Comparer le temps et l'effort avec la résolution manuelle.
 
 **Exercice 20.6 (niveau 2)** Pour trois crackmes du cours (par exemple `crack01` comparaison directe, `crack05` contraintes, `machine` VM), dire pour chacun si z3, angr ou l'analyse manuelle est le plus adapté, et pourquoi.
 
@@ -104,4 +104,4 @@ Solutions : [solutions/partie2.md](../solutions/partie2.md#angr-z3)
 
 - [ ] Chapitre angr/z3 : lecture
 - [ ] Chapitre angr/z3 : z3 pratiqué (crack05, VM)
-- [ ] Chapitre angr/z3 : angr essayé (sur votre machine)
+- [ ] Chapitre angr/z3 : angr essayé (dans le laboratoire)

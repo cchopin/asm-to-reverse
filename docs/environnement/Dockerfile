@@ -24,6 +24,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # pwntools : ecriture de shellcode et analyse (partie 3)
 RUN pip3 install --no-cache-dir --break-system-packages pwntools
 
+# Frida : instrumentation dynamique (chapitre 19). frida-tools fournit la CLI frida.
+RUN pip3 install --no-cache-dir --break-system-packages frida-tools
+
+# angr : execution symbolique (chapitre 20). Paquet volumineux, d'ou une etape dediee.
+RUN pip3 install --no-cache-dir --break-system-packages angr
+
 # GEF : extension de GDB (installation manuelle documentee par le projet)
 RUN wget -q -O /root/.gef.py https://raw.githubusercontent.com/hugsy/gef/main/gef.py \
     && echo "source /root/.gef.py" > /root/.gdbinit \

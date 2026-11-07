@@ -4,7 +4,7 @@
     Approfondissement de la partie 2. Un binaire *packé* est un binaire dont le vrai code n'apparaît pas tel quel dans le fichier : il est compressé ou chiffré, et n'est reconstitué en mémoire qu'au moment de l'exécution. C'est extrêmement courant dans les malwares (pour échapper à l'analyse et aux antivirus) et fréquent en CTF. Savoir reconnaître et défaire un packer est indispensable.
 
 !!! note "Note sur l'environnement"
-    UPX n'est pas installé dans le conteneur de ce cours, et il n'est pas possible d'y ajouter de paquets. Ce chapitre illustre donc le **principe** avec un petit packer pédagogique maison (compression zlib), tout à fait représentatif du mécanisme réel. Sur votre machine, `upx` s'installe facilement (`brew install upx` sur Mac) et les mêmes idées s'appliquent. Les sources du packer de démonstration sont dans `packing/`.
+    Ce chapitre illustre le **principe** du packing avec un petit packer pédagogique maison (compression zlib), tout à fait représentatif du mécanisme réel : les exemples zlib ci-dessous ont été produits et testés tels quels. L'outil `upx` est fourni dans l'image du laboratoire (`reverse-lab`, voir l'installation sur Mac), vous pouvez donc y rejouer directement un vrai packing (`upx --best monprog`) et comparer. Les sources du packer de démonstration sont dans `packing/`.
 
 ## 17.1 Ce qu'est un packer
 

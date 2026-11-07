@@ -226,13 +226,13 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 
 - [ ] Chapitre analyse dynamique : lecture
 - [ ] Chapitre analyse dynamique : strace et ltrace/GDB pratiqués
-- [ ] Chapitre analyse dynamique : Frida essayé (sur votre machine)
+- [ ] Chapitre analyse dynamique : Frida essayé (dans le laboratoire)
 
 ### [Chapitre 20 : résolution automatique (angr et z3)](partie2-reverse/20-angr-z3.md)
 
 - [ ] Chapitre angr/z3 : lecture
 - [ ] Chapitre angr/z3 : z3 pratiqué (crack05, VM)
-- [ ] Chapitre angr/z3 : angr essayé (sur votre machine)
+- [ ] Chapitre angr/z3 : angr essayé (dans le laboratoire)
 
 ### [Chapitre 21 : lire les formats ELF et PE](partie2-reverse/21-formats-elf-pe.md)
 

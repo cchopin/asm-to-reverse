@@ -4,7 +4,7 @@
     Approfondissement de la partie 2. Observer un programme pendant qu'il s'exécute révèle souvent en quelques secondes ce qu'une analyse statique mettrait une heure à établir. Ce chapitre approfondit `strace` et `ltrace`, puis introduit `Frida`, qui ne se contente pas d'observer : il **modifie** l'exécution.
 
 !!! note "Note sur l'environnement"
-    `strace` est disponible dans le conteneur de ce cours ; `ltrace` et `Frida` ne le sont pas. Les exemples `strace` sont donc réels et testés. Pour `ltrace`, on montre le même résultat avec GDB (disponible) et on décrit la sortie de `ltrace`. Pour `Frida`, un script complet est fourni, à exécuter sur votre machine (`pip install frida-tools`).
+    Les exemples `strace` ci-dessous sont réels et testés. Pour `ltrace`, on montre aussi le même résultat avec GDB, qui fonctionne dans tous les cas. `strace`, `ltrace` et `Frida` sont tous fournis dans l'image du laboratoire (`reverse-lab`, voir l'installation sur Mac) : vous pouvez y rejouer directement les exemples, y compris le script Frida (`frida -l hook_strcmp.js ./motdepasse essai`), sans rien installer de plus.
 
 ## 19.1 strace en profondeur
 
@@ -68,7 +68,7 @@ Interceptor.attach(Module.getExportByName(null, 'strcmp'), {
 });
 ```
 
-`onEnter` lit les arguments (ce que ferait `ltrace`), `onLeave` réécrit la valeur de retour. Ici, forcer `strcmp` à renvoyer 0 fait croire au programme que le mot de passe est toujours bon : le test est contourné sans toucher au binaire. Lancement (sur votre machine) :
+`onEnter` lit les arguments (ce que ferait `ltrace`), `onLeave` réécrit la valeur de retour. Ici, forcer `strcmp` à renvoyer 0 fait croire au programme que le mot de passe est toujours bon : le test est contourné sans toucher au binaire. Lancement (dans le laboratoire) :
 
 ```
 $ frida -l hook_strcmp.js ./motdepasse essai
@@ -89,7 +89,7 @@ La démarche type : `strace`/`ltrace` pour comprendre vite ce que fait le progra
 
 ## Exercices gradués
 
-Sources dans `dynamique/` (`motdepasse.c`, `activite.c`, `hook_strcmp.js`). `strace` est testable ici ; pour `ltrace`/`Frida`, utiliser votre machine (ou GDB en remplacement de `ltrace`).
+Sources dans `dynamique/` (`motdepasse.c`, `activite.c`, `hook_strcmp.js`). `strace`, `ltrace` et `Frida` sont tous disponibles dans l'image du laboratoire (`reverse-lab`) ; GDB peut aussi remplacer `ltrace` au besoin.
 
 **Exercice 19.1 (niveau 1)** Compiler `activite.c` et lancer `strace -e trace=openat,connect ./activite`. Décrire en une phrase ce que fait le programme, d'après la seule trace.
 
@@ -99,7 +99,7 @@ Sources dans `dynamique/` (`motdepasse.c`, `activite.c`, `hook_strcmp.js`). `str
 
 **Exercice 19.4 (niveau 2)** Sur un programme qui lit un fichier, utiliser `strace -f` pour confirmer qu'aucun processus fils n'est créé, puis `strace -e trace=openat` pour lister tous les fichiers ouverts, y compris les bibliothèques chargées au démarrage.
 
-**Exercice 19.5 (niveau 3, sur votre machine)** Avec Frida et `hook_strcmp.js`, journaliser l'appel à `strcmp` de `motdepasse` (observer le mot de passe), puis activer le `retval.replace(0)` et vérifier que n'importe quelle entrée est désormais acceptée. Expliquer la différence entre observer et modifier.
+**Exercice 19.5 (niveau 3)** Avec Frida et `hook_strcmp.js`, journaliser l'appel à `strcmp` de `motdepasse` (observer le mot de passe), puis activer le `retval.replace(0)` et vérifier que n'importe quelle entrée est désormais acceptée. Expliquer la différence entre observer et modifier.
 
 **Exercice 19.6 (niveau 3)** Comparer ce que montrent `strace` et `ltrace` (ou GDB) sur `motdepasse` : lequel révèle le mot de passe, et pourquoi l'autre ne le voit pas ?
 
@@ -109,4 +109,4 @@ Solutions : [solutions/partie2.md](../solutions/partie2.md#analyse-dynamique)
 
 - [ ] Chapitre analyse dynamique : lecture
 - [ ] Chapitre analyse dynamique : strace et ltrace/GDB pratiqués
-- [ ] Chapitre analyse dynamique : Frida essayé (sur votre machine)
+- [ ] Chapitre analyse dynamique : Frida essayé (dans le laboratoire)
