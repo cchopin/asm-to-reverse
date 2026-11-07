@@ -4,6 +4,14 @@ Cette partie 0 est une initiation au langage C, destinée à ceux qui en ont peu
 
 Elle peut être sautée par ceux qui connaissent déjà le C. Pour les autres, elle se complète très bien avec la ressource en français citée dans les [prérequis](../README.md#prerequis). Les exercices sont dans l'esprit des « piscines » de programmation : courts, progressifs, à écrire soi-même. On commence sans la bibliothèque standard, pour bien voir ce qui se passe.
 
+!!! note "De quoi a-t-on besoin pour cette partie 0 ?"
+    Juste d'un compilateur C. Deux possibilités :
+
+    - **Le compilateur du Mac**, suffisant ici et plus simple à ce stade. S'il n'est pas déjà là, l'installer une fois avec `xcode-select --install`, puis utiliser la commande `cc` (ou `gcc`) dans le Terminal. Les exemples (`write`, `unistd.h`) fonctionnent aussi sous macOS.
+    - **Le conteneur Docker du cours**, si vous l'avez déjà installé (voir le guide [Installation sur Mac](../environnement/INSTALLATION-MAC.md)). Il est de toute façon nécessaire à partir du chapitre 1, mais pas indispensable pour cette partie 0.
+
+    Dans la suite, `gcc` et `cc` sont interchangeables ; utilisez celui dont vous disposez.
+
 ## Un premier programme
 
 Un programme C minimal :
@@ -16,22 +24,22 @@ int main(void)
 ```
 
 - `main` est la fonction par laquelle tout commence.
-- `int` est le **type** de ce que `main` renvoie : un entier. `return 0;` signifie « terminé sans erreur » (c'est le code de retour, lisible avec `echo $?`, comme au chapitre 1).
+- `int` est le **type** de ce que `main` renvoie : un entier. `return 0;` signifie « terminé sans erreur ». Cette valeur est le **code de retour** du programme ; dans le Terminal, la commande `echo $?` affiche le code de retour du dernier programme lancé.
 - `void` entre les parenthèses signifie « aucun argument ».
 
-Compilation et exécution dans le conteneur :
+On écrit ce code dans un fichier texte nommé `programme.c` (avec l'éditeur de votre choix sur le Mac, ou `nano programme.c` dans un terminal). Puis, dans le Terminal, depuis le dossier qui contient ce fichier :
 
 ```bash
-gcc programme.c -o programme
+gcc programme.c -o programme   # ou : cc programme.c -o programme
 ./programme
 echo $?        # affiche 0
 ```
 
-`gcc` traduit le C en exécutable. L'option `-o programme` donne le nom du résultat. Les options de compilation utiles seront vues au fil de l'eau (chapitre 2 en dresse la liste).
+`gcc` traduit le C en exécutable. L'option `-o programme` donne le nom du résultat. Les options de compilation utiles seront vues plus tard (le chapitre 2 en dresse la liste).
 
 ## Afficher un caractère sans la libc
 
-Pour afficher, on utilise d'abord l'appel système `write` (le même qu'au chapitre 15), qui écrit des octets sur la sortie standard (descripteur 1). Il faut inclure son en-tête :
+Pour afficher, on utilise d'abord l'appel système `write` (on le reverra en détail bien plus tard, au chapitre 15), qui écrit des octets sur la sortie standard (descripteur 1). Il faut inclure son en-tête avec `#include`, qui rend disponibles des fonctions définies ailleurs :
 
 ```c
 #include <unistd.h>
@@ -57,9 +65,16 @@ void my_putchar(char c)
 }
 ```
 
-`void` signifie que la fonction ne renvoie rien. On peut maintenant afficher plusieurs caractères :
+`void` signifie que la fonction ne renvoie rien. La fonction et le `main` vont dans **le même fichier**, la fonction étant définie **au-dessus** du `main` qui l'appelle. Voici donc le fichier complet, prêt à compiler :
 
 ```c
+#include <unistd.h>
+
+void my_putchar(char c)
+{
+    write(1, &c, 1);
+}
+
 int main(void)
 {
     my_putchar('H');
@@ -68,6 +83,8 @@ int main(void)
     return 0;
 }
 ```
+
+On le compile et on l'exécute comme précédemment (`gcc fichier.c -o fichier`, puis `./fichier`). Dans les exemples suivants, on ne répètera pas le `main` ni les `#include` à chaque fois, mais ils restent nécessaires : chaque fonction se place au-dessus d'un `main` qui l'appelle.
 
 ## Afficher avec printf
 
@@ -93,7 +110,7 @@ int main(void)
 
 **Exercice 0.1.2** Écrire `void alphabet(void)` qui affiche `abcdefghijklmnopqrstuvwxyz` suivi d'un retour à la ligne, en utilisant `my_putchar` dans une boucle. Indice : en C, un `char` est un petit entier ; `'a' + 1` vaut `'b'`.
 
-**Exercice 0.1.3** Écrire `void chiffres(void)` qui affiche `0123456789`. En déduire la valeur numérique de `'0'` en ASCII (revoir le chapitre 1).
+**Exercice 0.1.3** Écrire `void chiffres(void)` qui affiche `0123456789`. Afficher ensuite la valeur numérique du caractère `'0'` avec `printf("%d\n", '0');` : un caractère est en réalité un petit entier, et cette valeur (son code ASCII) explique l'astuce `'0' + n` pour obtenir le caractère d'un chiffre.
 
 **Exercice 0.1.4** Sans utiliser `printf`, afficher la ligne `42` (les deux caractères `'4'` et `'2'`, puis un retour à la ligne) avec `my_putchar` uniquement.
 

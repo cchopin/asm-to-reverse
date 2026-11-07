@@ -18,7 +18,7 @@ int main(void)
 }
 ```
 
-`%p` affiche une adresse (un grand nombre en hexadécimal, par exemple `0x7ffd...`). Cette adresse est exactement ce qu'on retrouvera dans un registre comme `rbp-0x4` au chapitre 6.
+`%p` affiche une adresse (un grand nombre en hexadécimal, par exemple `0x7ffd...`). Le `(void *)` devant `&n` est une conversion de type : `%p` attend une adresse « sans type précis », on l'y adapte, sans quoi le compilateur émet un avertissement. Cette notion d'adresse d'une variable est exactement ce qu'on manipulera en assembleur, où une variable locale est désignée par une expression comme `[rbp-0x4]` (chapitre 6).
 
 ## Un pointeur contient une adresse
 
@@ -52,7 +52,7 @@ En C, une chaîne est un **tableau de caractères** terminé par un octet nul `'
 char *s = "Clemence";
 ```
 
-En mémoire : `'C'`, `'l'`, `'e'`, `'m'`, `'e'`, `'n'`, `'c'`, `'e'`, `'\0'`. Le `'\0'` final (octet de valeur 0) marque la fin : c'est lui qui permet aux fonctions de savoir où la chaîne s'arrête. Oublier ce terminateur est une source classique de bugs et de vulnérabilités, et sa recherche est un motif très reconnaissable en assembleur (chapitre 15).
+En mémoire : `'C'`, `'l'`, `'e'`, `'m'`, `'e'`, `'n'`, `'c'`, `'e'`, `'\0'`. Le `'\0'` final (octet de valeur 0) marque la fin : c'est lui qui permet aux fonctions de savoir où la chaîne s'arrête. Oublier ce terminateur est une source classique de bugs et de vulnérabilités. Parcourir une chaîne jusqu'au `'\0'` (comme le `my_strlen` ci-dessous) est un motif qu'on apprendra à repérer une fois compilé en assembleur.
 
 On parcourt une chaîne en avançant le pointeur ou l'indice jusqu'au `'\0'` :
 

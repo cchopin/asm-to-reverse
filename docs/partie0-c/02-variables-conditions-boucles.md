@@ -13,7 +13,7 @@ long  g = 123456789; // entier plus large, 8 octets
 unsigned int u = 7;  // entier non signé
 ```
 
-La taille et le caractère signé/non signé comptent beaucoup en reverse : ils expliquent par exemple pourquoi un même octet peut valoir `200` ou `-56` (revoir le chapitre 1 sur le complément à deux).
+La taille et le caractère signé/non signé comptent beaucoup en reverse : ils expliquent par exemple pourquoi un même octet peut valoir `200` ou `-56` (c'est la représentation des nombres négatifs, détaillée plus tard au chapitre 1).
 
 ## Les conditions
 
@@ -54,25 +54,18 @@ for (int i = 0; i < 10; i++)
 
 ## Afficher un nombre
 
-Afficher un entier sans `printf` demande un peu de travail : il faut en extraire les chiffres un par un. C'est exactement ce que fait la libc en interne, et le voir une fois aide à lire ce genre de routine en assembleur.
+Afficher un entier sans `printf` demande un peu de travail : il faut en extraire les chiffres un par un. C'est exactement ce que fait la libc en interne, et le voir une fois aide à lire ce genre de routine en assembleur. C'est l'objet de l'exercice 0.2.2 ci-dessous.
 
-Le principe : `n % 10` donne le dernier chiffre, `n / 10` retire ce chiffre. On traite d'abord le cas du nombre négatif, puis les chiffres de gauche à droite par récursion.
+Le principe :
 
-```c
-void my_putnbr(int n)
-{
-    if (n < 0)
-    {
-        my_putchar('-');
-        // attention : -n peut déborder pour le plus petit int, voir solutions
-    }
-    if (n >= 10)
-        my_putnbr(n / 10);
-    my_putchar('0' + (n % 10));
-}
-```
+- `n % 10` (le reste de la division par 10) donne le **dernier chiffre** ;
+- `n / 10` (la division entière) **retire** ce dernier chiffre ;
+- pour afficher dans le bon ordre (de gauche à droite), on affiche d'abord tout ce qui précède le dernier chiffre, puis le dernier : c'est naturel par **récursion** (une fonction qui s'appelle elle-même) ou avec une boucle.
 
-Le cas du plus petit entier (`-2147483648`) est un piège utile : `-n` n'est pas représentable. La solution détaillée le traite proprement.
+Deux pièges à prévoir :
+
+- un nombre négatif : afficher le signe `-`, puis travailler sur sa valeur absolue, et veiller à ce que `% 10` porte sur un nombre positif ;
+- le plus petit entier, `-2147483648` : son opposé `-n` n'est pas représentable sur un `int`. Un moyen simple de l'éviter est de calculer dans un `long`. La solution détaillée montre comment.
 
 ## Exercices
 

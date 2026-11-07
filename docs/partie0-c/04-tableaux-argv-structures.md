@@ -71,13 +71,50 @@ En mémoire, les champs sont rangés les uns après les autres. En reverse, une 
 
 **Exercice 0.4.2** Écrire un programme qui affiche ses arguments, un par ligne, en commençant par `argv[1]` (sans afficher le nom du programme). Le tester avec `./prog un deux trois`.
 
-**Exercice 0.4.3** Écrire `int my_getnbr(const char *s)` qui convertit une chaîne en entier. Gérer un signe `+` ou `-` en tête et s'arrêter au premier caractère non numérique. Exemples attendus : `"42"` donne 42, `"  -42abc"` donne -42, `"+-+-13"` donne 13.
+**Exercice 0.4.3** Écrire `int my_getnbr(const char *s)` qui convertit une chaîne en entier. On ignore d'éventuels espaces en tête, puis on lit une suite de signes `+` et `-` : plusieurs signes peuvent se suivre, et **chaque `-` inverse le résultat** (deux `-` s'annulent). On lit ensuite les chiffres et on s'arrête au premier caractère non numérique. Exemples attendus : `"42"` donne 42, `"  -42abc"` donne -42, `"+-+-13"` donne 13 (deux `-`, qui s'annulent).
 
 **Exercice 0.4.4** Définir `struct point { int x; int y; };` puis écrire `int distance_carre(struct point *a, struct point *b)` qui renvoie le carré de la distance entre deux points, soit `(ax-bx)^2 + (ay-by)^2`. On évite la racine carrée pour rester en entiers. Vérifier : entre `{1, 2}` et `{4, 6}`, le résultat est 25.
 
 **Exercice 0.4.5** (bonus, fait le lien avec la suite) Écrire un mini-crackme : un programme qui attend un nombre en argument, le convertit avec `my_getnbr`, et affiche `Gagne` si ce nombre vaut `1337`, `Perdu` sinon. C'est la structure exacte des premiers défis de la partie 2, cette fois côté source.
 
 Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-04)
+
+## Quelques fonctions de la libc
+
+Jusqu'ici on a tout réécrit à la main, pour comprendre. En pratique, la bibliothèque standard (la libc) fournit ces fonctions toutes faites. Les crackmes de la partie 2 les utilisent beaucoup, en particulier pour lire une saisie et comparer des chaînes. Les plus utiles :
+
+| Fonction | En-tête | Rôle |
+|---|---|---|
+| `strlen(s)` | `string.h` | longueur d'une chaîne (ce que fait `my_strlen`) |
+| `strcmp(a, b)` | `string.h` | compare deux chaînes ; renvoie 0 si elles sont égales |
+| `strncmp(a, b, n)` | `string.h` | compare les `n` premiers caractères |
+| `atoi(s)` | `stdlib.h` | convertit une chaîne en entier (ce que fait `my_getnbr`) |
+| `fgets(buf, taille, stdin)` | `stdio.h` | lit une ligne saisie au clavier dans `buf` |
+| `malloc(n)` / `free(p)` | `stdlib.h` | réserve / libère `n` octets de mémoire |
+
+Un programme qui demande un mot de passe ressemble alors à ceci, et c'est exactement la forme des coffres de la partie 2 :
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
+{
+    char saisie[64];
+
+    printf("Mot de passe : ");
+    fgets(saisie, sizeof(saisie), stdin);   // lit la ligne
+    saisie[strcspn(saisie, "\n")] = '\0';    // retire le retour à la ligne final
+
+    if (strcmp(saisie, "ouvre-toi") == 0)
+        printf("Acces autorise\n");
+    else
+        printf("Refuse\n");
+    return 0;
+}
+```
+
+Le détail de chaque fonction est dans son manuel : `man 3 strcmp`, `man 3 fgets`, etc. (la section 3 est celle des fonctions de la libc).
 
 ## Et ensuite
 
