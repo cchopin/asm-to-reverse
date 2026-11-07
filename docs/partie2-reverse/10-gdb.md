@@ -15,24 +15,26 @@ Cet écran, le **contexte**, déroute à la première rencontre. Il est en réal
 ───────────────────────────────────────────────────── registers ────
 $rax   : 0x000000000040111c  ->  <main+0> endbr64
 $rbx   : 0x00007fffffffaee8  ->  0x00007fffffffb1f2
-$rcx   : 0x0000000000403e40  ->  ...
+$rcx   : 0x0000000000403e40
 $rdx   : 0x00007fffffffaef8  ->  0x00007fffffffb1f5
 $rsi   : 0x00007fffffffaee8  ->  0x00007fffffffb1f2
 $rdi   : 0x7
 $rbp   : 0x00007fffffffadc0  ->  0x00007fffffffadd0
-$rsp   : 0x00007fffffffadb8  ->  0x000000000040112e  ->  <main+18> ...
+$rsp   : 0x00007fffffffadb8  ->  0x000000000040112e  ->  <main+18> pop rbp
 $rip   : 0x0000000000401106  ->  <carre+0> endbr64
-$eflags: [ZERO carry PARITY adjust sign trap INTERRUPT direction overflow]
+$eflags: [ carry PARITY adjust ZERO sign trap INTERRUPT direction overflow ]
 ──────────────────────────────────────────────────────── stack ────
-0x00007fffffffadb8│+0x0000: 0x000000000040112e  ->  <main+18>    <- $rsp
-0x00007fffffffadc0│+0x0008: 0x00007fffffffadd0  ->  ...          <- $rbp
+0x00007fffffffadb8│+0x0000: 0x000000000040112e  ->  <main+18> pop rbp     <- $rsp
+0x00007fffffffadc0│+0x0008: 0x00007fffffffae40
 0x00007fffffffadc8│+0x0010: 0x00007ffff7c2a1ca  ->  <__libc_start_call_main+122>
 ──────────────────────────────────────────────────────── code:x86:64 ────
-     0x4010fe <main+... >  ...
- ->  0x401106 <carre+0>    endbr64
-     0x40110a <carre+4>    push   rbp
-     0x40110b <carre+5>    mov    rbp, rsp
-     0x40110e <carre+8>    mov    QWORD PTR [rbp-0x8], rdi
+     0x401100 <frame_dummy+0>  endbr64
+     0x401104 <frame_dummy+4>  jmp    0x401090 <register_tm_clones>
+ ->  0x401106 <carre+0>        endbr64
+     0x40110a <carre+4>        push   rbp
+     0x40110b <carre+5>        mov    rbp, rsp
+     0x40110e <carre+8>        mov    QWORD PTR [rbp-0x8], rdi
+     0x401112 <carre+12>       mov    rax, QWORD PTR [rbp-0x8]
 ─────────────────────────────────────────────────────────── threads ────
 [#0] Id 1, Name: "pile", stopped 0x401106 in carre (), reason: BREAKPOINT
 ───────────────────────────────────────────────────────────── trace ────

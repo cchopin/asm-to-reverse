@@ -248,23 +248,6 @@ pop    rbp
 ret                                ; la fonction renvoie eax
 ```
 
-### Les options de compilation utiles
-
-Les commandes de ce cours emploient quelques options de `gcc`. Les voici regroupées une fois pour toutes :
-
-| Option | Effet | Où elle compte |
-|---|---|---|
-| `-O0` | aucune optimisation : code verbeux mais très lisible | la plupart des exemples et des CTF faciles |
-| `-O1`, `-O2` | optimisations croissantes : code plus court et plus astucieux | chapitre 7, et les malwares (souvent `-O2`) |
-| `-c` | compiler sans faire l'édition de liens : produit un fichier objet `.o` | section 2.4 |
-| `-no-pie` | exécutable chargé à une adresse fixe (pas de PIE) : adresses stables, plus simples à lire | pour obtenir des listings aux adresses constantes |
-| `-fno-stack-protector` | retire le canari de pile (chapitre 5) | pour des listings épurés |
-| `-s` | retire les symboles : le binaire devient *strippé* (chapitre 8) | pour simuler un vrai échantillon |
-| `-m32` | compiler en x86 32 bits | chapitre 7 |
-| `-g` | ajouter les informations de débogage | pour confort dans GDB (chapitres 10, 15) |
-
-Un exemple typique de compilation « propre » pour la lecture : `gcc -O0 -no-pie -fno-stack-protector prog.c -o prog`.
-
 Les instructions `push rbp`, `mov rbp, rsp` et `pop rbp` seront expliquées au chapitre 5. À observer ici :
 
 - le premier argument `a` arrive dans `edi`, le second `b` dans `esi` ;
@@ -283,6 +266,23 @@ ret
 ```
 
 Une seule instruction : le même calcul, condensé grâce à `lea`. En CTF, les binaires sont souvent compilés en `-O0` ou `-O1` ; les malwares, souvent avec optimisation. Les deux cas seront travaillés.
+
+### Les options de compilation utiles
+
+Les commandes de ce cours emploient quelques options de `gcc`. Les voici regroupées une fois pour toutes :
+
+| Option | Effet | Où elle compte |
+|---|---|---|
+| `-O0` | aucune optimisation : code verbeux mais très lisible | la plupart des exemples et des CTF faciles |
+| `-O1`, `-O2` | optimisations croissantes : code plus court et plus astucieux | chapitre 7, et les malwares (souvent `-O2`) |
+| `-c` | compiler sans faire l'édition de liens : produit un fichier objet `.o` | section 2.4 |
+| `-no-pie` | exécutable chargé à une adresse fixe (pas de PIE) : adresses stables, plus simples à lire | pour obtenir des listings aux adresses constantes |
+| `-fno-stack-protector` | retire le canari de pile (chapitre 5) | pour des listings épurés |
+| `-s` | retire les symboles : le binaire devient *strippé* (chapitre 8) | pour simuler un vrai échantillon |
+| `-m32` | compiler en x86 32 bits | chapitre 7 |
+| `-g` | ajouter les informations de débogage | pour confort dans GDB (chapitres 10, 15) |
+
+Un exemple typique de compilation « propre » pour la lecture : `gcc -O0 -no-pie -fno-stack-protector prog.c -o prog`.
 
 ## 2.5 Méthode de lecture d'un bloc d'instructions
 
