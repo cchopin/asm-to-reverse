@@ -211,6 +211,11 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Laboratoire malware : cas 2 (dropper)
 - [ ] Laboratoire malware : rapport rédigé
 
+### [Chapitre 17 : packing et UPX](partie2-reverse/17-packing-upx.md)
+
+- [ ] Chapitre packing : lecture
+- [ ] Chapitre packing : exercices (entropie, dépaquetage statique)
+
 ### [Chapitre 14 : et après ?](partie2-reverse/14-et-apres.md)
 
 - [ ] Chapitre 14 : lecture

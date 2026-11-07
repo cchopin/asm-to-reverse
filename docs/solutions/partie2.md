@@ -333,3 +333,26 @@ print("".join(chr(b ^ 0x11) for b in payload))   # charge factice FLAG{dropper_d
 | Comportements | Persistance (fichier `/tmp/.balise.lock`), réseau (`connect` localhost:9999), obscurcissement XOR 0x3C des chaînes sensibles |
 | IOC | voir le tableau ci-dessus |
 | Recommandations | Détecter la présence du fichier marqueur et les connexions vers le domaine ; en environnement réel, bloquer le domaine et analyser le trafic sortant |
+
+## Packing et UPX {#packing-upx}
+
+**17.1** Sur un binaire ELF normal, l'entropie est modérée (souvent 1 à 6 bits/octet selon le remplissage), tandis que sa version compressée monte à environ 7.8-7.9. Mesures typiques : binaire normal `1.47`, compressé `7.86`, aléatoire `7.99`. Le seuil pratique est **~7.2 bits/octet** : au-dessus, le contenu est compressé ou chiffré.
+
+**17.2** Après `gcc -O2 -s packed.c -o packed -lz`, `./packed` affiche son message, mais `strings packed | grep -i flag` ne renvoie rien. Le message n'est pas stocké en clair : il fait partie du payload compressé (`blob`), et n'est reconstitué qu'à l'exécution, par `uncompress` dans une zone `mmap`, juste avant le saut dessus. Tant qu'on n'exécute pas, le fichier ne le contient que sous forme compressée, illisible par `strings`.
+
+**17.3** Le binaire packé présente typiquement : un point d'entrée déplacé (vers le stub), une grosse zone de données à forte entropie, peu de chaînes utiles, et pour un vrai UPX des sections nommées `UPX0`/`UPX1`. Sur un échantillon inconnu, la combinaison « entropie élevée + strings vide + point d'entrée hors `.text` habituelle + sections inhabituelles » est une signature de packing. (Le packer de démonstration garde des sections normales, puisqu'il s'agit d'un simple programme C embarquant un blob ; un vrai UPX modifie l'en-tête et les sections.)
+
+**17.4** Dépaquetage statique, sans exécution :
+
+```python
+import zlib
+blob = bytes(...)                 # octets compressés relevés dans la section de données
+code = zlib.decompress(blob)      # décompression hors ligne
+open("depaque.bin", "wb").write(code)
+```
+
+Puis `objdump -D -b binary -m i386:x86-64 -M intel depaque.bin` montre le shellcode original (`jmp`/`call`/`pop` puis `write` et `ret`), et `strings depaque.bin` révèle `code original execute: FLAG{depack_ok}`. Le binaire n'a jamais été lancé : c'est la méthode à privilégier face à un échantillon hostile, quand on connaît (ou devine) l'algorithme de compression.
+
+**17.5** Dépaquetage dynamique générique : en bac à sable, lancer le binaire sous GDB, laisser le stub décompresser, et poser un point d'arrêt sur le **saut vers l'OEP** (le `jmp`/`call` vers l'adresse de la zone fraîchement rendue exécutable, souvent repérable par un `jmp` lointain ou un appel sur registre après un `mprotect`). À cet instant, le code original est en clair en mémoire : on le *dumpe* (`dump binary memory oep.bin debut fin`) et on l'analyse ensuite statiquement. Cette méthode marche pour **n'importe quel** packer, car tout packer finit par dévoiler le code en mémoire pour l'exécuter. Elle est plus générale que `upx -d`, qui ne fonctionne que pour UPX standard non modifié.
+
+**17.6** Le binaire à **7.8** bits/octet est le plus probablement packé : cette valeur, proche du maximum de 8, indique un contenu compressé ou chiffré. 4.9 correspond à du code/texte ordinaire, et 6.1 à un binaire mixte non packé. Le seuil d'alerte est autour de 7.2.
