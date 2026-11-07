@@ -9,38 +9,22 @@
 {% set premiere = parties[0].children[0] if parties else none %}
 <section class="accueil">
   <div class="accueil__grille md-grid">
-    <div class="accueil__texte">
-      <p class="accueil__surtitre">Cours en français · x86-64 · Linux</p>
-      <h1 class="accueil__titre">Lire ce que la machine exécute vraiment.</h1>
-      <p class="accueil__intro">
-        De la première instruction assembleur au premier crackme, puis au triage
-        d'un binaire suspect. Une méthode répétable plutôt qu'une collection
-        d'astuces.
-      </p>
-      <div class="accueil__actions">
-        {% if premiere %}
-          <a class="md-button md-button--primary" href="{{ premiere.url | url }}">Commencer le cours</a>
-        {% endif %}
-        <a class="md-button" href="{{ 'progression.md' | url }}">Ma progression</a>
-      </div>
-      <div class="accueil__stat" data-progression-globale></div>
-    </div>
-    <div class="terminal" aria-hidden="true">
-      <div class="terminal__barre"><i></i><i></i><i></i><span>coffre</span></div>
-<pre class="terminal__code"><span class="t-invite">$</span> objdump -d -M intel coffre
-<span class="t-adr">401136:</span>  <span class="t-oct">55</span>                 <span class="t-ins">push</span>   rbp
-<span class="t-adr">401137:</span>  <span class="t-oct">48 89 e5</span>           <span class="t-ins">mov</span>    rbp, rsp
-<span class="t-adr">40113a:</span>  <span class="t-oct">e8 f1 fe ff ff</span>     <span class="t-ins">call</span>   strcmp@plt
-<span class="t-adr">40113f:</span>  <span class="t-oct">85 c0</span>              <span class="t-ins">test</span>   eax, eax
-<span class="t-adr">401141:</span>  <span class="t-oct">75 0c</span>              <span class="t-ins">jne</span>    40114f
-<span class="t-com">; le compilateur a écrit un if.</span>
-<span class="t-com">; à vous de le retrouver.</span><span class="t-curseur"></span></pre>
+    <h1 class="accueil__titre">{{ config.site_name }}</h1>
+    <p class="accueil__intro">
+      Un cours progressif, en français, qui mène de la lecture d'un premier
+      désassemblage à la résolution de crackmes et au triage de binaires suspects.
+    </p>
+    <div class="accueil__actions">
+      {% if premiere %}
+        <a class="md-button md-button--primary" href="{{ premiere.url | url }}">Commencer le cours</a>
+      {% endif %}
+      <a class="md-button" href="{{ 'progression.md' | url }}">Ma progression</a>
+      <span class="accueil__stat" data-progression-globale></span>
     </div>
   </div>
 
   <div class="parcours md-grid">
-    <h2 class="parcours__titre">Le parcours</h2>
-    <div class="parcours__parties">
+        <div class="parcours__parties">
       {% for partie in parties %}
         {% set titre = partie.title.split(" : ", 1) %}
         <div class="partie-carte" data-partie>

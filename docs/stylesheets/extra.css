@@ -1,11 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap");
-
 /* =====================================================================
    Palette : fond papier en clair, fond encre en sombre, accent vert
    « terminal ». Toutes les couleurs du thème dérivent de ces variables.
    ===================================================================== */
 :root {
-  --titres: "Space Grotesk", var(--md-text-font-family), sans-serif;
+  --titres: var(--md-text-font-family);
   --rayon: .6rem;
   --largeur-lecture: 40rem;
 }
@@ -28,7 +26,6 @@
   --md-code-fg-color: #2a2d35;
   --surface: #ffffff;
   --bordure: #e6e3dc;
-  --terminal-bg: #14171d;
 }
 
 [data-md-color-scheme="slate"] {
@@ -43,16 +40,15 @@
   --md-primary-fg-color--dark: #0a0c10;
   --md-primary-bg-color: #e3e6ec;
   --md-primary-bg-color--light: #a3a9b6;
-  --md-accent-fg-color: #4ade9a;
-  --md-accent-fg-color--transparent: rgba(74, 222, 154, .1);
-  --md-typeset-a-color: #5fe3a6;
+  --md-accent-fg-color: #5cc893;
+  --md-accent-fg-color--transparent: rgba(92, 200, 147, .1);
+  --md-typeset-a-color: #6fd3a2;
   --md-code-bg-color: #151821;
   --md-code-fg-color: #d7dbe3;
   --md-footer-bg-color: #0a0c10;
   --md-footer-bg-color--dark: #07080b;
   --surface: #13161d;
   --bordure: #242833;
-  --terminal-bg: #090b0f;
 }
 
 body { background: var(--md-default-bg-color); }
@@ -281,7 +277,7 @@ body { background: var(--md-default-bg-color); }
 
 /* Boutons */
 .md-typeset .md-button {
-  border-radius: 999px;
+  border-radius: .35rem;
   border-width: 1px;
   font-weight: 600;
   padding: .55em 1.4em;
@@ -325,48 +321,34 @@ body { background: var(--md-default-bg-color); }
 /* =====================================================================
    Accueil
    ===================================================================== */
-.accueil { padding: 3.5rem 0 1rem; }
-.accueil__grille {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-  gap: 3rem;
-  align-items: center;
-  padding: 0 1.2rem;
-}
-.accueil__surtitre {
-  margin: 0 0 .9rem;
-  font-family: var(--md-code-font-family);
-  font-size: .68rem;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color: var(--md-accent-fg-color);
-}
+.accueil { padding: 3rem 0 0; }
+.accueil__grille { padding: 0 1.2rem; }
 .accueil__titre {
   margin: 0;
-  font-family: var(--titres);
-  font-size: clamp(2rem, 4.4vw, 3.2rem);
+  max-width: 40rem;
+  font-size: clamp(1.8rem, 3.6vw, 2.5rem);
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -.025em;
+  line-height: 1.15;
+  letter-spacing: -.02em;
   color: var(--md-default-fg-color);
 }
 .accueil__intro {
-  margin: 1.2rem 0 1.6rem;
-  max-width: 32rem;
-  font-size: .95rem;
+  margin: 1rem 0 1.5rem;
+  max-width: 36rem;
+  font-size: .9rem;
   line-height: 1.6;
   color: var(--md-default-fg-color--light);
 }
-.accueil__actions { display: flex; flex-wrap: wrap; gap: .7rem; }
-.accueil .md-button { font-size: .8rem; }
+.accueil__actions { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1rem; }
 .accueil .md-button {
   display: inline-block;
-  border-radius: 999px;
+  border-radius: .35rem;
   border: 1px solid var(--bordure);
+  font-size: .78rem;
   font-weight: 600;
-  padding: .6em 1.5em;
+  padding: .55em 1.2em;
   color: var(--md-default-fg-color);
-  transition: border-color .15s, color .15s, filter .15s;
+  transition: border-color .15s, color .15s;
 }
 .accueil .md-button:hover { border-color: var(--md-accent-fg-color); color: var(--md-accent-fg-color); }
 .accueil .md-button--primary {
@@ -374,61 +356,12 @@ body { background: var(--md-default-bg-color); }
   border-color: var(--md-accent-fg-color);
   color: var(--md-default-bg-color);
 }
-.accueil .md-button--primary:hover { color: var(--md-default-bg-color); filter: brightness(1.08); }
-.accueil__stat {
-  margin-top: 1.4rem;
-  font-family: var(--md-code-font-family);
-  font-size: .68rem;
-  color: var(--md-default-fg-color--light);
-}
+.accueil .md-button--primary:hover { color: var(--md-default-bg-color); }
+.accueil__stat { font-size: .72rem; color: var(--md-default-fg-color--lighter); }
 .accueil__stat:empty { display: none; }
 
-/* Terminal décoratif */
-.terminal {
-  border-radius: .8rem;
-  background: var(--terminal-bg);
-  border: 1px solid #262b36;
-  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .55), 0 0 0 1px rgba(74, 222, 154, .05);
-  overflow: hidden;
-}
-.terminal__barre {
-  display: flex; align-items: center; gap: .35rem;
-  padding: .6rem .8rem;
-  border-bottom: 1px solid #1f232c;
-}
-.terminal__barre i { width: .55rem; height: .55rem; border-radius: 50%; background: #2b303b; }
-.terminal__barre span {
-  margin-left: .5rem;
-  font-family: var(--md-code-font-family);
-  font-size: .6rem;
-  color: #6f7584;
-}
-.terminal__code {
-  margin: 0;
-  padding: 1.1rem 1.2rem 1.3rem;
-  overflow-x: auto;
-  font-family: var(--md-code-font-family);
-  font-size: .68rem;
-  line-height: 1.75;
-  color: #d7dbe3;
-  background: none;
-}
-.t-invite { color: #4ade9a; }
-.t-adr { color: #6f7584; }
-.t-oct { color: #7aa2f7; }
-.t-ins { color: #f5c26b; }
-.t-com { color: #4ade9a; opacity: .85; }
-.t-curseur {
-  display: inline-block; width: .5em; height: 1.1em;
-  margin-left: .2em; vertical-align: text-bottom;
-  background: #4ade9a;
-  animation: clignote 1.1s steps(1) infinite;
-}
-@keyframes clignote { 50% { opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .t-curseur { animation: none; } }
-
 /* Carte du parcours */
-.parcours { padding: 3.5rem 1.2rem 0; }
+.parcours { padding: 2.2rem 1.2rem 0; }
 .parcours__titre {
   margin: 0 0 1.2rem;
   font-family: var(--titres);
@@ -449,15 +382,12 @@ body { background: var(--md-default-bg-color); }
 }
 .partie-carte__tete { display: flex; justify-content: space-between; align-items: center; }
 .partie-carte__numero {
-  font-family: var(--md-code-font-family);
-  font-size: .62rem;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color: var(--md-accent-fg-color);
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--md-default-fg-color--light);
 }
 .partie-carte__compte {
-  font-family: var(--md-code-font-family);
-  font-size: .62rem;
+  font-size: .68rem;
   color: var(--md-default-fg-color--lighter);
 }
 .partie-carte__titre {
@@ -501,7 +431,6 @@ body { background: var(--md-default-bg-color); }
 .etape.encours .etape__noeud {
   border-color: var(--md-accent-fg-color);
   color: var(--md-accent-fg-color);
-  box-shadow: inset 0 0 0 2px var(--md-accent-fg-color--transparent);
 }
 .etape.fait .etape__noeud {
   border-color: var(--md-accent-fg-color);
@@ -512,11 +441,12 @@ body { background: var(--md-default-bg-color); }
 .etape.fait .etape__nom { color: var(--md-default-fg-color--light); }
 
 /* Contenu de l'accueil (README) sous la carte du parcours */
-.accueil ~ .md-main .md-content__inner > h1:first-of-type { display: none; }
+.accueil ~ .md-main .md-content__inner > h1:first-of-type,
+.accueil ~ .md-main .md-content__inner > h1:first-of-type + p { display: none; }
 
 @media screen and (max-width: 60em) {
   .accueil { padding-top: 2rem; }
-  .accueil__grille { grid-template-columns: 1fr; gap: 2rem; padding: 0 .8rem; }
+  .accueil__grille { padding: 0 .8rem; }
   .parcours { padding: 2.5rem .8rem 0; }
 }
 
