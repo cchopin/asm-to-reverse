@@ -370,3 +370,20 @@ Puis `objdump -D -b binary -m i386:x86-64 -M intel depaque.bin` montre le shellc
 **18.5** Un faux `getppid`/`ptrace` en `LD_PRELOAD` est compilé en bibliothèque partagée (`gcc -shared -fPIC`) et chargé avant la libc ; un programme témoin qui appelle la fonction obtient la version préchargée (valeur forcée). C'est plus souple qu'un patch : rien à modifier dans le binaire (utile s'il est signé ou vérifie son intégrité), et on peut activer ou non le contournement en définissant ou non `LD_PRELOAD`.
 
 **18.6** `antidis` renvoie 7 : le `jmp court` saute par-dessus l'octet `0xE8`, qui n'est donc **jamais exécuté**. En pas à pas sous GDB (`stepi`), on vérifie que l'exécution va directement de `jmp` à `mov eax, 60`. Mais `objdump -d`, qui décode linéairement, lit `0xE8` comme le début d'un `call rel32` et consomme les octets suivants, produisant une instruction fantôme et désynchronisant la suite. C'est tout l'écart entre balayage linéaire et désassemblage par flot de contrôle.
+
+## Analyse dynamique avancée {#analyse-dynamique}
+
+**19.1** La trace `openat(AT_FDCWD, "/etc/hostname", O_RDONLY)` suivie de `connect(..., 127.0.0.1:8080) = ECONNREFUSED` montre que le programme lit le nom de la machine puis tente de se connecter à `127.0.0.1` sur le port 8080 (connexion refusée, aucun service en face). Toute l'activité fichiers + réseau est résumée en deux lignes.
+
+**19.2** Avec `ltrace` : `strcmp("essai", "sX3-reverse!")` révèle directement le mot de passe attendu. Sans `ltrace`, sous GDB : repérer l'adresse du `call strcmp` dans `main` (`objdump -d`), poser un point d'arrêt dessus, lancer avec un mot quelconque, puis `x/s $rdi` et `x/s $rsi` affichent `"essai"` et `"sX3-reverse!"`. Le mot de passe est `sX3-reverse!`, et `./motdepasse 'sX3-reverse!'` donne `FLAG{ltrace_strcmp}`.
+
+!!! tip "Astuce GDB"
+    Passer les arguments de l'inféreur avec `gdb --args ./motdepasse essai`, sinon le programme s'exécute sans argument. Et pour éviter les `strcmp` internes de la résolution de symboles, poser le point d'arrêt sur l'adresse du `call` dans `main`, pas sur le symbole `strcmp`.
+
+**19.3** Sous `strace`, le `specimen` s'arrête tôt car son premier geste est `ptrace(PTRACE_TRACEME, ...)` : `strace` trace déjà le processus, donc cet appel échoue, et le code `if (ptrace(...) < 0) return 0;` fait quitter le programme avant toute action. C'est une protection anti-debug (chapitre 18). Pour voir le vrai comportement, la neutraliser : précharger un faux `ptrace` renvoyant 0 (`LD_PRELOAD`), patcher le test, ou forcer le retour dans GDB. La trace montre alors la reconnaissance, le marqueur, la balise et la charge.
+
+**19.4** `strace -f ./prog` n'affiche aucun `clone`/`fork` suivi d'activité enfant : le programme est monoprocessus. `strace -e trace=openat ./prog` liste tous les fichiers ouverts, y compris, au démarrage, les bibliothèques partagées (`/lib/x86_64-linux-gnu/libc.so.6`, le chargeur `ld-linux`...) avant même le `main`. Cela rappelle le coût du démarrage de la libc vu en partie 3.
+
+**19.5** `frida -l hook_strcmp.js ./motdepasse essai` affiche d'abord, via `onEnter`, les deux chaînes comparées (dont le mot de passe) : c'est l'équivalent de `ltrace`, en observation. En activant `retval.replace(0)` dans `onLeave`, `strcmp` renvoie toujours 0 : le programme croit l'égalité vraie et accepte n'importe quelle entrée. Différence fondamentale : `ltrace` et `strace` **observent** sans changer le cours du programme ; Frida **modifie** l'exécution en direct, ce qui permet de contourner un test sans toucher au binaire.
+
+**19.6** `ltrace` (ou GDB sur l'appel) révèle le mot de passe, car la comparaison se fait par un appel à la fonction de bibliothèque `strcmp`, visible dynamiquement. `strace` ne le voit pas : `strcmp` est un calcul en espace utilisateur, sans appel système, donc hors de portée de `strace`, qui n'observe que la frontière avec le noyau. Chaque outil voit une couche différente.

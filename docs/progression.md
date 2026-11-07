@@ -222,6 +222,12 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre anti-reverse : contournements (LD_PRELOAD, patch, GDB)
 - [ ] Chapitre anti-reverse : anti-désassemblage compris
 
+### [Chapitre 19 : analyse dynamique avancée](partie2-reverse/19-analyse-dynamique.md)
+
+- [ ] Chapitre analyse dynamique : lecture
+- [ ] Chapitre analyse dynamique : strace et ltrace/GDB pratiqués
+- [ ] Chapitre analyse dynamique : Frida essayé (sur votre machine)
+
 ### [Chapitre 14 : et après ?](partie2-reverse/14-et-apres.md)
 
 - [ ] Chapitre 14 : lecture

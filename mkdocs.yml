@@ -106,6 +106,7 @@ nav:
       - "Laboratoire malware": partie2-reverse/16-labo-malware.md
       - "17. Packing et UPX (approfondissement)": partie2-reverse/17-packing-upx.md
       - "18. Anti-reverse avancé (approfondissement)": partie2-reverse/18-anti-reverse.md
+      - "19. Analyse dynamique avancée (approfondissement)": partie2-reverse/19-analyse-dynamique.md
       - "14. Et après ?": partie2-reverse/14-et-apres.md
   - "Partie 3 : écrire de l'assembleur":
       - "15. Premiers pas en NASM": partie3-ecriture/15-nasm-syscalls.md
