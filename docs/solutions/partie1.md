@@ -580,3 +580,48 @@ Le `lea` additionne `x*x` (dans `rax`), `2*x` (via `rdi*2`) et `1` en une instru
 **11.5** En `-O3`, `somme` est vectorisée. L'accumulateur `xmm0` est mis à zéro (`pxor xmm0, xmm0`), puis la boucle charge plusieurs entiers d'un coup (`movdqu xmm1, [rax]`) et les additionne en parallèle (`paddq`). La boucle principale additionne donc plusieurs éléments par tour ; le bloc scalaire final traite les quelques éléments restants quand `n` n'est pas un multiple de la largeur vectorielle.
 
 **11.6** `2^35 / 0xCCCCCCCD ≈ 10`. Le code réalise une **division par 10** : `imul` par le magique `0xCCCCCCCD` suivi d'un décalage de 35 bits. Même schéma qu'en 11.2, avec un autre couple (magique, décalage) correspondant au diviseur 10.
+
+## C++ et fonctions virtuelles {#cpp-vtables}
+
+**12.1** Trois symboles décorés et leur traduction par `c++filt` :
+
+- `_Z7calculePK5Forme` -> `calcule(Forme const*)`
+- `_ZNK5Carre4aireEv` -> `Carre::aire() const`
+- `_ZTV5Carre` -> `vtable for Carre`
+
+Les symboles en `_Z` sont la marque du C++ ; `_ZTV` préfixe les vtables, `_ZTI` les informations de type (RTTI), `_ZTS` les chaînes de nom de type.
+
+**12.2** `Carre::aire` lit `cote` à l'offset `0xc` (12) :
+
+```asm
+mov eax, [rdi+0xc]   ; this->cote
+imul eax, eax
+ret
+```
+
+Disposition d'un `Carre` : vptr à l'offset 0 (8 octets), `tag` (hérité de `Forme`) à l'offset 8, `cote` à l'offset 12. `cote` n'est pas à 0 parce que tout objet polymorphe commence par son pointeur de vtable caché.
+
+**12.3** En `-O0`, `calcule` enchaîne :
+
+```asm
+mov rax, [rbp-0x8]   ; rax = f
+mov rax, [rax]       ; rax = *f = vptr (adresse de la vtable)
+mov rdx, [rax]       ; rdx = vtable[0] = adresse de aire()
+mov rdi, ...         ; this en 1er argument
+call rdx             ; appel indirect
+```
+
+On déréférence `this` pour obtenir le vptr, puis le vptr pour obtenir la première entrée de la vtable (ici `aire`), et on appelle cette adresse. C'est la résolution dynamique de la méthode.
+
+**12.4** `objdump -t forme | grep _ZTV5Carre`, puis `c++filt`, donne « vtable for Carre » (en `.data.rel.ro`). La table contient les adresses des méthodes virtuelles effectives de `Carre` (son `aire()` redéfini, son destructeur). Deux classes ont des vtables différentes car chacune peut redéfinir ses méthodes : c'est en suivant le vptr propre à chaque objet que le programme appelle la bonne version.
+
+**12.5** En `-O2`, `calcule` devient :
+
+```asm
+mov rax, [rdi]   ; vptr
+jmp [rax]        ; tail call sur vtable[0]
+```
+
+Le `jmp` remplace le `call` car `calcule` n'a plus rien à faire après l'appel (appel terminal) : `aire()` renverra directement à l'appelant de `calcule`. L'appel reste indirect par la vtable : le compilateur ne dévirtualise pas, car `f` peut pointer sur n'importe quelle sous-classe de `Forme`, type inconnu à la compilation.
+
+**12.6** `mov rax, [rdi]` charge le vptr, `call [rax+0x10]` appelle l'entrée à l'offset 16 de la vtable. Les entrées faisant 8 octets, l'offset 16 est l'indice 2 : **deux méthodes virtuelles précèdent** celle appelée (aux offsets 0 et 8). C'est donc la troisième méthode virtuelle de la classe.
