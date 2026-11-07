@@ -145,3 +145,232 @@ Soit 8 octets, 0 nul. Les `push imm8 / pop` évitent les `mov` avec constante su
 3. Méthode dynamique : `break *<adresse du call rbx>`, `run`, `x/20i $rbx`. Le shellcode déchiffré affiche `FLAG{chargeur_dechiffre}`.
 4. Méthode statique : le script lit le fichier, extrait `0x41` octets à l'offset `0x2020`, applique `^ 0xA7` (l'octet bas de `0xffffffa7`), et désassemble avec pwntools. On y retrouve la construction de la chaîne sur la pile puis le `write`.
 5. `dump binary memory` dans GDB et le fichier produit par le script sont identiques (`cmp` ne signale aucune différence) : l'analyse statique n'a rien manqué, et le malware n'a jamais eu besoin d'être réellement exécuté.
+
+## Exercices gradués de la partie 3
+
+### Chapitre 15
+
+**15.5** Routine `ma_putchar` (l'octet est poussé sur la pile pour avoir une adresse) :
+
+```nasm
+ma_putchar:                 ; octet dans dil
+    push rdi
+    mov eax, 1              ; write
+    mov edi, 1
+    mov rsi, rsp           ; adresse de l'octet poussé
+    mov edx, 1
+    syscall
+    pop rdi
+    ret
+```
+
+Appelée avec `mov dil, 'A' / call ma_putchar`, puis `mov dil, 10 / call ma_putchar`, elle affiche `A` et un retour à la ligne.
+
+**15.6** `ma_putstr` calcule la longueur puis écrit tout d'un coup :
+
+```nasm
+ma_putstr:                  ; rdi = adresse de la chaîne
+    xor edx, edx
+.len:
+    cmp byte [rdi+rdx], 0
+    je .write
+    inc rdx
+    jmp .len
+.write:
+    mov rsi, rdi
+    mov eax, 1
+    mov edi, 1
+    syscall
+    ret
+```
+
+**15.7** Mini-`cat` : boucle `read` / `write` jusqu'à EOF.
+
+```nasm
+section .bss
+    buf resb 4096
+section .text
+global _start
+_start:
+.loop:
+    xor eax, eax                ; read(0, buf, 4096)
+    xor edi, edi
+    lea rsi, [rel buf]
+    mov edx, 4096
+    syscall
+    test rax, rax
+    jle .end                    ; 0 = EOF, <0 = erreur
+    mov rdx, rax
+    mov eax, 1                  ; write(1, buf, lus)
+    mov edi, 1
+    lea rsi, [rel buf]
+    syscall
+    jmp .loop
+.end:
+    mov eax, 60
+    xor edi, edi
+    syscall
+```
+
+### Chapitre 16
+
+**16.4** Fonction feuille :
+
+```nasm
+global cube
+cube:                       ; long cube(long n)
+    mov rax, rdi
+    imul rax, rdi           ; n*n
+    imul rax, rdi           ; n*n*n
+    ret
+section .note.GNU-stack noalloc noexec nowrite progbits
+```
+
+`cube(2)=8`, `cube(5)=125`, `cube(-3)=-27`.
+
+**16.5** Somme d'un tableau de `long` :
+
+```nasm
+global somme_tableau
+somme_tableau:              ; rdi = tableau, rsi = n
+    xor eax, eax
+    xor ecx, ecx
+.boucle:
+    cmp rcx, rsi
+    jge .fin
+    add rax, [rdi + rcx*8]
+    inc rcx
+    jmp .boucle
+.fin:
+    ret
+```
+
+Sur `{3, 7, -2, 10, 42}` avec `n = 5`, le résultat est `60`.
+
+**16.6** `main` qui imprime chaque argument. Les trois `push` réalignent la pile (entrée à `16k+8`, trois `push` ramènent à `16k`) et sauvegardent les registres *callee-saved* :
+
+```nasm
+extern printf
+section .data
+    fmt db "%s", 10, 0
+section .text
+global main
+main:                       ; edi = argc, rsi = argv
+    push rbx
+    push r12
+    push r13
+    mov r12d, edi           ; argc
+    mov r13, rsi            ; argv
+    xor ebx, ebx            ; i
+.boucle:
+    cmp ebx, r12d
+    jge .fin
+    mov rsi, [r13 + rbx*8]
+    lea rdi, [rel fmt]
+    xor eax, eax
+    call printf wrt ..plt
+    inc ebx
+    jmp .boucle
+.fin:
+    pop r13
+    pop r12
+    pop rbx
+    xor eax, eax
+    ret
+```
+
+`./programme alpha beta gamma` affiche le nom du programme puis `alpha`, `beta`, `gamma`, chacun sur sa ligne.
+
+### Chapitre 17
+
+**17.5** `hey\n` tient sur 4 octets, poussés en une fois ; les petites constantes passent par `push imm8 / pop` :
+
+```nasm
+_start:
+    push 1
+    pop rax                 ; write
+    push 1
+    pop rdi                 ; fd = 1
+    push 0x0a796568         ; "hey\n" (68 65 79 0a)
+    mov rsi, rsp
+    push 4
+    pop rdx
+    syscall
+    push 60
+    pop rax
+    xor edi, edi
+    syscall
+```
+
+`objcopy -O binary -j .text` puis `count(0)` donne `0` octet nul. Le lanceur affiche `hey`.
+
+**17.6** `reverse\n` fait 8 octets, tous non nuls, donc `mov r64, imm64` ne crée aucun zéro :
+
+```nasm
+_start:
+    push 1
+    pop rax
+    push 1
+    pop rdi
+    mov rbx, 0x0a65737265766572   ; "reverse\n"
+    push rbx
+    mov rsi, rsp
+    push 8
+    pop rdx
+    syscall
+    push 60
+    pop rax
+    xor edi, edi
+    syscall
+```
+
+Une chaîne plus courte laisserait des octets hauts nuls dans la constante `imm64` : c'est pourquoi on complète souvent à 8 octets utiles, ou on construit la chaîne autrement.
+
+**17.7** XOR roulant `cle_i = 0x5A ^ i`. On déchiffre à froid, puis on désassemble sans exécuter :
+
+```python
+enc = bytes.fromhex(
+    "305a00335f0014e61c600f1e1d5d5455"
+    "1903c1af2449164247297c1977b84b40")
+dec = bytes(b ^ (0x5A ^ (i & 0xff)) for i, b in enumerate(enc))
+open("octets.bin", "wb").write(dec)
+```
+
+Puis `objdump -D -b binary -m i386:x86-64 -M intel octets.bin`. On lit un `write(1, "N3_OK\n", 6)` (chaîne poussée via `mov rbx, 0x000a4b4f5f334e`) suivi d'un `exit(0)` : un shellcode inoffensif qui affiche simplement `N3_OK`. L'important est de l'avoir établi **sans jamais le lancer**.
+
+## Challenge de synthèse {#challenge}
+
+Fichier complet : [scripts/filtre_majuscules.asm](scripts/filtre_majuscules.asm). Le cœur est la boucle de transformation entre la lecture et l'écriture :
+
+```nasm
+    mov rcx, rax                ; octets lus
+    xor rbx, rbx
+.boucle:
+    mov dl, [buf + rbx]
+    cmp dl, 'a'
+    jb .suivant
+    cmp dl, 'z'
+    ja .suivant
+    sub dl, 0x20                ; minuscule -> majuscule
+    mov [buf + rbx], dl
+.suivant:
+    inc rbx
+    cmp rbx, rcx
+    jl .boucle
+```
+
+Les deux `cmp` encadrent la plage `a`-`z` ; un octet hors plage saute directement à `.suivant`, inchangé. Le `sub dl, 0x20` est la conversion de casse (l'écart constant entre minuscules et majuscules en ASCII).
+
+Tests :
+
+```
+$ printf 'Bonjour Clemence, reverse 2026!\n' | ./filtre_majuscules
+BONJOUR CLEMENCE, REVERSE 2026!
+$ printf 'abc\nxyz 123 fin\n' | ./filtre_majuscules
+ABC
+XYZ 123 FIN
+```
+
+Au désassemblage (`objdump -d -M intel`), on retrouve les trois phases attendues : `syscall` de lecture après `xor eax,eax / xor edi,edi`, la boucle avec `cmp` sur `0x61`/`0x7a` et `sub` de `0x20`, puis le `syscall` d'écriture avec `eax = 1`. Cette signature (deux bornes de 26 valeurs + `sub 0x20`) est reconnaissable instantanément comme une conversion de casse, même sans le code source.
+
+**Variante rot13** : remplacer le `sub dl, 0x20` par un décalage de 13 avec repli dans l'alphabet (ramener d'abord la lettre à `0`-`25`, ajouter `13`, prendre le modulo `26`, puis rétablir la base `'a'` ou `'A'`). C'est le chiffrement symétrique le plus simple, et l'appliquer deux fois redonne le texte d'origine.

@@ -131,6 +131,23 @@ Côté reverse, cette règle explique des instructions qui semblent inutiles dan
 
 **Exercice 16.3** Assembler `desaligne.asm`, observer le plantage dans GDB, puis afficher `p/x $rsp` à l'entrée de `main` (`break main`, `run`). Vérifier que la valeur se termine par 8. Corriger le programme et vérifier que `rsp` se termine par 0 juste avant le `call`.
 
+### Exercices gradués (style piscine)
+
+**Exercice 16.4 (niveau 1)** Écrire `long cube(long n)` en assembleur (deux `imul`), l'appeler depuis un programme C et vérifier le résultat avec une valeur négative.
+
+!!! note "Contraintes"
+    Fonction feuille : pas de cadre de pile, pas de `call`. Ajouter `section .note.GNU-stack noalloc noexec nowrite progbits` en fin de fichier.
+
+**Exercice 16.5 (niveau 2)** Écrire `long somme_tableau(const long *t, long n)` qui additionne les `n` premiers éléments d'un tableau de `long`. L'appeler depuis C sur un tableau mêlant valeurs positives et négatives.
+
+!!! note "Contraintes"
+    Une seule boucle. Accéder au tableau avec l'adressage indexé `[rdi + rcx*8]` (un `long` occupe 8 octets).
+
+**Exercice 16.6 (niveau 3)** Écrire un `main` en assembleur qui affiche chaque argument de la ligne de commande sur sa propre ligne, avec `printf("%s\n", ...)`. Tester avec `./programme alpha beta gamma`.
+
+!!! note "Contraintes"
+    Respecter l'alignement de la pile sur 16 octets avant chaque `call printf`. Conserver `argc`, `argv` et l'indice de boucle dans des registres *callee-saved* (`rbx`, `r12`, `r13`) pour qu'ils survivent aux appels. Astuce : trois `push` en entrée réalignent la pile et sauvegardent ces trois registres d'un coup.
+
 ## Fil rouge partie 3 : le keygen complet
 
 Étape 2 : écrire `keygen.asm`, un `main` qui :

@@ -104,6 +104,7 @@ nav:
       - "15. Premiers pas en NASM": partie3-ecriture/15-nasm-syscalls.md
       - "16. Fonctions et libc": partie3-ecriture/16-fonctions-libc.md
       - "17. Shellcode et loader": partie3-ecriture/17-shellcode.md
+      - "18. Challenge de synthèse": partie3-ecriture/18-challenge.md
   - Solutions:
       - "Partie 0": solutions/partie0.md
       - "Partie 1": solutions/partie1.md

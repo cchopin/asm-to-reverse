@@ -155,6 +155,30 @@ Les deux méthodes doivent donner exactement les mêmes octets : c'est la vérif
 
 **Exercice 17.4** Reprendre `flag.asm`, chiffrer ses octets avec une clé XOR au choix (un court script Python), puis écrire un loader en C qui les déchiffre dans une page `mmap` et saute dessus, sur le modèle du fil rouge. Vérifier que le flag s'affiche bien.
 
+### Exercices gradués (style piscine)
+
+**Exercice 17.5 (niveau 1)** Écrire un shellcode qui affiche `hey\n` puis quitte, sans aucun octet nul. Le tester avec le lanceur et vérifier `count(0) == 0` sur les octets extraits.
+
+!!! note "Contraintes"
+    Pas de section `.data` : la chaîne (4 octets) est poussée sur la pile par une seule instruction `push`. Petites constantes via `push imm8 / pop`.
+
+**Exercice 17.6 (niveau 2)** Même programme avec une chaîne de 8 octets (`reverse\n`), chargée dans un registre puis poussée. Vérifier à nouveau l'absence d'octet nul.
+
+!!! note "Contraintes"
+    `mov r64, imm64` est autorisé ici, car les 8 octets de la chaîne sont tous non nuls. Observer dans `objdump` pourquoi cela ne vaut pas pour une chaîne plus courte.
+
+**Exercice 17.7 (niveau 3, analyse)** On vous remet un shellcode chiffré par un XOR *roulant* : la clé change à chaque octet selon `cle_i = 0x5A XOR i`. Sans jamais l'exécuter, écrire un script qui le déchiffre, puis désassembler le résultat et décrire ce qu'il fait.
+
+Octets chiffrés :
+
+```
+30 5a 00 33 5f 00 14 e6 1c 60 0f 1e 1d 5d 54 55
+19 03 c1 af 24 49 16 42 47 29 7c 19 77 b8 4b 40
+```
+
+!!! warning "Analyse défensive"
+    On ne lance jamais un échantillon inconnu pour voir ce qu'il fait : le déchiffrement se fait à froid. Pour le désassemblage, `objdump -D -b binary -m i386:x86-64 -M intel octets.bin` ne dépend que de binutils (toujours présent) ; pwntools ou capstone font aussi l'affaire s'ils sont installés.
+
 ## Fil rouge partie 3 : analyser un loader
 
 Le fichier [fil-rouge/partie3/chargeur.c](../fil-rouge/partie3/chargeur.c) est fourni, mais **l'exercice se fait sur le binaire compilé, sans lire la source** (la source n'est là que pour vérifier ensuite). Compiler puis analyser :

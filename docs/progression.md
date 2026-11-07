@@ -211,4 +211,9 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre 17 : exercices
 - [ ] Chapitre 17 : fil rouge
 
+### [Challenge de synthèse](partie3-ecriture/18-challenge.md)
+
+- [ ] Challenge partie 3 : filtre majuscules écrit et testé
+- [ ] Challenge partie 3 : filtre désassemblé et annoté
+
 <p><button class="md-button reinitialiser-progression">Réinitialiser la progression</button></p>

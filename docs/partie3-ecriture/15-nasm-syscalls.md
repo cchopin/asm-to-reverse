@@ -261,6 +261,28 @@ C'est la technique 2 de la section 12.2, appliquée pas à pas. Dans Ghidra, un 
 1. poser un point d'arrêt sur l'instruction qui suit le `syscall`, puis modifier `rax` ;
 2. poser un point d'arrêt sur le `js`, puis faire sauter l'exécution à l'instruction suivante avec `set $pc = adresse` (`$pc` désigne `rip`), ce qui revient à ignorer le saut.
 
+### Exercices gradués (style piscine)
+
+Ces trois exercices construisent une mini-bibliothèque d'affichage sans libc, qui sera réutilisée par la suite. Tout se compile avec `nasm -f elf64 fichier.asm -o f.o && ld f.o -o programme`.
+
+!!! tip "L'avertissement `.note.GNU-stack`"
+    Depuis les versions récentes de `ld`, un objet NASM sans section de pile explicite déclenche un avertissement (`missing .note.GNU-stack section implies executable stack`). Il est sans danger ici, mais pour une sortie propre, ajouter en fin de fichier : `section .note.GNU-stack noalloc noexec nowrite progbits`.
+
+**Exercice 15.5 (niveau 1)** Écrire `ma_putchar`, une routine qui affiche l'octet présent dans `dil` sur la sortie standard. L'utiliser pour afficher `A` puis un retour à la ligne.
+
+!!! note "Contraintes"
+    Pas de libc, pas de section `.data`. Pour que `rsi` pointe sur l'octet, le pousser d'abord sur la pile. Un seul `write` par appel.
+
+**Exercice 15.6 (niveau 2)** Écrire `ma_putstr`, qui reçoit dans `rdi` l'adresse d'une chaîne terminée par `\0`, calcule sa longueur avec une boucle, puis l'affiche en un seul `write`. La tester sur deux chaînes différentes.
+
+!!! note "Contraintes"
+    Interdit d'écrire la longueur en dur : elle doit être calculée. Un seul `write` par chaîne.
+
+**Exercice 15.7 (niveau 3)** Écrire un mini-`cat` : lire l'entrée standard par blocs avec `read`, recopier chaque bloc sur la sortie standard avec `write`, et s'arrêter quand `read` renvoie 0 (fin de fichier). Tester avec `printf 'un\ndeux\n' | ./moncat` et avec `./moncat < fichier.txt`.
+
+!!! note "Contraintes"
+    Pas de libc. Utiliser un tampon en section `.bss`. Bien traiter le retour de `read` : `0` signifie EOF, une valeur négative une erreur.
+
 ## Fil rouge partie 3 : réécrire le keygen du coffre v3
 
 Au chapitre 11, le coffre v3 a été vaincu par un keygen écrit en Python ([keygen_v3.py](../solutions/scripts/keygen_v3.py)). Le fil rouge de la partie 3 consiste à écrire ce même keygen **en assembleur**, en deux temps.
