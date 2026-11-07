@@ -108,7 +108,7 @@ $ echo test | ltrace ./coffre_v1
 puts("=== Coffre v1 ===")                          = 18
 printf("Mot de passe : ")                           = 15
 fgets("test\n", 64, 0x7f...)                        = 0x7ffd...
-strcspn("test\n", "\n")                             = 4
+strcspn("test\n", "\n")                             = 4   # longueur avant le premier \n : sert à retirer le retour à la ligne de fgets
 strcmp("test", "Sesame_ouvre_toi")                  = 33
 puts("Acces refuse.")                               = 14
 ```
@@ -164,7 +164,9 @@ objdump -s -j .rodata coffre_v1
 
 **Exercice 8.2** Écrire un petit programme C qui demande un nombre avec `scanf("%d", &n)` et affiche "Gagne" si `n == 1337`. Le compiler. La réponse est-elle trouvable avec `strings` ? Avec `ltrace` ? Avec `objdump` ? Pourquoi ?
 
-**Exercice 8.3** Sur https://crackmes.one, filtrer par difficulté 1.0 et plateforme Unix/Linux, puis télécharger deux crackmes. N'appliquer que les étapes 1 et 2 de la méthode. Combien sont résolus sans ouvrir de désassembleur ? (Les crackmes de ce site sont censés être sûrs, mais par principe ils s'analysent dans le conteneur.)
+**Exercice 8.3** Sur https://crackmes.one, filtrer par difficulté 1.0 et plateforme Unix/Linux, puis télécharger deux crackmes. N'appliquer que les étapes 1 et 2 de la méthode. Combien sont résolus sans ouvrir de désassembleur ?
+
+Pratique : les archives sont souvent des `.zip` protégés par le mot de passe `crackmes.one`. Pour transférer le fichier téléchargé sur le Mac vers le conteneur, le déposer dans le dossier du cours (partagé dans `/cours`, voir le guide d'installation), puis le décompresser côté conteneur. La difficulté affichée sur le site est donnée par l'auteur et reste approximative : un "1.0" peut bloquer, ce n'est pas anormal. Les crackmes de ce site sont censés être sûrs, mais par principe ils s'analysent dans le conteneur.
 
 ## Fil rouge : coffre v1
 

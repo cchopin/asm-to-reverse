@@ -34,6 +34,8 @@ flowchart TD
     F -- "oui" --> F1["Protections : chapitre 12"]
 ```
 
+Plusieurs termes de ce catalogue (empreinte et fonction de hachage, MD5, entropie, programme packé, opcode et bytecode) sont définis plus loin : empreinte et hachage en 11.4, entropie et packing au chapitre 12. Une **fonction de hachage** transforme une donnée de taille quelconque en une empreinte de taille fixe, impossible à inverser directement.
+
 ## 11.2 Inverser une transformation
 
 Si le programme vérifie `transforme(saisie) == attendu`, il faut calculer `transforme⁻¹(attendu)`.
@@ -44,7 +46,7 @@ Si le programme vérifie `transforme(saisie) == attendu`, il faut calculer `tran
 | `c + k` | `c - k` (modulo 256 pour un octet) |
 | `c - k` | `c + k` |
 | `rol c, n` | `ror c, n` |
-| `c * k` (modulo 256, k impair) | `c * inverse(k)` modulo 256 (`pow(k, -1, 256)` en Python) |
+| `c * k` (modulo 256, k impair) | `c * inverse(k)` modulo 256 (`pow(k, -1, 256)` en Python ; notion avancée, l'inverse modulaire n'est pas indispensable à la première lecture) |
 | permutation des positions `out[p[i]] = in[i]` | `in[i] = out[p[i]]` |
 | plusieurs opérations successives | les inverses **dans l'ordre inverse** |
 

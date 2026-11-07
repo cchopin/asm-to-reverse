@@ -252,7 +252,7 @@ push   0x0
 call   DWORD PTR [MessageBoxA]
 ```
 
-(Rappel : `int MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)`.)
+(Rappel : `int MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)`. `HWND` est un identifiant de fenêtre, et `LPCSTR` un simple pointeur de chaîne : ce sont des noms de types Windows détaillés au chapitre 13. `call DWORD PTR [MessageBoxA]` est un **appel indirect** : l'adresse de la fonction n'est pas écrite dans l'instruction mais lue en mémoire, à l'emplacement `MessageBoxA` de la table des imports, puisqu'une fonction de DLL n'est connue qu'au chargement.)
 
 **Exercice 7.3** Écrire un petit programme C avec un `switch` de 6 cas sur un caractère (`'a'` à `'f'`) qui appelle 6 fonctions différentes. Compiler en `-O0` et `-O2`, et retrouver la table de sauts. Comment le compilateur fait-il commencer la table à l'indice 0 alors que `'a'` vaut `0x61` ?
 

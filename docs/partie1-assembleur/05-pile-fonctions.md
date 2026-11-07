@@ -75,7 +75,7 @@ Une fois le prologue exécuté, `rbp` constitue un repère fixe :
 
 ```
         |  ...                      |
-rbp+0x10|  7e argument (s'il existe)|
+rbp+0x10|  7e argument (voir 5.4)      |
 rbp+0x8 |  adresse de retour        |
 rbp     |  ancien rbp               |
 rbp-0x4 |  variable locale 1        |
@@ -88,7 +88,7 @@ rsp     |  sommet                   |
 flowchart TB
     subgraph cadre["Cadre de pile"]
         direction TB
-        A["rbp+0x10 : 7e argument éventuel"]
+        A["rbp+0x10 : 7e argument (voir 5.4)"]
         B["rbp+0x8 : adresse de retour"]
         C["rbp : ancien rbp"]
         D["rbp-0x4, rbp-0x8, ... : variables locales"]
@@ -105,7 +105,7 @@ La taille réservée par `sub rsp, ...` donne une idée du volume des variables 
 
 ## 5.4 Les conventions d'appel
 
-Une **convention d'appel** définit où l'appelant place les arguments et où l'appelé place la valeur de retour. Il en existe plusieurs, à connaître par cœur.
+Une **convention d'appel** définit où l'appelant place les arguments et où l'appelé place la valeur de retour. Il en existe plusieurs ; seule System V (Linux et macOS en 64 bits) est à retenir pour l'instant, les autres servent de référence le moment venu. C'est elle qui explique pourquoi un 7e argument se retrouve sur la pile, en `rbp+0x10` : les six premiers tiennent dans des registres.
 
 ### Linux et macOS en 64 bits (System V AMD64)
 
@@ -271,7 +271,7 @@ Dans [mystere_O0.txt](../fil-rouge/partie1/mystere_O0.txt) :
 3. Lister toutes les variables locales (`[rbp-0x4]`, `[rbp-0x8]`, `[rbp-0xc]`), leur taille et leur rôle d'après les notes des chapitres précédents.
 4. Que renvoie la fonction, et de quel type ?
 5. Écrire le prototype complet de `verifier`.
-6. Bonus : la fonction `main` figure à la fin de `mystere_O0.txt`. Retrouver l'appel à `verifier`. Que lui passe-t-on en argument ? (Indice : `main` reçoit `argc` dans `edi` et `argv` dans `rsi`.)
+6. Bonus (à traiter après le chapitre 6, sections 6.6 et 6.7) : la fonction `main` figure à la fin de `mystere_O0.txt`. Retrouver l'appel à `verifier`. Que lui passe-t-on en argument ? (Indice : `main` reçoit `argc` dans `edi` et `argv` dans `rsi` ; l'accès à `argv[1]` et les `lea rax,[rip+...]` sont vus en 6.6 et 6.7.)
 
 Solutions : [solutions/partie1.md](../solutions/partie1.md#chapitre-5)
 

@@ -38,7 +38,10 @@ delete 2                     # supprime le point d'arrêt n°2
 
 Un binaire PIE (chapitre 8) est chargé à une adresse différente à chaque exécution : les adresses affichées par Ghidra (`0x101240`) ne sont pas celles de l'exécution. Solutions :
 
-- GDB désactive la randomisation par défaut : sous GDB, le programme est presque toujours chargé à `0x555555554000`. L'adresse réelle vaut `0x555555554000 + offset`. Pour un offset Ghidra de `0x101240` (Ghidra charge par défaut à `0x100000`), on obtient `0x555555555240`.
+- GDB désactive la randomisation par défaut : sous GDB, le programme est presque toujours chargé à la base `0x555555554000`. Le calcul pas à pas, pour une instruction vue à `0x101240` dans Ghidra :
+    1. retirer la base de Ghidra (par défaut `0x100000`) pour obtenir l'offset dans le fichier : `0x101240 - 0x100000 = 0x1240` ;
+    2. ajouter la base réelle sous GDB : `0x555555554000 + 0x1240 = 0x555555555240`.
+  C'est donc à `0x555555555240` qu'il faut poser le point d'arrêt. Autre méthode, sans calcul : poser le point d'arrêt sur un symbole (`break main`) quand il existe.
 - Plus simple : utiliser les symboles lorsqu'ils existent (`break *verifier+87`).
 - Avec GEF : `pie break *0x1240` puis `pie run`.
 - Ou encore : `starti`, puis `info proc mappings` pour lire l'adresse de base.

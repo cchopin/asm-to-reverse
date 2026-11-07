@@ -191,6 +191,8 @@ readelf -S /bin/ls    # liste des sections
 
 **Exercice 1.1** Convertir à la main (puis vérifier avec Python) : 200 en hexadécimal, 0x7F en décimal, 0b10110011 en hexadécimal.
 
+Méthode. Vers l'hexadécimal, on divise par 16 en notant les restes de bas en haut : 200 = 12*16 + 8, soit `0xC8` (12 = C, 8). Du binaire vers l'hexadécimal, on regroupe les bits par quatre depuis la droite, chaque groupe donnant un chiffre hexadécimal : `1011 0011` donne `0xB3`. De l'hexadécimal vers le décimal, chaque chiffre pèse une puissance de 16 : `0x7F = 7*16 + 15 = 127`.
+
 **Exercice 1.2** Quelle est la valeur de l'octet signé `0x80` ? Et de `0xFE` ?
 
 **Exercice 1.3** Un programme compare un entier de 8 octets à `0x2165737265766572`. Quelle chaîne de 8 caractères cela représente-t-il en mémoire ?
@@ -203,7 +205,7 @@ readelf -S /bin/ls    # liste des sections
 
 1. Installer l'environnement comme indiqué dans le [guide d'installation](../environnement/INSTALLATION-MAC.md), puis ouvrir un shell avec `./environnement/lab.sh`.
 2. Compiler `mystere` (sans lire le `.c`) et le lancer : `./mystere 1234`.
-3. Ouvrir [mystere_O0.txt](../fil-rouge/partie1/mystere_O0.txt). Il ne s'agit pas encore de le comprendre, mais de compter : combien d'instructions compte la fonction `verifier` ? Combien de fois apparaît `cmp` ? Et `jmp` ? Relever toutes les constantes (les nombres en `0x` qui ne sont pas des adresses), les convertir en décimal et, lorsque cela a un sens, en caractère ASCII. Consigner le tout dans un fichier `notes_mystere.md`, qui sera complété à chaque chapitre.
+3. Ouvrir [mystere_O0.txt](../fil-rouge/partie1/mystere_O0.txt). Il ne s'agit pas encore de le comprendre, mais de compter : combien d'instructions compte la fonction `verifier` ? Combien de fois apparaît `cmp` ? Et `jmp` ? Relever toutes les constantes (les nombres en `0x` qui ne sont pas des adresses ; dans ce listing, les adresses sont celles de la colonne de gauche et celles citées par les sauts, et commencent par `0x40`, alors que les constantes apparaissent à droite comme opérandes), les convertir en décimal et, lorsque cela a un sens, en caractère ASCII. Consigner le tout dans un fichier `notes_mystere.md`, qui sera complété à chaque chapitre.
 
 Solutions : [solutions/partie1.md](../solutions/partie1.md#chapitre-1)
 

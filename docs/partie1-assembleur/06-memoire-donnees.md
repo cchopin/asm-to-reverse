@@ -137,6 +137,8 @@ flowchart LR
 
 **Signature d'une structure : un même pointeur de base et des déplacements constants différents.** `[rax+0x10]`, `[rax+0x14]` : deux champs d'une structure pointée par `rax`.
 
+**Alignement et remplissage (padding).** Le compilateur place chaque champ à un offset multiple de sa taille : un `int` (4 octets) sur un multiple de 4, un `long` ou un pointeur (8 octets) sur un multiple de 8. Pour y parvenir, il insère parfois des octets inutilisés entre deux champs (le *padding*), et la taille totale est arrondie au multiple du plus grand champ. C'est pourquoi `struct { char c; int x; }` occupe 8 octets et non 5 : trois octets de remplissage suivent `c`. Un offset qui "saute" une valeur dans un listing s'explique souvent ainsi (voir l'exercice 6.3).
+
 Différence avec un tableau : dans un tableau, l'index est un **registre** qui varie (`[rax+rcx*4]`) ; dans une structure, le déplacement est une **constante** (`[rax+0x14]`).
 
 On remarque au passage le calcul `niveau * 10` réalisé avec `shl` et des `add` au lieu d'un `imul`. Les compilateurs utilisent volontiers ce type d'astuce ; le chapitre 7 en dresse la liste.

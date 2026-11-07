@@ -206,6 +206,18 @@ Le compilateur a exprimé `c >= 0x30` sous la forme `!(c <= 0x2f)`. Ce genre de 
 
 Pour un `||`, le premier test qui réussit saute directement **dans** le bloc, sans évaluer la suite.
 
+Le compilateur peut aussi produire la forme **inverse**, où chaque test saute vers le bloc valide et où l'on tombe sinon dans le rejet. C'est le cas de `mystere` (fil rouge), qui enchaîne `jle refus` puis `jle suite` :
+
+```
+cmp  ...             ; première condition
+jle  refus           ; si elle échoue, aller au rejet
+cmp  ...             ; seconde condition
+jle  suite           ; si elle réussit, aller au bloc valide
+...                  ; (chute dans le rejet sinon)
+```
+
+Les deux formes expriment la même logique ; il faut reconnaître l'une comme l'autre.
+
 ## 3.8 Trouver "le" saut dans un crackme
 
 Dans un crackme, cherchez la chaîne de succès ("Bravo", "Correct", "flag") et remontez : juste avant se trouve presque toujours un `test eax, eax` / `je` ou un `cmp` / `jne` qui décide si elle est atteinte. Ce saut est la **décision**. Comprendre ce qui est comparé, c'est résoudre le challenge ; modifier ce saut (chapitre 11), c'est le contourner.
