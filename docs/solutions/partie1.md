@@ -625,3 +625,42 @@ jmp [rax]        ; tail call sur vtable[0]
 Le `jmp` remplace le `call` car `calcule` n'a plus rien à faire après l'appel (appel terminal) : `aire()` renverra directement à l'appelant de `calcule`. L'appel reste indirect par la vtable : le compilateur ne dévirtualise pas, car `f` peut pointer sur n'importe quelle sous-classe de `Forme`, type inconnu à la compilation.
 
 **12.6** `mov rax, [rdi]` charge le vptr, `call [rax+0x10]` appelle l'entrée à l'offset 16 de la vtable. Les entrées faisant 8 octets, l'offset 16 est l'indice 2 : **deux méthodes virtuelles précèdent** celle appelée (aux offsets 0 et 8). C'est donc la troisième méthode virtuelle de la classe.
+
+## x86 32 bits {#x86-32-bits}
+
+Assemblage 32 bits : `nasm -f elf32 f.asm -o f.o && ld -m elf_i386 f.o -o f`.
+
+**13.1** La fonction lit ses arguments à `[ebp+8]` (premier) et `[ebp+0xc]` (deuxième) :
+
+```asm
+som:
+    push ebp
+    mov  ebp, esp
+    mov  eax, [ebp+8]
+    add  eax, [ebp+0xc]
+    pop  ebp
+    ret
+```
+
+`som(40, 2)` renvoie `42`. Les arguments sont sur la pile, au-dessus de l'adresse de retour (`[ebp+4]`) et de l'ancien `ebp` (`[ebp]`).
+
+**13.2** Il suffit de remplacer `add` par `sub` :
+
+```asm
+    mov eax, [ebp+8]
+    sub eax, [ebp+0xc]
+```
+
+`som(50, 8)` renvoie `42`. La structure de lecture des arguments ne change pas.
+
+**13.3** Après `call som`, on trouve `add esp, 8` : deux arguments de 4 octets, soit 8 octets à retirer. En cdecl, c'est l'appelant qui nettoie. En stdcall, on n'aurait pas ce `add esp, 8` : la fonction `som` se terminerait par `ret 8`, dépilant elle-même ses arguments.
+
+**13.4** La sortie est `32 bits!`. Dans le désassemblage, les octets de la chaîne (`"32 bits!\n"`) suivent immédiatement le `call` et sont décodés par `objdump` comme des instructions absurdes (`xor esi, [edx]`, etc.) : ce sont en réalité des données. Le `call apres` pousse l'adresse de ces octets (l'instruction « suivante ») sur la pile ; arrivé à `apres`, `pop ecx` récupère donc l'adresse de la chaîne. C'est l'équivalent 32 bits du `lea rsi, [rel msg]` 64 bits.
+
+**13.5** Trois différences entre `som` en 32 et 64 bits :
+
+1. En 64 bits, les arguments viennent des registres (`edi`, `esi`) ; en 32 bits, de la pile (`[ebp+8]`, `[ebp+0xc]`).
+2. Le 64 bits dispose de 16 registres généraux, le 32 bits de 8 seulement.
+3. En cdecl 32 bits, l'appelant nettoie la pile (`add esp, N`) après l'appel ; en 64 bits, les arguments étant en registres, ce nettoyage n'existe pas.
+
+**13.6** Les accès `[ebp+8]`, `[ebp+0xc]` et `[ebp+0x10]` correspondent aux premier, deuxième et troisième arguments : la fonction prend donc **trois arguments**. Sa valeur de retour est dans `eax`, comme toujours en 32 bits.

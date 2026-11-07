@@ -94,6 +94,7 @@ nav:
       - "10. Structures et tableaux (approfondissement)": partie1-assembleur/10-structures-tableaux.md
       - "11. Lire du code optimisé (approfondissement)": partie1-assembleur/11-optimisations.md
       - "12. C++ et vtables (approfondissement)": partie1-assembleur/12-cpp-vtables.md
+      - "13. x86 32 bits (approfondissement)": partie1-assembleur/13-x86-32bits.md
   - "Partie 2 : le reverse":
       - "8. Méthode et outils": partie2-reverse/08-methode-outils.md
       - "9. Ghidra": partie2-reverse/09-ghidra.md

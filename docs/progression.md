@@ -157,6 +157,11 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre 12 (C++ et vtables) : lecture
 - [ ] Chapitre 12 (C++ et vtables) : exercices
 
+### [Chapitre 13 : x86 32 bits](partie1-assembleur/13-x86-32bits.md)
+
+- [ ] Chapitre 13 (x86 32 bits) : lecture
+- [ ] Chapitre 13 (x86 32 bits) : exercices
+
 ## Partie 2 : le reverse engineering
 
 ### [Chapitre 8 : la méthode et les premiers outils](partie2-reverse/08-methode-outils.md)
