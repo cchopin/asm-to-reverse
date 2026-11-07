@@ -234,6 +234,12 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre angr/z3 : z3 pratiqué (crack05, VM)
 - [ ] Chapitre angr/z3 : angr essayé (sur votre machine)
 
+### [Chapitre 21 : lire les formats ELF et PE](partie2-reverse/21-formats-elf-pe.md)
+
+- [ ] Chapitre formats : lecture
+- [ ] Chapitre formats : ELF lu avec readelf (-h, -l, -S, -d, -s)
+- [ ] Chapitre formats : table d'import PE comprise (intérêt malware)
+
 ### [Chapitre 14 : et après ?](partie2-reverse/14-et-apres.md)
 
 - [ ] Chapitre 14 : lecture

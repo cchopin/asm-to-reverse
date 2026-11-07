@@ -416,3 +416,27 @@ z3 retrouve `Clemence`, puisque `cle[i] = cible[i] - i`.
 **20.5** Avec angr : relever `find` (adresse du bloc affichant le succès) et `avoid` (bloc d'échec) dans `objdump`, lancer `simgr.explore(find=..., avoid=...)`, puis `simgr.found[0].posix.dumps(0)` donne l'entrée gagnante lue sur stdin. Sur un petit crackme, angr trouve la solution sans qu'on ait rien modélisé ; sur un binaire avec de longues boucles ou beaucoup de chemins, il peut devenir très lent (explosion des chemins), là où une modélisation z3 ciblée resterait instantanée.
 
 **20.6** Pour `crack01` (comparaison directe à une chaîne), l'analyse manuelle suffit : la chaîne est lisible, nul besoin d'outil. Pour `crack05` (contraintes arithmétiques claires), z3 est idéal : on lit les conditions et on les transcrit. Pour `machine` (VM), z3 convient aussi (modéliser la transformation par caractère), et angr serait une alternative si l'on ne voulait pas comprendre la VM. La règle : plus on comprend la vérification, plus z3 est direct ; moins on veut lire le code, plus angr est tentant, à condition que le binaire reste petit.
+
+## Lire les formats : ELF puis PE {#formats-elf-pe}
+
+**21.1** `readelf -h` donne tout : `Class` (`ELF64` ou `ELF32`), `Type` (`EXEC` en `-no-pie`, `DYN` en PIE, `REL` pour un `.o`), et `Entry point address` (par exemple `0x401070`). Le magic se confirme avec `xxd prog | head -1` : les quatre premiers octets sont `7f 45 4c 46`, soit `\x7f` puis `ELF`.
+
+**21.2** `readelf -l` liste les segments. Typiquement : un `PT_LOAD` en `R` (en-têtes), un en `R E` (le code `.text`), un en `R` (constantes `.rodata`), un en `RW` (données `.data`/`.bss`). Aucun n'est à la fois `W` et `E` : du code modifiable serait un terrain idéal pour écraser des instructions à l'exécution (W^X, « write xor execute »). Un segment `RWX` est d'ailleurs un indice classique de packer ou de shellcode.
+
+**21.3** `.bss` est de type `NOBITS` : il contient les globales initialisées à zéro, et comme leur valeur est connue (zéro), inutile de les stocker sur le disque. Le noyau réserve la place et la met à zéro au chargement. D'où un `MemSiz` supérieur au `FileSiz` dans le segment `RW`. `readelf -d` montre les dépendances : sur un binaire C simple, une seule ligne `NEEDED  Shared library: [libc.so.6]`.
+
+**21.4** `readelf -s` affiche, pour `main`, une ligne du type `... FUNC GLOBAL DEFAULT 15 main` avec son adresse et sa taille. Après `strip prog -o prog2`, `readelf -s prog2 | grep main` ne renvoie plus rien : `strip` retire `.symtab` (les symboles internes). En revanche `.dynsym` demeure, car les symboles externes (`strcmp`, `puts`...) sont indispensables à la liaison dynamique. Résumé : `.symtab` = tous les symboles (optionnel, retiré par `strip`) ; `.dynsym` = seulement les symboles dynamiques (toujours présent sur un binaire lié dynamiquement).
+
+**21.5** Sur l'original, `strings` révèle les chaînes en clair (par exemple `reverse42`) et le point d'entrée pointe sur le vrai code. Sur la version packée, le point d'entrée a changé (il tombe dans le stub de dépaquetage, par exemple `0x4010b0` au lieu de `0x401070`) et `strings` ne trouve plus la chaîne connue : le vrai code est compressé dans un blob et n'existe en clair nulle part sur le disque. Conclusion : l'en-tête (point d'entrée) plus un `strings` suffisent souvent à classer un binaire (normal / strippé / packé) avant même d'ouvrir le désassembleur.
+
+**21.6 (PE, conceptuel)** Import par import :
+
+- `VirtualAlloc` + `VirtualProtect` + `CreateThread` : le programme réserve de la mémoire, la rend exécutable, puis y lance un thread. C'est le schéma type d'un **dépaquetage en mémoire ou d'une injection de code** (écrire du code puis l'exécuter).
+- `InternetOpenUrlA` + `InternetReadFile` : il **télécharge** un contenu depuis une URL.
+- `RegSetValueExA` : il **écrit dans la base de registre**, typiquement pour la persistance.
+
+Hypothèse en une phrase : un **téléchargeur/injecteur** (downloader) qui récupère une charge sur le réseau, l'exécute en mémoire et s'assure une persistance par le registre.
+
+**21.7 (PE, conceptuel)** Correspondances : magic `7f ELF` ↔ signature `MZ` puis `PE\0\0` ; point d'entrée ELF (`Entry point address`) ↔ `ImageBase + AddressOfEntryPoint` ; `.rodata` ↔ `.rdata` ; `readelf -d`/NEEDED et `.plt`/`.got` ↔ table d'import (IAT) et `.idata`. Les chaînes se cherchent dans `.rodata` (ELF) et `.rdata` (PE) ; la liste des fonctions externes se lit via `readelf -d` + `.dynsym` (ELF) et via la table d'import (PE).
+
+**21.8 (PE, conceptuel)** Une table d'import réduite à `LoadLibraryA` et `GetProcAddress` est suspecte précisément parce qu'elle est presque vide : avec ces deux seules fonctions, le programme peut charger **n'importe quelle** DLL et résoudre **n'importe quelle** fonction à l'exécution, sans que cela apparaisse dans l'IAT. C'est de la **résolution dynamique d'API**, une technique d'évasion qui masque les capacités réelles au triage statique. Adaptation de l'analyse : en statique, chercher les chaînes de noms de fonctions et de DLL dans `.rdata` (souvent présentes, parfois obfusquées/chiffrées), repérer les appels à `GetProcAddress` et remonter leurs arguments ; en dynamique (sur une machine d'analyse isolée), observer les appels réels avec un moniteur d'API ou un hook sur `GetProcAddress` pour lister les fonctions effectivement résolues. C'est le pont direct avec le chapitre d'analyse dynamique : ce que le statique cache, l'exécution surveillée le révèle.
