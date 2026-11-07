@@ -216,4 +216,29 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Challenge partie 3 : filtre majuscules écrit et testé
 - [ ] Challenge partie 3 : filtre désassemblé et annoté
 
+## Partie 4 : capstone
+
+### [Présentation du capstone](partie4-capstone/19-presentation.md)
+
+- [ ] Capstone : bac à sable compris et prêt
+- [ ] Capstone : méthode d'approche révisée
+
+### [Défis CTF avancés](partie4-capstone/20-ctf-avance.md)
+
+- [ ] Défi 1 (serrure) : flag obtenu et keygen écrit
+- [ ] Défi 2 (machine) : flag obtenu et VM inversée
+- [ ] Défi 3 (oignon) : flag obtenu, anti-debug contourné
+
+### [Cas de malware](partie4-capstone/21-cas-malware.md)
+
+- [ ] Cas malware : triage statique fait
+- [ ] Cas malware : IOC réseau et fichiers extraits
+- [ ] Cas malware : charge déchiffrée et identifiée (statiquement)
+- [ ] Cas malware : rapport rédigé
+
+### [Rapport d'analyse](partie4-capstone/22-rapport-type.md)
+
+- [ ] Rapport : modèle compris et réutilisé
+- [ ] Rapport : cas specimen documenté de bout en bout
+
 <p><button class="md-button reinitialiser-progression">Réinitialiser la progression</button></p>

@@ -105,8 +105,14 @@ nav:
       - "16. Fonctions et libc": partie3-ecriture/16-fonctions-libc.md
       - "17. Shellcode et loader": partie3-ecriture/17-shellcode.md
       - "18. Challenge de synthèse": partie3-ecriture/18-challenge.md
+  - "Partie 4 : capstone":
+      - "19. Présentation du capstone": partie4-capstone/19-presentation.md
+      - "20. Défis CTF avancés": partie4-capstone/20-ctf-avance.md
+      - "21. Cas de malware": partie4-capstone/21-cas-malware.md
+      - "22. Rapport d'analyse": partie4-capstone/22-rapport-type.md
   - Solutions:
       - "Partie 0": solutions/partie0.md
       - "Partie 1": solutions/partie1.md
       - "Partie 2": solutions/partie2.md
       - "Partie 3": solutions/partie3.md
+      - "Partie 4": solutions/partie4.md
