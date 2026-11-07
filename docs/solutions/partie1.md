@@ -375,3 +375,84 @@ int g3(const char *s)
     return c;
 }
 ```
+
+## Convention d'appel en profondeur {#convention-appel}
+
+Chaque solution se termine par `section .note.GNU-stack noalloc noexec nowrite progbits` pour éviter l'avertissement du linker.
+
+**9.1** Le 7e argument est juste au-dessus de l'adresse de retour :
+
+```nasm
+septieme:
+    mov rax, [rsp+8]
+    ret
+```
+
+`septieme(1,2,3,4,5,6,777)` renvoie `777`. Les six premiers (`1`-`6`) sont dans `rdi`-`r9` et ne servent pas ; seul le septième, sur la pile, est lu.
+
+**9.2** Les six premiers en registres, les deux derniers sur la pile :
+
+```nasm
+somme8:
+    mov rax, rdi
+    add rax, rsi
+    add rax, rdx
+    add rax, rcx
+    add rax, r8
+    add rax, r9
+    add rax, [rsp+8]        ; 7e argument
+    add rax, [rsp+16]       ; 8e argument
+    ret
+```
+
+`somme8(1,2,3,4,5,6,7,8)` renvoie `36`.
+
+**9.3** Les `double` vivent dans les registres `xmm` :
+
+```nasm
+section .data
+    deux dq 2.0
+section .text
+moyenne:
+    addsd xmm0, xmm1       ; a + b
+    divsd xmm0, [rel deux] ; / 2
+    ret
+```
+
+`moyenne(3.0, 8.0)` renvoie `5.50`. Le résultat est laissé dans `xmm0`, registre de retour des flottants.
+
+**9.4** Version correcte :
+
+```nasm
+    lea rdi, [rel fmt]     ; "entier %d et flottant %.1f\n"
+    mov esi, 42            ; %d
+    movsd xmm0, [rel pi]   ; %f -> xmm0
+    mov eax, 1             ; AL = 1 registre vectoriel
+    call printf wrt ..plt
+```
+
+Avec `mov eax, 1`, on obtient `entier 42 et flottant 3.1`. Avec `al = 0`, `printf` croit qu'aucun `xmm` n'est utilisé, ne va pas lire `xmm0`, et affiche `entier 42 et flottant 0.0`. La règle variadique impose que `al` contienne le nombre de registres `xmm` employés.
+
+**9.5** Les deux champs reviennent dans `rax` (premier champ) et `rdx` (second) :
+
+```nasm
+paire:
+    mov rax, rdi           ; x = a
+    lea rdx, [rsi+rsi]     ; y = 2*b
+    ret
+```
+
+`paire(10, 21)` donne `x = 10`, `y = 42`. Une structure de 16 octets ou moins revient dans `rax:rdx`, sans pointeur caché.
+
+**9.6** Fonction feuille utilisant la red zone :
+
+```nasm
+rouge:
+    mov [rsp-8], rdi       ; red zone : écriture sous rsp sans réserver
+    mov [rsp-16], rsi
+    mov rax, [rsp-8]
+    add rax, [rsp-16]
+    ret
+```
+
+`rouge(40, 2)` renvoie `42`. C'est valide car `rouge` est une feuille : les 128 octets sous `rsp` lui sont garantis. Si elle appelait une autre fonction, le `call` pousserait l'adresse de retour à `[rsp-8]` et écraserait les données rangées dans la red zone : il faudrait alors réserver l'espace avec un vrai `sub rsp`.

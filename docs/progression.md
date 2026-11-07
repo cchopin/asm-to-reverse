@@ -137,6 +137,11 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 
 - [ ] Challenge partie 1 : les trois fonctions reconstruites
 
+### [Chapitre 9 : convention d'appel en profondeur](partie1-assembleur/09-convention-appel.md)
+
+- [ ] Chapitre 9 (convention d'appel) : lecture
+- [ ] Chapitre 9 (convention d'appel) : exercices
+
 ## Partie 2 : le reverse engineering
 
 ### [Chapitre 8 : la méthode et les premiers outils](partie2-reverse/08-methode-outils.md)
