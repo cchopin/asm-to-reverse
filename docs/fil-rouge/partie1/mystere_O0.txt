@@ -1,0 +1,108 @@
+Desassemblage de la fonction verifier (gcc 13, -O0, syntaxe Intel)
+Obtenu avec : objdump -d -M intel --no-show-raw-insn mystere
+
+0000000000401156 <verifier>:
+  401156:	endbr64
+  40115a:	push   rbp
+  40115b:	mov    rbp,rsp
+  40115e:	mov    QWORD PTR [rbp-0x18],rdi
+  401162:	mov    DWORD PTR [rbp-0x4],0x0
+  401169:	jmp    40116f <verifier+0x19>
+  40116b:	add    DWORD PTR [rbp-0x4],0x1
+  40116f:	mov    eax,DWORD PTR [rbp-0x4]
+  401172:	movsxd rdx,eax
+  401175:	mov    rax,QWORD PTR [rbp-0x18]
+  401179:	add    rax,rdx
+  40117c:	movzx  eax,BYTE PTR [rax]
+  40117f:	test   al,al
+  401181:	jne    40116b <verifier+0x15>
+  401183:	cmp    DWORD PTR [rbp-0x4],0x8
+  401187:	je     401193 <verifier+0x3d>
+  401189:	mov    eax,0x0
+  40118e:	jmp    401224 <verifier+0xce>
+  401193:	mov    DWORD PTR [rbp-0x8],0x0
+  40119a:	mov    DWORD PTR [rbp-0xc],0x0
+  4011a1:	jmp    4011ef <verifier+0x99>
+  4011a3:	mov    eax,DWORD PTR [rbp-0xc]
+  4011a6:	movsxd rdx,eax
+  4011a9:	mov    rax,QWORD PTR [rbp-0x18]
+  4011ad:	add    rax,rdx
+  4011b0:	movzx  eax,BYTE PTR [rax]
+  4011b3:	cmp    al,0x2f
+  4011b5:	jle    4011cb <verifier+0x75>
+  4011b7:	mov    eax,DWORD PTR [rbp-0xc]
+  4011ba:	movsxd rdx,eax
+  4011bd:	mov    rax,QWORD PTR [rbp-0x18]
+  4011c1:	add    rax,rdx
+  4011c4:	movzx  eax,BYTE PTR [rax]
+  4011c7:	cmp    al,0x39
+  4011c9:	jle    4011d2 <verifier+0x7c>
+  4011cb:	mov    eax,0x0
+  4011d0:	jmp    401224 <verifier+0xce>
+  4011d2:	mov    eax,DWORD PTR [rbp-0xc]
+  4011d5:	movsxd rdx,eax
+  4011d8:	mov    rax,QWORD PTR [rbp-0x18]
+  4011dc:	add    rax,rdx
+  4011df:	movzx  eax,BYTE PTR [rax]
+  4011e2:	movsx  eax,al
+  4011e5:	sub    eax,0x30
+  4011e8:	add    DWORD PTR [rbp-0x8],eax
+  4011eb:	add    DWORD PTR [rbp-0xc],0x1
+  4011ef:	cmp    DWORD PTR [rbp-0xc],0x7
+  4011f3:	jle    4011a3 <verifier+0x4d>
+  4011f5:	cmp    DWORD PTR [rbp-0x8],0x28
+  4011f9:	je     401202 <verifier+0xac>
+  4011fb:	mov    eax,0x0
+  401200:	jmp    401224 <verifier+0xce>
+  401202:	mov    rax,QWORD PTR [rbp-0x18]
+  401206:	movzx  edx,BYTE PTR [rax]
+  401209:	mov    rax,QWORD PTR [rbp-0x18]
+  40120d:	add    rax,0x7
+  401211:	movzx  eax,BYTE PTR [rax]
+  401214:	cmp    dl,al
+  401216:	je     40121f <verifier+0xc9>
+  401218:	mov    eax,0x0
+  40121d:	jmp    401224 <verifier+0xce>
+  40121f:	mov    eax,0x1
+  401224:	pop    rbp
+  401225:	ret
+
+
+Et la fonction main du meme programme :
+
+0000000000401226 <main>:
+  401226:	endbr64
+  40122a:	push   rbp
+  40122b:	mov    rbp,rsp
+  40122e:	sub    rsp,0x10
+  401232:	mov    DWORD PTR [rbp-0x4],edi
+  401235:	mov    QWORD PTR [rbp-0x10],rsi
+  401239:	cmp    DWORD PTR [rbp-0x4],0x2
+  40123d:	je     401264 <main+0x3e>
+  40123f:	mov    rax,QWORD PTR [rbp-0x10]
+  401243:	mov    rax,QWORD PTR [rax]
+  401246:	mov    rsi,rax
+  401249:	lea    rax,[rip+0xdb4]        # 402004 <_IO_stdin_used+0x4>
+  401250:	mov    rdi,rax
+  401253:	mov    eax,0x0
+  401258:	call   401060 <printf@plt>
+  40125d:	mov    eax,0x1
+  401262:	jmp    4012a0 <main+0x7a>
+  401264:	mov    rax,QWORD PTR [rbp-0x10]
+  401268:	add    rax,0x8
+  40126c:	mov    rax,QWORD PTR [rax]
+  40126f:	mov    rdi,rax
+  401272:	call   401156 <verifier>
+  401277:	test   eax,eax
+  401279:	je     40128c <main+0x66>
+  40127b:	lea    rax,[rip+0xd95]        # 402017 <_IO_stdin_used+0x17>
+  401282:	mov    rdi,rax
+  401285:	call   401050 <puts@plt>
+  40128a:	jmp    40129b <main+0x75>
+  40128c:	lea    rax,[rip+0xd91]        # 402024 <_IO_stdin_used+0x24>
+  401293:	mov    rdi,rax
+  401296:	call   401050 <puts@plt>
+  40129b:	mov    eax,0x0
+  4012a0:	leave
+  4012a1:	ret
+

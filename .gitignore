@@ -1,0 +1,8 @@
+site/
+__pycache__/
+# binaires compiles a partir du fil rouge
+docs/fil-rouge/partie1/mystere
+docs/fil-rouge/partie2/coffre_v[0-9]
+docs/fil-rouge/partie2/*_patch
+*.o
+.DS_Store

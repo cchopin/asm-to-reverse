@@ -1,0 +1,53 @@
+Desassemblage de la fonction verifier (gcc 13, -O2, syntaxe Intel)
+Obtenu avec : gcc -O2 -fno-stack-protector -no-pie -o mystere_O2 mystere.c
+puis : objdump -d -M intel --no-show-raw-insn mystere_O2
+
+00000000004011e0 <verifier>:
+  4011e0:	endbr64
+  4011e4:	push   rbp
+  4011e5:	push   rbx
+  4011e6:	sub    rsp,0x8
+  4011ea:	movzx  ebp,BYTE PTR [rdi]
+  4011ed:	test   bpl,bpl
+  4011f0:	je     401240 <verifier+0x60>
+  4011f2:	mov    rbx,rdi
+  4011f5:	lea    rdi,[rdi+0x1]
+  4011f9:	call   401070 <strlen@plt>
+  4011fe:	mov    rdx,rax
+  401201:	xor    eax,eax
+  401203:	cmp    edx,0x7
+  401206:	jne    401238 <verifier+0x58>
+  401208:	mov    rdx,rbx
+  40120b:	lea    rdi,[rbx+0x8]
+  40120f:	xor    ecx,ecx
+  401211:	nop    DWORD PTR [rax+0x0]
+  401218:	movsx  eax,BYTE PTR [rdx]
+  40121b:	lea    esi,[rax-0x30]
+  40121e:	cmp    sil,0x9
+  401222:	ja     401240 <verifier+0x60>
+  401224:	add    rdx,0x1
+  401228:	lea    ecx,[rcx+rax*1-0x30]
+  40122c:	cmp    rdi,rdx
+  40122f:	jne    401218 <verifier+0x38>
+  401231:	xor    eax,eax
+  401233:	cmp    ecx,0x28
+  401236:	je     401250 <verifier+0x70>
+  401238:	add    rsp,0x8
+  40123c:	pop    rbx
+  40123d:	pop    rbp
+  40123e:	ret
+  40123f:	nop
+  401240:	add    rsp,0x8
+  401244:	xor    eax,eax
+  401246:	pop    rbx
+  401247:	pop    rbp
+  401248:	ret
+  401249:	nop    DWORD PTR [rax+0x0]
+  401250:	xor    eax,eax
+  401252:	cmp    BYTE PTR [rbx+0x7],bpl
+  401256:	sete   al
+  401259:	add    rsp,0x8
+  40125d:	pop    rbx
+  40125e:	pop    rbp
+  40125f:	ret
+

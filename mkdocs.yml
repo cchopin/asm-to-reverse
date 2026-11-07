@@ -1,0 +1,83 @@
+site_name: Cours d'assembleur et de reverse engineering
+site_description: Cours progressif d'assembleur x86-64 et de reverse engineering, des bases aux CTF et à l'analyse de malware
+docs_dir: docs
+use_directory_urls: false
+
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.highlight
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Passer en mode sombre
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Passer en mode clair
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - javascripts/progression.js
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Accueil: README.md
+  - Progression: progression.md
+  - Installation sur Mac: environnement/INSTALLATION-MAC.md
+  - "Partie 1 : l'assembleur":
+      - partie1-assembleur/01-bases.md
+      - partie1-assembleur/02-registres-instructions.md
+      - partie1-assembleur/03-comparaisons-sauts.md
+      - partie1-assembleur/04-boucles.md
+      - partie1-assembleur/05-pile-fonctions.md
+      - partie1-assembleur/06-memoire-donnees.md
+      - partie1-assembleur/07-patterns-compilateur.md
+  - "Partie 2 : le reverse":
+      - partie2-reverse/08-methode-outils.md
+      - partie2-reverse/09-ghidra.md
+      - partie2-reverse/10-gdb.md
+      - partie2-reverse/11-classiques-crackmes.md
+      - partie2-reverse/12-protections.md
+      - partie2-reverse/13-malware-analysis.md
+      - partie2-reverse/14-et-apres.md
+  - "Partie 3 : écrire de l'assembleur":
+      - partie3-ecriture/15-nasm-syscalls.md
+      - partie3-ecriture/16-fonctions-libc.md
+      - partie3-ecriture/17-shellcode.md
+  - Solutions:
+      - solutions/partie1.md
+      - solutions/partie2.md
+      - solutions/partie3.md
