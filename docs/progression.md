@@ -216,6 +216,12 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre packing : lecture
 - [ ] Chapitre packing : exercices (entropie, dépaquetage statique)
 
+### [Chapitre 18 : anti-reverse avancé](partie2-reverse/18-anti-reverse.md)
+
+- [ ] Chapitre anti-reverse : lecture
+- [ ] Chapitre anti-reverse : contournements (LD_PRELOAD, patch, GDB)
+- [ ] Chapitre anti-reverse : anti-désassemblage compris
+
 ### [Chapitre 14 : et après ?](partie2-reverse/14-et-apres.md)
 
 - [ ] Chapitre 14 : lecture

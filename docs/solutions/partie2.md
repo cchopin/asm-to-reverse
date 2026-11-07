@@ -356,3 +356,17 @@ Puis `objdump -D -b binary -m i386:x86-64 -M intel depaque.bin` montre le shellc
 **17.5** Dépaquetage dynamique générique : en bac à sable, lancer le binaire sous GDB, laisser le stub décompresser, et poser un point d'arrêt sur le **saut vers l'OEP** (le `jmp`/`call` vers l'adresse de la zone fraîchement rendue exécutable, souvent repérable par un `jmp` lointain ou un appel sur registre après un `mprotect`). À cet instant, le code original est en clair en mémoire : on le *dumpe* (`dump binary memory oep.bin debut fin`) et on l'analyse ensuite statiquement. Cette méthode marche pour **n'importe quel** packer, car tout packer finit par dévoiler le code en mémoire pour l'exécuter. Elle est plus générale que `upx -d`, qui ne fonctionne que pour UPX standard non modifié.
 
 **17.6** Le binaire à **7.8** bits/octet est le plus probablement packé : cette valeur, proche du maximum de 8, indique un contenu compressé ou chiffré. 4.9 correspond à du code/texte ordinaire, et 6.1 à un binaire mixte non packé. Le seuil d'alerte est autour de 7.2.
+
+## Anti-reverse avancé {#anti-reverse}
+
+**18.1** En exécution normale, aucun test ne se déclenche : `FLAG{anti_debug_contourne}`. Sous `strace` comme sous GDB, le test **TracerPid** se déclenche en premier (`/proc/self/status` indique le PID du traceur attaché, donc non nul). Avec `LD_PRELOAD` défini, c'est le test **LD_PRELOAD** qui bloque. Le test `ptrace` ne se voit que si l'on neutralise d'abord TracerPid tout en restant tracé.
+
+**18.2** `faux.so` neutralise deux protections : son constructeur appelle `unsetenv("LD_PRELOAD")` **avant** `main`, donc `getenv("LD_PRELOAD")` ne voit rien (test LD_PRELOAD passé) ; et il définit un `ptrace` qui renvoie toujours 0, masquant celui de la libc (test ptrace passé). Résultat : `LD_PRELOAD=./faux.so ./protege` affiche le flag. Les tests TracerPid et timing passent d'eux-mêmes hors débogueur.
+
+**18.3** Le test TracerPid se termine par `test eax,eax` / `jne <bloc détecté>` (`0f 85 8b 00 00 00`). En remplaçant les 6 octets du `jne` par des `NOP`, le saut disparaît. Le binaire patché affiche le flag en temps normal, mais **sous `strace` il est encore détecté** : une fois TracerPid neutralisé, l'exécution atteint le test `ptrace`, qui échoue car `strace` utilise déjà `ptrace`. Une seule couche patchée ne suffit pas.
+
+**18.4** Il faut combiner : patch TracerPid (pour le traceur visible dans `/proc`) **et** `faux.so` (pour `ptrace`). `LD_PRELOAD=./faux.so strace ./protege_patch` franchit alors toutes les couches et affiche le flag. Morale : un binaire multi-protégé demande autant de parades que de couches.
+
+**18.5** Un faux `getppid`/`ptrace` en `LD_PRELOAD` est compilé en bibliothèque partagée (`gcc -shared -fPIC`) et chargé avant la libc ; un programme témoin qui appelle la fonction obtient la version préchargée (valeur forcée). C'est plus souple qu'un patch : rien à modifier dans le binaire (utile s'il est signé ou vérifie son intégrité), et on peut activer ou non le contournement en définissant ou non `LD_PRELOAD`.
+
+**18.6** `antidis` renvoie 7 : le `jmp court` saute par-dessus l'octet `0xE8`, qui n'est donc **jamais exécuté**. En pas à pas sous GDB (`stepi`), on vérifie que l'exécution va directement de `jmp` à `mov eax, 60`. Mais `objdump -d`, qui décode linéairement, lit `0xE8` comme le début d'un `call rel32` et consomme les octets suivants, produisant une instruction fantôme et désynchronisant la suite. C'est tout l'écart entre balayage linéaire et désassemblage par flot de contrôle.
