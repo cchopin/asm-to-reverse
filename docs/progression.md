@@ -147,6 +147,11 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre 10 (structures et tableaux) : lecture
 - [ ] Chapitre 10 (structures et tableaux) : exercices
 
+### [Chapitre 11 : lire du code optimisé](partie1-assembleur/11-optimisations.md)
+
+- [ ] Chapitre 11 (code optimisé) : lecture
+- [ ] Chapitre 11 (code optimisé) : exercices
+
 ## Partie 2 : le reverse engineering
 
 ### [Chapitre 8 : la méthode et les premiers outils](partie2-reverse/08-methode-outils.md)

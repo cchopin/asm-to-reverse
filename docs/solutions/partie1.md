@@ -530,3 +530,53 @@ lire_flags:
 - `add rax, QWORD PTR [rdi+0x8]` : offset 8, taille 8 (`QWORD`) -> `long c`.
 
 Déclaration compatible : `struct { int a; unsigned char b; long c; };`, de taille 16 octets (padding entre `b` et `c`). Les tailles d'accès et les extensions suffisent à retrouver les types sans la source.
+
+## Lire du code optimisé {#optimisations}
+
+**11.1** En `-O2`, `fois18` donne :
+
+```asm
+lea eax, [rdi+rdi*8]   ; rdi + rdi*8 = x*9
+add eax, eax           ; x*9 + x*9 = x*18
+ret
+```
+
+`lea` calcule `rdi*9` grâce à l'échelle `*8` plus la base `rdi`, le tout sans accès mémoire. Le `add eax, eax` double le résultat. Deux instructions, aucune pile, contre neuf en `-O0`.
+
+**11.2** En `-O2`, `div3` ne contient aucune division :
+
+```asm
+mov  eax, edi
+mov  edx, 0xaaaaaaab   ; nombre magique
+imul rax, rdx
+shr  rax, 0x21         ; 33
+ret
+```
+
+Le diviseur se retrouve par `2^33 / 0xAAAAAAAB ≈ 3` (le magique vaut `0xAAAAAAAB`, soit `ceil(2^33 / 3)`). Multiplier par ce nombre puis décaler de 33 bits équivaut à diviser par 3, sans l'instruction `div` coûteuse.
+
+**11.3** En `-O2`, `maxi` utilise un déplacement conditionnel :
+
+```asm
+cmp    esi, edi
+mov    eax, edi        ; par défaut, a
+cmovge eax, esi        ; si b >= a, prendre b
+ret
+```
+
+Aucun `jmp` : `cmovge` choisit la valeur selon le drapeau produit par `cmp`, ce qui évite un branchement et donc une éventuelle erreur de prédiction. C'est la traduction typique d'un `? :` simple.
+
+**11.4** En `-O2`, `carre_plus` :
+
+```asm
+mov  eax, edi
+imul eax, edi             ; x*x
+lea  eax, [rax+rdi*2+0x1] ; x*x + 2*x + 1
+ret
+```
+
+Le `lea` additionne `x*x` (dans `rax`), `2*x` (via `rdi*2`) et `1` en une instruction. L'expression `x*x + 2*x + 1` se factorise en `(x+1)²`.
+
+**11.5** En `-O3`, `somme` est vectorisée. L'accumulateur `xmm0` est mis à zéro (`pxor xmm0, xmm0`), puis la boucle charge plusieurs entiers d'un coup (`movdqu xmm1, [rax]`) et les additionne en parallèle (`paddq`). La boucle principale additionne donc plusieurs éléments par tour ; le bloc scalaire final traite les quelques éléments restants quand `n` n'est pas un multiple de la largeur vectorielle.
+
+**11.6** `2^35 / 0xCCCCCCCD ≈ 10`. Le code réalise une **division par 10** : `imul` par le magique `0xCCCCCCCD` suivi d'un décalage de 35 bits. Même schéma qu'en 11.2, avec un autre couple (magique, décalage) correspondant au diviseur 10.

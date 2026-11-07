@@ -92,6 +92,7 @@ nav:
       - "8. Challenge de synthèse": partie1-assembleur/08-challenge.md
       - "9. Convention d'appel (approfondissement)": partie1-assembleur/09-convention-appel.md
       - "10. Structures et tableaux (approfondissement)": partie1-assembleur/10-structures-tableaux.md
+      - "11. Lire du code optimisé (approfondissement)": partie1-assembleur/11-optimisations.md
   - "Partie 2 : le reverse":
       - "8. Méthode et outils": partie2-reverse/08-methode-outils.md
       - "9. Ghidra": partie2-reverse/09-ghidra.md
