@@ -228,6 +228,12 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre analyse dynamique : strace et ltrace/GDB pratiqués
 - [ ] Chapitre analyse dynamique : Frida essayé (sur votre machine)
 
+### [Chapitre 20 : résolution automatique (angr et z3)](partie2-reverse/20-angr-z3.md)
+
+- [ ] Chapitre angr/z3 : lecture
+- [ ] Chapitre angr/z3 : z3 pratiqué (crack05, VM)
+- [ ] Chapitre angr/z3 : angr essayé (sur votre machine)
+
 ### [Chapitre 14 : et après ?](partie2-reverse/14-et-apres.md)
 
 - [ ] Chapitre 14 : lecture

@@ -387,3 +387,32 @@ Puis `objdump -D -b binary -m i386:x86-64 -M intel depaque.bin` montre le shellc
 **19.5** `frida -l hook_strcmp.js ./motdepasse essai` affiche d'abord, via `onEnter`, les deux chaînes comparées (dont le mot de passe) : c'est l'équivalent de `ltrace`, en observation. En activant `retval.replace(0)` dans `onLeave`, `strcmp` renvoie toujours 0 : le programme croit l'égalité vraie et accepte n'importe quelle entrée. Différence fondamentale : `ltrace` et `strace` **observent** sans changer le cours du programme ; Frida **modifie** l'exécution en direct, ce qui permet de contourner un test sans toucher au binaire.
 
 **19.6** `ltrace` (ou GDB sur l'appel) révèle le mot de passe, car la comparaison se fait par un appel à la fonction de bibliothèque `strcmp`, visible dynamiquement. `strace` ne le voit pas : `strcmp` est un calcul en espace utilisateur, sans appel système, donc hors de portée de `strace`, qui n'observe que la frontière avec le noyau. Chaque outil voit une couche différente.
+
+## Résolution automatique : angr et z3 {#angr-z3}
+
+**20.1** `solve_crack05.py` affiche `9218`. En passant la somme à 21, z3 répond `unsat` : aucune combinaison de quatre chiffres ne satisfait alors toutes les contraintes. C'est l'intérêt du solveur : il prouve aussi l'**absence** de solution.
+
+**20.2** `solve_vm.py` retrouve `reverse42`. On a décrit la transformation dans le **sens direct** (`rol8((c ^ 0x2A) + 5, 3) == cible`) et z3 l'a inversée tout seul. La solution manuelle du capstone devait, elle, calculer l'inverse pas à pas (`ror8`, puis `- 5`, puis `^ 0x2A`). Avec z3, inverser devient inutile : on énonce la contrainte, le solveur trouve l'antécédent.
+
+**20.3** Modélisation du `coffre0` :
+
+```python
+from z3 import BitVec, Solver
+cible = [0x43,0x6d,0x67,0x70,0x69,0x73,0x69,0x6c]
+cle = [BitVec('k%d'%i, 8) for i in range(8)]
+s = Solver()
+for i in range(8):
+    s.add(cle[i] + i == cible[i])
+    s.add(cle[i] >= 0x20, cle[i] <= 0x7e)
+s.check()
+m = s.model()
+print(''.join(chr(m[k].as_long()) for k in cle))   # -> Clemence
+```
+
+z3 retrouve `Clemence`, puisque `cle[i] = cible[i] - i`.
+
+**20.4** Il suffit d'enchaîner les opérations dans le script z3 exactement comme dans le check (par exemple `v = RotateLeft(((c ^ 0x11) + 7) ^ 0x5A, 2)`), de poser `v == cible[i]`, et d'appeler `s.check()`. Même si l'inversion à la main serait fastidieuse et source d'erreurs, z3 la fait sans qu'on ait à y penser : on ne code que le sens direct.
+
+**20.5** Avec angr : relever `find` (adresse du bloc affichant le succès) et `avoid` (bloc d'échec) dans `objdump`, lancer `simgr.explore(find=..., avoid=...)`, puis `simgr.found[0].posix.dumps(0)` donne l'entrée gagnante lue sur stdin. Sur un petit crackme, angr trouve la solution sans qu'on ait rien modélisé ; sur un binaire avec de longues boucles ou beaucoup de chemins, il peut devenir très lent (explosion des chemins), là où une modélisation z3 ciblée resterait instantanée.
+
+**20.6** Pour `crack01` (comparaison directe à une chaîne), l'analyse manuelle suffit : la chaîne est lisible, nul besoin d'outil. Pour `crack05` (contraintes arithmétiques claires), z3 est idéal : on lit les conditions et on les transcrit. Pour `machine` (VM), z3 convient aussi (modéliser la transformation par caractère), et angr serait une alternative si l'on ne voulait pas comprendre la VM. La règle : plus on comprend la vérification, plus z3 est direct ; moins on veut lire le code, plus angr est tentant, à condition que le binaire reste petit.
