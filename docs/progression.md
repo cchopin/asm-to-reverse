@@ -142,6 +142,11 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre 9 (convention d'appel) : lecture
 - [ ] Chapitre 9 (convention d'appel) : exercices
 
+### [Chapitre 10 : structures et tableaux en assembleur](partie1-assembleur/10-structures-tableaux.md)
+
+- [ ] Chapitre 10 (structures et tableaux) : lecture
+- [ ] Chapitre 10 (structures et tableaux) : exercices
+
 ## Partie 2 : le reverse engineering
 
 ### [Chapitre 8 : la méthode et les premiers outils](partie2-reverse/08-methode-outils.md)

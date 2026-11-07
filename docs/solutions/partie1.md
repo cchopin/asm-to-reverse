@@ -456,3 +456,77 @@ rouge:
 ```
 
 `rouge(40, 2)` renvoie `42`. C'est valide car `rouge` est une feuille : les 128 octets sous `rsp` lui sont garantis. Si elle appelait une autre fonction, le `call` pousserait l'adresse de retour à `[rsp-8]` et écraserait les données rangées dans la red zone : il faudrait alors réserver l'espace avec un vrai `sub rsp`.
+
+## Structures et tableaux en assembleur {#structures-tableaux}
+
+Chaque objet NASM se termine par `section .note.GNU-stack noalloc noexec nowrite progbits`.
+
+**10.1** `y` est à l'offset 4 :
+
+```nasm
+lire_y:
+    mov eax, [rdi+4]
+    ret
+```
+
+**10.2** Modification en place via le pointeur (offset 0) :
+
+```nasm
+double_x:
+    sal dword [rdi], 1     ; p->x <<= 1, soit *2
+    ret
+```
+
+Après l'appel, le `x` de la structure côté C est bien doublé : on a écrit à travers le pointeur, pas sur une copie.
+
+**10.3** `Enr` fait 16 octets (`id` à 0, padding, `val` à 8) :
+
+```nasm
+somme_val:
+    xor eax, eax
+    xor ecx, ecx
+.b:
+    cmp rcx, rsi
+    jge .f
+    mov rdx, rcx
+    sal rdx, 4             ; i * 16
+    add rax, [rdi+rdx+8]   ; t[i].val
+    inc rcx
+    jmp .b
+.f:
+    ret
+```
+
+Sur `{{1,100},{2,20},{3,3}}`, le résultat est `123`. L'erreur classique serait de multiplier l'index par 12 (la somme des tailles brutes) au lieu de 16 (la taille réelle avec padding).
+
+**10.4** Index linéaire `i*ncol + j`, étendu en 64 bits :
+
+```nasm
+element:
+    mov eax, edx          ; i
+    imul eax, esi         ; i*ncol
+    add eax, ecx          ; +j
+    cdqe
+    mov eax, [rdi+rax*4]
+    ret
+```
+
+`element(&m[0][0], 3, 1, 2)` renvoie `6` (c'est `m[1][2]`).
+
+**10.5** Le champ est un `unsigned char` : on étend par zéro avec `movzx`, sinon une valeur comme 200 (bit de poids fort à 1) deviendrait négative avec `movsx`.
+
+```nasm
+lire_flags:
+    movzx eax, byte [rdi]
+    ret
+```
+
+`flags = 200` renvoie bien `200`, et non `-56`.
+
+**10.6** Le désassemblage donne tout :
+
+- `movsxd rax, DWORD PTR [rdi]` : offset 0, taille 4 (`DWORD`), signé (`movsxd`) -> `int a`.
+- `movzx edx, BYTE PTR [rdi+0x4]` : offset 4, taille 1 (`BYTE`), non signé (`movzx`) -> `unsigned char b`.
+- `add rax, QWORD PTR [rdi+0x8]` : offset 8, taille 8 (`QWORD`) -> `long c`.
+
+Déclaration compatible : `struct { int a; unsigned char b; long c; };`, de taille 16 octets (padding entre `b` et `c`). Les tailles d'accès et les extensions suffisent à retrouver les types sans la source.
