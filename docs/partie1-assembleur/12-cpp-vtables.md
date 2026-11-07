@@ -102,5 +102,5 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#cpp-vtables)
 
 ## Suivi
 
-- [ ] Chapitre 12 (C++ et vtables) : lecture
-- [ ] Chapitre 12 (C++ et vtables) : exercices
+- [ ] Partie 2, chapitre 12 (C++ et vtables) : lecture
+- [ ] Partie 2, chapitre 12 (C++ et vtables) : exercices

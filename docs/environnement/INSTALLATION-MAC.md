@@ -58,7 +58,7 @@ colima start reverse
 
 ### Alternative : UTM
 
-[UTM](https://mac.getutm.app) permet d'installer une machine virtuelle Ubuntu x86-64 complète en mode émulation, avec une interface graphique. C'est plus lent que Colima et plus long à installer, mais cela peut servir plus tard pour un laboratoire d'analyse de malware entièrement isolé (chapitre 13). Dans ce cas, choisir "Emulate" (et non "Virtualize") et l'architecture x86_64.
+[UTM](https://mac.getutm.app) permet d'installer une machine virtuelle Ubuntu x86-64 complète en mode émulation, avec une interface graphique. C'est plus lent que Colima et plus long à installer, mais cela peut servir plus tard pour un laboratoire d'analyse de malware entièrement isolé (chapitre 6 de la partie 3). Dans ce cas, choisir "Emulate" (et non "Virtualize") et l'architecture x86_64.
 
 ## 3. Mac Intel (note)
 
@@ -136,7 +136,7 @@ flowchart LR
 
 ## 7. Binary Ninja (optionnel)
 
-Binary Ninja est une alternative à Ghidra (voir l'encadré du chapitre 9). Deux possibilités :
+Binary Ninja est une alternative à Ghidra (voir l'encadré du chapitre sur Ghidra). Deux possibilités :
 
 - **Binary Ninja Free** : une application gratuite à télécharger depuis [binary.ninja/free](https://binary.ninja/free) (macOS Apple Silicon et Intel), aux fonctions limitées mais suffisantes pour débuter. La glisser dans le dossier Applications après téléchargement.
 - **Binary Ninja Cloud** : une version qui s'utilise dans le navigateur, sans installation, sur [cloud.binary.ninja](https://cloud.binary.ninja).

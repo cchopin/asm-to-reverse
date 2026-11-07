@@ -40,7 +40,7 @@ C'est le point le plus souvent négligé, et une source classique de bugs. Les r
 Autrement dit : si une fonction veut utiliser `rbx` ou `r12`, elle doit les sauver (`push`) en entrée et les restaurer (`pop`) en sortie, car son appelant compte les retrouver inchangés. À l'inverse, après un `call`, on ne peut rien supposer sur `rax`, `rcx`, `rdi`... : ils ont pu être écrasés.
 
 !!! warning "Le bug typique"
-    Garder une valeur importante dans `rdi` « pendant » un `call` à `printf` : `printf` est libre d'écraser `rdi`. Il faut soit la mettre dans un registre *callee-saved* (après l'avoir sauvé), soit la ranger sur la pile. C'est exactement le piège de l'exercice 16.6 (partie 3).
+    Garder une valeur importante dans `rdi` « pendant » un `call` à `printf` : `printf` est libre d'écraser `rdi`. Il faut soit la mettre dans un registre *callee-saved* (après l'avoir sauvé), soit la ranger sur la pile. C'est exactement le piège de l'exercice 16.6 (partie 4).
 
 ## 9.4 La red zone
 
@@ -117,5 +117,5 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#convention-appel)
 
 ## Suivi
 
-- [ ] Chapitre 9 (convention d'appel) : lecture
-- [ ] Chapitre 9 (convention d'appel) : exercices
+- [ ] Partie 2, chapitre 9 (convention d'appel) : lecture
+- [ ] Partie 2, chapitre 9 (convention d'appel) : exercices

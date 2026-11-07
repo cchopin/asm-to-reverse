@@ -1,6 +1,6 @@
-# 0.6 Pointeurs
+# Chapitre 6 : Pointeurs
 
-C'est le chapitre le plus important de cette partie 0 pour le reverse. Un pointeur est une adresse, et en assembleur presque tout est adresse : les registres qui pointent vers la pile, les chaînes rangées en mémoire, les tableaux parcourus par incrément d'adresse. Comprendre les pointeurs en C, c'est comprendre d'avance une grande partie de ce qu'on verra désassemblé.
+C'est le chapitre le plus important de cette partie 1 pour le reverse. Un pointeur est une adresse, et en assembleur presque tout est adresse : les registres qui pointent vers la pile, les chaînes rangées en mémoire, les tableaux parcourus par incrément d'adresse. Comprendre les pointeurs en C, c'est comprendre d'avance une grande partie de ce qu'on verra désassemblé.
 
 ## Une variable a une adresse
 
@@ -46,7 +46,7 @@ C'est la même idée que `[rax]` en assembleur : `rax` contient une adresse, `[r
 
 ## Passage par adresse
 
-Le chapitre 0.5 a montré qu'une fonction ne peut pas modifier les variables de l'appelant par passage par valeur. En passant une **adresse**, elle le peut :
+Le chapitre 5 a montré qu'une fonction ne peut pas modifier les variables de l'appelant par passage par valeur. En passant une **adresse**, elle le peut :
 
 ```c
 void echange(int *a, int *b)
@@ -72,7 +72,7 @@ Un pointeur peut ne désigner aucune adresse valide : il vaut alors `NULL`. Dér
 
 ## Pointeur de pointeur
 
-Puisqu'un pointeur est une variable, il a lui-même une adresse, que l'on peut stocker dans un pointeur de pointeur `int **`. On en a besoin dès qu'une fonction doit modifier un pointeur de l'appelant, et c'est la forme exacte de `argv` (chapitre 0.9).
+Puisqu'un pointeur est une variable, il a lui-même une adresse, que l'on peut stocker dans un pointeur de pointeur `int **`. On en a besoin dès qu'une fonction doit modifier un pointeur de l'appelant, et c'est la forme exacte de `argv` (chapitre 9).
 
 ```c
 void echange_pointeurs(int **a, int **b)
@@ -85,15 +85,15 @@ void echange_pointeurs(int **a, int **b)
 
 ## Exercices
 
-**Exercice 0.6.1 (N1)** Écrire `void echange(int *a, int *b)` qui échange les valeurs pointées. Le tester et vérifier que les variables de l'appelant changent bien.
+**Exercice 6.1 (N1)** Écrire `void echange(int *a, int *b)` qui échange les valeurs pointées. Le tester et vérifier que les variables de l'appelant changent bien.
 
-**Exercice 0.6.2 (N1)** Écrire `void incremente(int *p)` qui ajoute 1 à la valeur pointée.
+**Exercice 6.2 (N1)** Écrire `void incremente(int *p)` qui ajoute 1 à la valeur pointée.
 
-**Exercice 0.6.3 (N2)** Écrire `void div_mod(int a, int b, int *q, int *r)` qui range le quotient de `a / b` dans `*q` et le reste dans `*r`. C'est l'exemple type d'une fonction à deux résultats.
+**Exercice 6.3 (N2)** Écrire `void div_mod(int a, int b, int *q, int *r)` qui range le quotient de `a / b` dans `*q` et le reste dans `*r`. C'est l'exemple type d'une fonction à deux résultats.
 
-**Exercice 0.6.4 (N2)** Écrire `void rotate3(int *a, int *b, int *c)` qui décale les trois valeurs vers la droite : l'ancien `c` va dans `a`, l'ancien `a` dans `b`, l'ancien `b` dans `c`. Sur `(1, 2, 3)` on obtient `(3, 1, 2)`.
+**Exercice 6.4 (N2)** Écrire `void rotate3(int *a, int *b, int *c)` qui décale les trois valeurs vers la droite : l'ancien `c` va dans `a`, l'ancien `a` dans `b`, l'ancien `b` dans `c`. Sur `(1, 2, 3)` on obtient `(3, 1, 2)`.
 
-**Exercice 0.6.5 (N3)** Écrire `void echange_pointeurs(int **a, int **b)` qui échange deux pointeurs eux-mêmes (pas les valeurs pointées). Vérifier qu'après l'appel, le premier pointeur désigne ce que désignait le second.
+**Exercice 6.5 (N3)** Écrire `void echange_pointeurs(int **a, int **b)` qui échange deux pointeurs eux-mêmes (pas les valeurs pointées). Vérifier qu'après l'appel, le premier pointeur désigne ce que désignait le second.
 
 Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-06)
 
@@ -117,6 +117,6 @@ Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-
 
 ## Suivi
 
-- [ ] Chapitre 0.6 : lecture
-- [ ] Chapitre 0.6 : exercices
-- [ ] Chapitre 0.6 : fil rouge
+- [ ] Partie 1, chapitre 6 : lecture
+- [ ] Partie 1, chapitre 6 : exercices
+- [ ] Partie 1, chapitre 6 : fil rouge

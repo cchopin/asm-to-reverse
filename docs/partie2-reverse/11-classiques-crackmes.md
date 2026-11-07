@@ -1,23 +1,23 @@
-# Chapitre 11 : les grands classiques des crackmes
+# Chapitre 4 : les grands classiques des crackmes
 
 Objectif : connaître les schémas récurrents, afin d'identifier en quelques minutes le type de challenge rencontré. Ce chapitre répond directement à l'impression que "chaque challenge est différent" : en pratique, presque tous sont des variations de ce qui suit.
 
-## 11.1 Le catalogue
+## 4.1 Le catalogue
 
 | Schéma | Indices | Résolution |
 |---|---|---|
 | **Comparaison directe** | `strcmp`, `memcmp`, `strncmp` avec une chaîne fixe | `strings`, `ltrace`, point d'arrêt sur la comparaison |
 | **Chaîne cachée** | grandes constantes `movabs` copiées sur la pile | conversion en little endian, ou lecture de la pile dans GDB |
 | **Transformation puis comparaison** | boucle sur la saisie avec `xor`, `add`, `sub`, `rol`, puis comparaison à un tableau | inverser la transformation en Python, ou lire les valeurs attendues dans GDB |
-| **Comparaison d'empreinte** | constantes de MD5, SHA, CRC32 (voir 11.4) | empreinte sur toute la saisie : force brute ou dictionnaire ; sinon caractère par caractère |
+| **Comparaison d'empreinte** | constantes de MD5, SHA, CRC32 (voir 4.4) | empreinte sur toute la saisie : force brute ou dictionnaire ; sinon caractère par caractère |
 | **Keygen (nom / serial)** | deux saisies, une fonction de calcul sur la première, comparaison avec la seconde | réimplémenter le calcul en Python |
-| **Contraintes** | nombreuses conditions arithmétiques sur les caractères (`s[0]+s[3]==0x9a`, `s[1]*s[2]==...`) | écrire les contraintes et les résoudre avec z3 (voir 11.5) |
+| **Contraintes** | nombreuses conditions arithmétiques sur les caractères (`s[0]+s[3]==0x9a`, `s[1]*s[2]==...`) | écrire les contraintes et les résoudre avec z3 (voir 4.5) |
 | **Machine virtuelle** | boucle avec un grand `switch` qui lit un tableau d'"opcodes" | écrire un désassembleur du bytecode, puis analyser le bytecode |
 | **Flag déchiffré en mémoire** | le flag n'est jamais affiché, mais il est calculé | point d'arrêt après le déchiffrement, lecture de la mémoire |
-| **Anti-debug / anti-analyse** | `ptrace`, mesure du temps, lecture de `/proc/self/status` | chapitre 12 |
-| **Programme packé** | presque aucune fonction, entropie élevée, chaînes illisibles | chapitre 12 |
+| **Anti-debug / anti-analyse** | `ptrace`, mesure du temps, lecture de `/proc/self/status` | chapitre 5 |
+| **Programme packé** | presque aucune fonction, entropie élevée, chaînes illisibles | chapitre 5 |
 
-Devant un nouveau challenge, après les étapes "reconnaître" et "observer" du chapitre 8, la question à se poser est : **à quelle ligne de ce tableau correspond-il ?** La résolution correspondante s'applique ensuite.
+Devant un nouveau challenge, après les étapes "reconnaître" et "observer" du chapitre 1, la question à se poser est : **à quelle ligne de ce tableau correspond-il ?** La résolution correspondante s'applique ensuite.
 
 ```mermaid
 flowchart TD
@@ -31,12 +31,12 @@ flowchart TD
     D -- "non" --> E{"Grand switch dans<br/>une boucle ?"}
     E -- "oui" --> E1["Machine virtuelle"]
     E -- "non" --> F{"Peu de code lisible,<br/>ptrace, entropie forte ?"}
-    F -- "oui" --> F1["Protections : chapitre 12"]
+    F -- "oui" --> F1["Protections : chapitre 5"]
 ```
 
-Plusieurs termes de ce catalogue (empreinte et fonction de hachage, MD5, entropie, programme packé, opcode et bytecode) sont définis plus loin : empreinte et hachage en 11.4, entropie et packing au chapitre 12. Une **fonction de hachage** transforme une donnée de taille quelconque en une empreinte de taille fixe, impossible à inverser directement.
+Plusieurs termes de ce catalogue (empreinte et fonction de hachage, MD5, entropie, programme packé, opcode et bytecode) sont définis plus loin : empreinte et hachage en 4.4, entropie et packing au chapitre 5. Une **fonction de hachage** transforme une donnée de taille quelconque en une empreinte de taille fixe, impossible à inverser directement.
 
-## 11.2 Inverser une transformation
+## 4.2 Inverser une transformation
 
 Si le programme vérifie `transforme(saisie) == attendu`, il faut calculer `transforme⁻¹(attendu)`.
 
@@ -67,7 +67,7 @@ for i, a in enumerate(attendu):
 print(mdp)
 ```
 
-## 11.3 Le keygen
+## 4.3 Le keygen
 
 Un **keygen** est un programme qui génère un serial valide pour n'importe quel nom. Méthode :
 
@@ -87,7 +87,7 @@ Autre piège : le signe. Si la variable C est un `int` signé et que l'algorithm
 
 **Un keygen se vérifie toujours dans GDB** : point d'arrêt juste avant la comparaison finale, puis comparaison de la valeur calculée par le programme avec celle du script, pour le même nom.
 
-## 11.4 Reconnaître les algorithmes connus par leurs constantes
+## 4.4 Reconnaître les algorithmes connus par leurs constantes
 
 De nombreux algorithmes utilisent des constantes caractéristiques. Une recherche sur internet permet alors de les identifier immédiatement, sans avoir à les reverser.
 
@@ -102,9 +102,9 @@ De nombreux algorithmes utilisent des constantes caractéristiques. Une recherch
 | `0x811c9dc5` et `0x01000193` | hachage FNV-1a |
 | boucle de 256 tours qui permute un tableau de 0 à 255, puis XOR | RC4 |
 
-Des outils le font automatiquement : le plugin **FindCrypt** pour Ghidra, ou **capa** (chapitre 13), repèrent ces constantes.
+Des outils le font automatiquement : le plugin **FindCrypt** pour Ghidra, ou **capa** (chapitre 6), repèrent ces constantes.
 
-## 11.5 Résoudre des contraintes avec z3
+## 4.5 Résoudre des contraintes avec z3
 
 Lorsqu'un programme vérifie des dizaines de conditions sur les caractères, il ne faut pas les résoudre à la main. **z3** est un solveur : on décrit les contraintes, il trouve une solution. Il est installé dans le conteneur du cours.
 
@@ -131,7 +131,7 @@ Le travail du reverseur consiste à **traduire fidèlement** les conditions du p
 
 Pour information : **angr** va plus loin et explore automatiquement le programme pour trouver une entrée qui atteint une adresse donnée ("une saisie qui mène à `puts("Bravo")`"). Puissant mais délicat à maîtriser, il est à réserver pour plus tard.
 
-## 11.6 Le patching
+## 4.6 Le patching
 
 L'objectif est parfois de **modifier** le programme : supprimer une vérification, une limite de temps, une protection. On modifie alors directement les octets du fichier.
 
@@ -159,7 +159,7 @@ Modifications classiques :
 
 ### Adresse en mémoire ou position dans le fichier
 
-Une distinction est indispensable pour patcher, et elle resservira au chapitre 17. Le désassembleur affiche l'**adresse virtuelle** : la position de l'instruction une fois le programme chargé en mémoire (par exemple `0x401180`). Mais pour modifier un octet du fichier sur le disque, il faut sa **position dans le fichier** (son *offset*), qui est en général différente.
+Une distinction est indispensable pour patcher, et elle resservira au chapitre 9. Le désassembleur affiche l'**adresse virtuelle** : la position de l'instruction une fois le programme chargé en mémoire (par exemple `0x401180`). Mais pour modifier un octet du fichier sur le disque, il faut sa **position dans le fichier** (son *offset*), qui est en général différente.
 
 La correspondance se lit avec `readelf -S` (colonnes `Address` et `Offset` de chaque section) ou directement dans Ghidra. Pour une section donnée : `offset_fichier = adresse_virtuelle - Address + Offset`. Pour les petits exécutables Linux non PIE, les deux coïncident souvent, mais il faut toujours le vérifier, car ce n'est pas garanti.
 
@@ -185,22 +185,22 @@ open('coffre_v1_patch', 'wb').write(data)
 
 Dans `coffre_v1` compilé avec gcc 13, on trouve `127c: test eax,eax` puis `127e: 75 11  jne 1291`. Après le patch, toute saisie **fausse** ouvre le coffre (et la bonne le referme). Avec un autre compilateur, l'offset peut différer : le retrouver avec `objdump -d coffre_v1`.
 
-Le patching a peu d'intérêt lorsque le flag dépend de la saisie (le programme affichera "Bravo" et un flag faux). Il est en revanche indispensable pour contourner des protections (chapitre 12) et pour les challenges du type "faire afficher le message caché".
+Le patching a peu d'intérêt lorsque le flag dépend de la saisie (le programme affichera "Bravo" et un flag faux). Il est en revanche indispensable pour contourner des protections (chapitre 5) et pour les challenges du type "faire afficher le message caché".
 
 ## Exercices
 
-**Exercice 11.1** Pour chaque description, indiquer le schéma du tableau 11.1 correspondant et l'approche à adopter :
+**Exercice 4.1** Pour chaque description, indiquer le schéma du tableau 4.1 correspondant et l'approche à adopter :
 
 - a) Ghidra montre une boucle de 32 tours sur la saisie qui calcule `out[i] = in[i] ^ in[(i+1) % 32]`, puis un `memcmp` avec un tableau global.
 - b) Le programme importe `MD5_Init`, `MD5_Update`, `MD5_Final` et compare le résultat à une chaîne de 32 caractères hexadécimaux.
 - c) `main` contient 40 `if` du type `if (s[7] * 3 - s[12] != 0x95) fail();`.
 - d) Le programme lit un fichier `prog.bin`, puis entre dans une boucle contenant un `switch` de 16 cas.
 
-**Exercice 11.2** Résoudre l'exemple z3 de la section 11.5, puis le modifier pour déterminer s'il existe une autre solution (indice : ajouter une contrainte qui exclut la première et relancer `check()`).
+**Exercice 4.2** Résoudre l'exemple z3 de la section 4.5, puis le modifier pour déterminer s'il existe une autre solution (indice : ajouter une contrainte qui exclut la première et relancer `check()`).
 
-**Exercice 11.3** Patcher `mystere` (partie 1) pour qu'il accepte n'importe quel code, de deux façons : en modifiant un saut dans `main`, puis en modifiant `verifier` pour qu'elle renvoie toujours 1.
+**Exercice 4.3** Patcher `mystere` (partie 2) pour qu'il accepte n'importe quel code, de deux façons : en modifiant un saut dans `main`, puis en modifiant `verifier` pour qu'elle renvoie toujours 1.
 
-**Exercice 11.4** Sur crackmes.one, chercher des crackmes Linux de difficulté 1.0 à 2.0 dont le titre ou la description mentionne "keygen", et en résoudre un.
+**Exercice 4.4** Sur crackmes.one, chercher des crackmes Linux de difficulté 1.0 à 2.0 dont le titre ou la description mentionne "keygen", et en résoudre un.
 
 ## Fil rouge : coffre v3, le keygen
 
@@ -217,6 +217,6 @@ Solutions : [solutions/partie2.md](../solutions/partie2.md#coffre-v3)
 
 ## Suivi
 
-- [ ] Chapitre 11 : lecture
-- [ ] Chapitre 11 : exercices
-- [ ] Chapitre 11 : fil rouge (coffre v3)
+- [ ] Partie 3, chapitre 4 : lecture
+- [ ] Partie 3, chapitre 4 : exercices
+- [ ] Partie 3, chapitre 4 : fil rouge (coffre v3)

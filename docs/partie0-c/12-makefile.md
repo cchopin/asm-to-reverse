@@ -1,10 +1,10 @@
-# 0.12 En-têtes, compilation séparée et Makefile
+# Chapitre 12 : En-têtes, compilation séparée et Makefile
 
 Un vrai programme tient rarement dans un seul fichier. Ce chapitre montre comment découper le code en plusieurs fichiers, les relier avec des en-têtes, et automatiser la compilation avec un Makefile. C'est aussi utile côté reverse : comprendre comment un binaire est assemblé à partir de plusieurs modules aide à lire la table des symboles et à séparer le code de l'auteur de celui des bibliothèques.
 
 ## Fichiers d'en-tête
 
-Un fichier `.h` contient les **prototypes** (chapitre 0.5) des fonctions qu'un module expose. Les autres fichiers l'incluent pour pouvoir les appeler.
+Un fichier `.h` contient les **prototypes** (chapitre 5) des fonctions qu'un module expose. Les autres fichiers l'incluent pour pouvoir les appeler.
 
 ```c
 /* libmy.h */
@@ -80,11 +80,11 @@ Chaque règle a une **cible**, ses **dépendances**, et une **commande** (préc�
 
 ## Exercices
 
-**Exercice 0.12.1 (N1)** Répartir `my_putchar`, `my_putstr` et `my_strlen` dans `libmy.c` et `libmy.h`, et écrire un `main.c` qui les utilise. Compiler à la main en passant par les `.o`.
+**Exercice 12.1 (N1)** Répartir `my_putchar`, `my_putstr` et `my_strlen` dans `libmy.c` et `libmy.h`, et écrire un `main.c` qui les utilise. Compiler à la main en passant par les `.o`.
 
-**Exercice 0.12.2 (N2)** Écrire un `Makefile` qui construit ce programme, avec une règle `clean`. Vérifier que `make` ne recompile que les fichiers modifiés.
+**Exercice 12.2 (N2)** Écrire un `Makefile` qui construit ce programme, avec une règle `clean`. Vérifier que `make` ne recompile que les fichiers modifiés.
 
-**Exercice 0.12.3 (N3)** Ajouter au module une ou deux fonctions de votre choix (par exemple `my_putnbr`), mettre à jour le `.h`, et constater que seuls les fichiers concernés sont recompilés.
+**Exercice 12.3 (N3)** Ajouter au module une ou deux fonctions de votre choix (par exemple `my_putnbr`), mettre à jour le `.h`, et constater que seuls les fichiers concernés sont recompilés.
 
 !!! tip "Le manuel"
     Les fonctions de la libc ont un manuel : `man 3 printf`, `man 3 malloc`, `man 2 write` (la section 2 regroupe les appels système, la section 3 les fonctions de bibliothèque). Savoir lire un `man` fait partie du métier.
@@ -99,6 +99,6 @@ Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-
 
 ## Suivi
 
-- [ ] Chapitre 0.12 : lecture
-- [ ] Chapitre 0.12 : exercices
-- [ ] Chapitre 0.12 : fil rouge
+- [ ] Partie 1, chapitre 12 : lecture
+- [ ] Partie 1, chapitre 12 : exercices
+- [ ] Partie 1, chapitre 12 : fil rouge

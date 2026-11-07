@@ -224,6 +224,6 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#chapitre-4)
 
 ## Suivi
 
-- [ ] Chapitre 4 : lecture
-- [ ] Chapitre 4 : exercices
-- [ ] Chapitre 4 : fil rouge
+- [ ] Partie 2, chapitre 4 : lecture
+- [ ] Partie 2, chapitre 4 : exercices
+- [ ] Partie 2, chapitre 4 : fil rouge

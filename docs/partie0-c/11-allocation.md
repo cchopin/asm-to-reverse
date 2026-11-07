@@ -1,4 +1,4 @@
-# 0.11 Allocation dynamique
+# Chapitre 11 : Allocation dynamique
 
 Jusqu'ici, la taille des tableaux était fixée à l'écriture du programme. L'allocation dynamique permet de réserver de la mémoire dont la taille n'est connue qu'à l'exécution (une saisie, un fichier). C'est aussi la source de bugs très étudiés en reverse et en exploitation (fuites, double libération, dépassement de tas).
 
@@ -49,13 +49,13 @@ char *my_strdup(const char *s)
 !!! warning "Contraintes"
     `strdup` et les fonctions de `<string.h>` restent interdites. Chaque `malloc` doit avoir son `free` ; vérifiez vos programmes, par exemple avec `valgrind` dans le conteneur.
 
-**Exercice 0.11.1 (N1)** Écrire `int *tableau_rempli(int n)` qui alloue un tableau de `n` entiers, le remplit avec les carrés (`t[i] = i * i`), et le renvoie. Dans le `main`, l'utiliser puis le libérer.
+**Exercice 11.1 (N1)** Écrire `int *tableau_rempli(int n)` qui alloue un tableau de `n` entiers, le remplit avec les carrés (`t[i] = i * i`), et le renvoie. Dans le `main`, l'utiliser puis le libérer.
 
-**Exercice 0.11.2 (N2)** Écrire `char *my_strdup(const char *s)` qui renvoie une copie allouée de `s`. Ne pas oublier le `'\0'` ni le `free` dans l'appelant.
+**Exercice 11.2 (N2)** Écrire `char *my_strdup(const char *s)` qui renvoie une copie allouée de `s`. Ne pas oublier le `'\0'` ni le `free` dans l'appelant.
 
-**Exercice 0.11.3 (N2)** Écrire `char *concat(const char *a, const char *b)` qui renvoie une nouvelle chaîne allouée contenant `a` suivi de `b`. `concat("Cle", "mence")` donne `"Clemence"`.
+**Exercice 11.3 (N2)** Écrire `char *concat(const char *a, const char *b)` qui renvoie une nouvelle chaîne allouée contenant `a` suivi de `b`. `concat("Cle", "mence")` donne `"Clemence"`.
 
-**Exercice 0.11.4 (N3)** Écrire `int *copie_agrandie(const int *tab, int n)` qui renvoie un nouveau tableau de taille `n + 1`, copie de `tab`, avec une case supplémentaire à la fin valant la somme des `n` premières. Libérer l'ancien si besoin dans l'appelant.
+**Exercice 11.4 (N3)** Écrire `int *copie_agrandie(const int *tab, int n)` qui renvoie un nouveau tableau de taille `n + 1`, copie de `tab`, avec une case supplémentaire à la fin valant la somme des `n` premières. Libérer l'ancien si besoin dans l'appelant.
 
 Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-11)
 
@@ -75,6 +75,6 @@ Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-
 
 ## Suivi
 
-- [ ] Chapitre 0.11 : lecture
-- [ ] Chapitre 0.11 : exercices
-- [ ] Chapitre 0.11 : fil rouge
+- [ ] Partie 1, chapitre 11 : lecture
+- [ ] Partie 1, chapitre 11 : exercices
+- [ ] Partie 1, chapitre 11 : fil rouge

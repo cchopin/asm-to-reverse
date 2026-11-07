@@ -1,14 +1,14 @@
-# Chapitre 8 : la méthode et les premiers outils
+# Chapitre 1 : la méthode et les premiers outils
 
 Objectif : disposer d'une méthode fixe, identique pour chaque challenge, et maîtriser les outils de première reconnaissance, qui suffisent à résoudre de nombreux challenges faciles.
 
-## 8.1 Pourquoi chaque challenge semble différent
+## 1.1 Pourquoi chaque challenge semble différent
 
 En surface, chaque crackme est différent. En profondeur, tous posent la même question : **qu'est-ce que le programme compare, et à quoi ?** Seule change la manière dont la réponse est dissimulée.
 
 Disposer d'une méthode, c'est se poser toujours les mêmes questions, dans le même ordre. Après une dizaine de challenges abordés avec la même méthode, les schémas récurrents deviennent visibles.
 
-## 8.2 La méthode en quatre étapes
+## 1.2 La méthode en quatre étapes
 
 ```mermaid
 flowchart TD
@@ -45,7 +45,7 @@ On ouvre le désassembleur et le débogueur.
 
 - Partir de la **chaîne de succès** et remonter jusqu'à la **décision** (chapitre 3).
 - Comprendre ce qui est comparé.
-- Alterner analyse statique (lecture du code, chapitre 9) et dynamique (exécution pas à pas, chapitre 10).
+- Alterner analyse statique (lecture du code, chapitre 2) et dynamique (exécution pas à pas, chapitre 3).
 
 **But** : savoir ce que le programme attend.
 
@@ -55,7 +55,7 @@ Selon le challenge : fournir l'entrée attendue, écrire un script qui la calcul
 
 Une habitude à prendre dès maintenant : **prendre des notes** à chaque étape, dans un fichier par challenge (hypothèses, adresses intéressantes, noms donnés aux fonctions). Les notes de vingt challenges valent davantage que n'importe quel cours.
 
-## 8.3 Les outils de reconnaissance
+## 1.3 Les outils de reconnaissance
 
 ### file
 
@@ -68,9 +68,9 @@ interpreter /lib64/ld-linux-x86-64.so.2, ..., for GNU/Linux 3.2.0, not stripped
 À lire :
 
 - **ELF 64-bit x86-64** : Linux, 64 bits, conventions du chapitre 5 ;
-- **pie** : les adresses changent à chaque exécution (le chapitre 10 explique comment le gérer dans GDB) ;
+- **pie** : les adresses changent à chaque exécution (le chapitre 3 explique comment le gérer dans GDB) ;
 - **dynamically linked** : le programme utilise la libc, les appels à `strcmp`, `printf`... seront donc visibles ;
-- **not stripped** : les noms des fonctions sont encore présents. Un binaire `stripped` n'en a plus (chapitre 12).
+- **not stripped** : les noms des fonctions sont encore présents. Un binaire `stripped` n'en a plus (chapitre 5).
 
 ### strings
 
@@ -97,7 +97,7 @@ readelf -h coffre_v1            # en-tête (dont le point d'entrée)
 
 La liste des fonctions importées (`nm -D`) est très parlante : `strcmp`, `memcmp`, `strncmp` annoncent une comparaison ; `ptrace` de l'anti-debug ; `rand`, `srand`, `time` de l'aléatoire ; `socket`, `connect` du réseau.
 
-## 8.4 Les outils d'observation
+## 1.4 Les outils d'observation
 
 ### ltrace : espionner les appels de bibliothèque
 
@@ -115,7 +115,7 @@ puts("Acces refuse.")                               = 14
 
 La ligne `strcmp` montre que le programme compare la saisie à la bonne réponse, et ltrace l'affiche. C'est la technique la plus rentable du reverse débutant.
 
-Limites : sur certaines distributions, ltrace n'affiche rien pour les binaires compilés avec certaines protections (liaison immédiate des symboles). Essayer alors `ltrace -x 'str*'` ou passer à GDB (chapitre 10). Par ailleurs, ltrace ne voit rien si le programme effectue la comparaison lui-même dans une boucle, ce qui sera le cas dès le coffre v2.
+Limites : sur certaines distributions, ltrace n'affiche rien pour les binaires compilés avec certaines protections (liaison immédiate des symboles). Essayer alors `ltrace -x 'str*'` ou passer à GDB (chapitre 3). Par ailleurs, ltrace ne voit rien si le programme effectue la comparaison lui-même dans une boucle, ce qui sera le cas dès le coffre v2.
 
 ### strace : espionner les appels système
 
@@ -129,16 +129,16 @@ write(1, "=== Coffre v1 ===\nMot de passe :"..., 47) = 47
 exit_group(0)                           = ?
 ```
 
-Pour un crackme simple, strace apporte peu. Pour un malware, c'est un outil majeur : quels fichiers il ouvre, à quoi il se connecte (chapitre 13).
+Pour un crackme simple, strace apporte peu. Pour un malware, c'est un outil majeur : quels fichiers il ouvre, à quoi il se connecte (chapitre 6).
 
 ```bash
 strace -f -e trace=file,network,process ./programme   # filtrer par catégorie
 strace -o trace.txt ./programme                       # enregistrer dans un fichier
 ```
 
-**Attention : ltrace et strace exécutent le programme.** Sur un crackme compilé soi-même, aucun risque. Sur un fichier inconnu ou un malware, jamais en dehors d'un environnement isolé (chapitre 13).
+**Attention : ltrace et strace exécutent le programme.** Sur un crackme compilé soi-même, aucun risque. Sur un fichier inconnu ou un malware, jamais en dehors d'un environnement isolé (chapitre 6).
 
-## 8.5 Le désassemblage rapide
+## 1.5 Le désassemblage rapide
 
 Pour un petit programme, objdump suffit :
 
@@ -160,17 +160,17 @@ objdump -s -j .rodata coffre_v1
 
 ## Exercices
 
-**Exercice 8.1** Lancer `file`, `strings` et `nm -D` sur `/bin/ls`. Que peut-on dire de ce programme sans l'exécuter ? Est-il strippé ?
+**Exercice 1.1** Lancer `file`, `strings` et `nm -D` sur `/bin/ls`. Que peut-on dire de ce programme sans l'exécuter ? Est-il strippé ?
 
-**Exercice 8.2** Écrire un petit programme C qui demande un nombre avec `scanf("%d", &n)` et affiche "Gagne" si `n == 1337`. Le compiler. La réponse est-elle trouvable avec `strings` ? Avec `ltrace` ? Avec `objdump` ? Pourquoi ?
+**Exercice 1.2** Écrire un petit programme C qui demande un nombre avec `scanf("%d", &n)` et affiche "Gagne" si `n == 1337`. Le compiler. La réponse est-elle trouvable avec `strings` ? Avec `ltrace` ? Avec `objdump` ? Pourquoi ?
 
-**Exercice 8.3** Sur https://crackmes.one, filtrer par difficulté 1.0 et plateforme Unix/Linux, puis télécharger deux crackmes. N'appliquer que les étapes 1 et 2 de la méthode. Combien sont résolus sans ouvrir de désassembleur ?
+**Exercice 1.3** Sur https://crackmes.one, filtrer par difficulté 1.0 et plateforme Unix/Linux, puis télécharger deux crackmes. N'appliquer que les étapes 1 et 2 de la méthode. Combien sont résolus sans ouvrir de désassembleur ?
 
 Pratique : les archives sont souvent des `.zip` protégés par le mot de passe `crackmes.one`. Pour transférer le fichier téléchargé sur le Mac vers le conteneur, le déposer dans le dossier du cours (partagé dans `/cours`, voir le guide d'installation), puis le décompresser côté conteneur. La difficulté affichée sur le site est donnée par l'auteur et reste approximative : un "1.0" peut bloquer, ce n'est pas anormal. Les crackmes de ce site sont censés être sûrs, mais par principe ils s'analysent dans le conteneur.
 
 ## Exercice de pont : votre propre coffre0
 
-Avant d'attaquer des binaires inconnus, commencez par le plus familier : le `coffre0` que vous avez écrit en [partie 0](../partie0-c/13-projet.md). Vous connaissez son code, donc vous pouvez vérifier que votre lecture du désassemblage est correcte. C'est le meilleur pont entre écrire du C et le lire en assembleur.
+Avant d'attaquer des binaires inconnus, commencez par le plus familier : le `coffre0` que vous avez écrit en [partie 1](../partie0-c/13-projet.md). Vous connaissez son code, donc vous pouvez vérifier que votre lecture du désassemblage est correcte. C'est le meilleur pont entre écrire du C et le lire en assembleur.
 
 Compilez-le, puis analysez-le **sans rouvrir le source** :
 
@@ -180,7 +180,7 @@ objdump -d coffre0 | less        # ou dans Ghidra
 strings coffre0 | less
 ```
 
-**Exercice 8.0 (N1 à N3)**
+**Exercice 1.0 (N1 à N3)**
 
 1. (N1) Avec `strings`, retrouvez les messages (`Coffre ouvert`, `Refuse`, `Usage ...`). Dans quelle fonction sont-ils utilisés ?
 2. (N2) Dans le désassemblage de `main`, retrouvez le tableau `cible` : huit octets `43 6d 67 70 69 73 69 6c`. Comment sont-ils chargés (en données, immédiats, ...) ?
@@ -203,6 +203,6 @@ Solutions : [solutions/partie2.md](../solutions/partie2.md#coffre-v1)
 
 ## Suivi
 
-- [ ] Chapitre 8 : lecture
-- [ ] Chapitre 8 : exercices
-- [ ] Chapitre 8 : fil rouge (coffre v1)
+- [ ] Partie 3, chapitre 1 : lecture
+- [ ] Partie 3, chapitre 1 : exercices
+- [ ] Partie 3, chapitre 1 : fil rouge (coffre v1)

@@ -1,12 +1,12 @@
 # Packing et UPX
 
 !!! info "Chapitre d'approfondissement"
-    Approfondissement de la partie 2. Un binaire *packé* est un binaire dont le vrai code n'apparaît pas tel quel dans le fichier : il est compressé ou chiffré, et n'est reconstitué en mémoire qu'au moment de l'exécution. C'est extrêmement courant dans les malwares (pour échapper à l'analyse et aux antivirus) et fréquent en CTF. Savoir reconnaître et défaire un packer est indispensable.
+    Approfondissement de la partie 3. Un binaire *packé* est un binaire dont le vrai code n'apparaît pas tel quel dans le fichier : il est compressé ou chiffré, et n'est reconstitué en mémoire qu'au moment de l'exécution. C'est extrêmement courant dans les malwares (pour échapper à l'analyse et aux antivirus) et fréquent en CTF. Savoir reconnaître et défaire un packer est indispensable.
 
 !!! note "Note sur l'environnement"
     Ce chapitre illustre le **principe** du packing avec un petit packer pédagogique maison (compression zlib), tout à fait représentatif du mécanisme réel : les exemples zlib ci-dessous ont été produits et testés tels quels. L'outil `upx` est fourni dans l'image du laboratoire (`reverse-lab`, voir l'installation sur Mac), vous pouvez donc y rejouer directement un vrai packing (`upx --best monprog`) et comparer. Les sources du packer de démonstration sont dans `packing/`.
 
-## 17.1 Ce qu'est un packer
+## 9.1 Ce qu'est un packer
 
 Un packer transforme un exécutable en un autre exécutable, plus petit et illisible, qui contient :
 
@@ -25,7 +25,7 @@ flowchart TD
 
 C'est exactement la structure du loader vu au capstone, appliquée à un programme entier.
 
-## 17.2 Les signes d'un binaire packé
+## 9.2 Les signes d'un binaire packé
 
 Plusieurs indices, repérables **sans exécuter**, trahissent un packer :
 
@@ -46,7 +46,7 @@ Plusieurs indices, repérables **sans exécuter**, trahissent un packer :
 
 4. **Point d'entrée déplacé.** Le point d'entrée (`readelf -h`, champ *Entry point*) pointe vers le stub, souvent hors de la `.text` habituelle.
 
-## 17.3 Détecter en pratique
+## 9.3 Détecter en pratique
 
 ```bash
 strings binaire | head              # presque rien d'utile ?
@@ -57,7 +57,7 @@ python3 entropie.py binaire         # entropie globale élevée ?
 
 Sur le binaire packé de démonstration, `strings` ne montre pas le message du programme : il n'apparaît qu'à l'exécution, après décompression.
 
-## 17.4 Dépaqueter
+## 9.4 Dépaqueter
 
 Trois approches, de la plus simple à la plus générale :
 
@@ -76,7 +76,7 @@ puis `objdump -D -b binary -m i386:x86-64` révèle le code original.
 
 **Dépaquetage dynamique (OEP dumping).** La méthode générale, valable même sans connaître l'algorithme : en bac à sable, laisser le stub décompresser, poser un point d'arrêt sur le **saut vers l'OEP** (souvent un `jmp` lointain vers une adresse fraîchement rendue exécutable), puis *dumper* la mémoire à ce moment (par exemple `dump binary memory` dans GDB). On obtient le programme dépaqueté, qu'on analyse ensuite normalement.
 
-## 17.5 Pourquoi les malwares packent
+## 9.5 Pourquoi les malwares packent
 
 Le packing sert surtout à **échapper à l'analyse** : signatures antivirus inopérantes (le code change à chaque packing), `strings` et désassemblage statique aveugles, taille réduite. Ce n'est pas une protection parfaite : tout binaire packé finit par se dépaqueter lui-même en mémoire pour s'exécuter, et c'est là que l'analyste le capture. Le packing ralentit l'analyse, il ne l'empêche pas.
 
@@ -84,21 +84,21 @@ Le packing sert surtout à **échapper à l'analyse** : signatures antivirus ino
 
 Outils : `packing/packer.py`, `packing/packed.c`, `packing/payload.asm`, et [solutions/scripts/entropie.py](../solutions/scripts/entropie.py).
 
-**Exercice 17.1 (niveau 1)** Mesurer avec `entropie.py` l'entropie d'un binaire normal, puis d'une version compressée du même binaire (`python3 -c "import zlib,sys;open('c.bin','wb').write(zlib.compress(open(sys.argv[1],'rb').read()))" binaire`). Quelle valeur sépare clairement les deux ?
+**Exercice 9.1 (niveau 1)** Mesurer avec `entropie.py` l'entropie d'un binaire normal, puis d'une version compressée du même binaire (`python3 -c "import zlib,sys;open('c.bin','wb').write(zlib.compress(open(sys.argv[1],'rb').read()))" binaire`). Quelle valeur sépare clairement les deux ?
 
-**Exercice 17.2 (niveau 2)** Compiler le packer de démonstration (`gcc -O2 -s packed.c -o packed -lz`), l'exécuter, puis vérifier avec `strings packed` que son message n'apparaît pas dans le fichier. Expliquer pourquoi il n'est visible qu'à l'exécution.
+**Exercice 9.2 (niveau 2)** Compiler le packer de démonstration (`gcc -O2 -s packed.c -o packed -lz`), l'exécuter, puis vérifier avec `strings packed` que son message n'apparaît pas dans le fichier. Expliquer pourquoi il n'est visible qu'à l'exécution.
 
-**Exercice 17.3 (niveau 2)** Comparer, avec `objdump -h` et `readelf -h`, un binaire normal et le binaire packé : sections, taille de la zone de données, point d'entrée. Quels éléments mettraient la puce à l'oreille sur un échantillon inconnu ?
+**Exercice 9.3 (niveau 2)** Comparer, avec `objdump -h` et `readelf -h`, un binaire normal et le binaire packé : sections, taille de la zone de données, point d'entrée. Quels éléments mettraient la puce à l'oreille sur un échantillon inconnu ?
 
-**Exercice 17.4 (niveau 3)** Dépaqueter le binaire de démonstration **statiquement** : relever les octets compressés, les décompresser en Python (`zlib.decompress`), désassembler le résultat et retrouver le message, sans jamais exécuter le binaire.
+**Exercice 9.4 (niveau 3)** Dépaqueter le binaire de démonstration **statiquement** : relever les octets compressés, les décompresser en Python (`zlib.decompress`), désassembler le résultat et retrouver le message, sans jamais exécuter le binaire.
 
-**Exercice 17.5 (niveau 3, méthode)** Décrire, étape par étape, comment dépaqueter un binaire dont on ne connaît pas l'algorithme : où poser le point d'arrêt, quoi dumper, et pourquoi cette méthode fonctionne quel que soit le packer. En quoi diffère-t-elle de `upx -d` ?
+**Exercice 9.5 (niveau 3, méthode)** Décrire, étape par étape, comment dépaqueter un binaire dont on ne connaît pas l'algorithme : où poser le point d'arrêt, quoi dumper, et pourquoi cette méthode fonctionne quel que soit le packer. En quoi diffère-t-elle de `upx -d` ?
 
-**Exercice 17.6 (niveau 1, lecture)** On mesure l'entropie de la section de données de trois binaires : 4.9, 6.1 et 7.8 bits/octet. Lequel est le plus probablement packé, et pourquoi ?
+**Exercice 9.6 (niveau 1, lecture)** On mesure l'entropie de la section de données de trois binaires : 4.9, 6.1 et 7.8 bits/octet. Lequel est le plus probablement packé, et pourquoi ?
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#packing-upx)
 
 ## Suivi
 
-- [ ] Chapitre packing : lecture
-- [ ] Chapitre packing : exercices (entropie, dépaquetage statique)
+- [ ] Partie 3, chapitre packing : lecture
+- [ ] Partie 3, chapitre packing : exercices (entropie, dépaquetage statique)

@@ -1,12 +1,12 @@
-# Solutions de la partie 3
+# Solutions de la partie 4
 
 À ne consulter qu'après avoir cherché. Les scripts et fichiers sources cités sont dans le dossier `scripts` (liens au fil du texte) et dans [fil-rouge/partie3/chargeur.c](../fil-rouge/partie3/chargeur.c).
 
-## Chapitre 15
+## Chapitre 1
 
-**15.1** Remplacer `xor rdi, rdi` par `mov rdi, 42` (ou `mov edi, 42`) avant le `exit`. Après `./bonjour`, la commande `echo $?` affiche `42`. Le code de retour est le premier argument d'`exit`, donc `rdi`.
+**1.1** Remplacer `xor rdi, rdi` par `mov rdi, 42` (ou `mov edi, 42`) avant le `exit`. Après `./bonjour`, la commande `echo $?` affiche `42`. Le code de retour est le premier argument d'`exit`, donc `rdi`.
 
-**15.2** Deux appels `write`, l'un avec `edi = 1`, l'autre avec `edi = 2` :
+**1.2** Deux appels `write`, l'un avec `edi = 1`, l'autre avec `edi = 2` :
 
 ```nasm
 section .data
@@ -32,9 +32,9 @@ _start:
 
 Avec `./programme 2>/dev/null`, seule la première ligne s'affiche : la seconde est partie sur le descripteur 2, qui a été redirigé vers le vide.
 
-**15.3** `strace -c ./bonjour` compte 2 appels système (`write` et `exit`). `strace -c ./programme` en compte une trentaine : l'essentiel sert à charger la libc (`openat`, `mmap`, `mprotect`...) avant `main`. Dans les deux cas, un seul `write` correspond à l'affichage. C'est l'illustration du coût du démarrage de la libc, qu'un programme écrit à la main évite.
+**1.3** `strace -c ./bonjour` compte 2 appels système (`write` et `exit`). `strace -c ./programme` en compte une trentaine : l'essentiel sert à charger la libc (`openat`, `mmap`, `mprotect`...) avant `main`. Dans les deux cas, un seul `write` correspond à l'affichage. C'est l'illustration du coût du démarrage de la libc, qu'un programme écrit à la main évite.
 
-**15.4**
+**1.4**
 1. `objdump -d -M intel detecte` donne l'adresse de l'instruction qui suit le `syscall` (`test rax, rax`, ici `0x401010`). Dans GDB : `break *0x401010`, `run`, `set $rax = 0`, `continue`. Le programme affiche "Aucun debogueur".
 2. L'adresse du `js` est `0x401013` et celle de l'instruction suivante `0x401015`. Dans GDB : `break *0x401013`, `run`, `set $pc = 0x401015`, `continue`. Le saut vers le bloc "détecté" est ainsi contourné.
 
@@ -58,11 +58,11 @@ _start:
     ; ... write du retour à la ligne, puis exit(0)
 ```
 
-Le point délicat est la lecture de `argc` et `argv` directement sur la pile (section 15.5), puisque la libc n'est pas là pour les préparer.
+Le point délicat est la lecture de `argc` et `argv` directement sur la pile (section 1.5), puisque la libc n'est pas là pour les préparer.
 
-## Chapitre 16
+## Chapitre 2
 
-**16.1** La fonction, avec `cmovl` (déplacement conditionnel si inférieur, signé) :
+**2.1** La fonction, avec `cmovl` (déplacement conditionnel si inférieur, signé) :
 
 ```nasm
 maximum:
@@ -74,7 +74,7 @@ maximum:
 
 Appelée depuis C comme `somme3`. Avec des valeurs négatives, `cmovl` (signé) donne le bon résultat : `maximum(-5, -2)` renvoie `-2`. Un `cmovb` (non signé) se tromperait, car `-2` vaut `0xffff...fe`, considéré comme très grand en non signé. C'est le même piège que `jl` contre `jb` (chapitre 3).
 
-**16.2** Le `main` reçoit `argc` dans `edi` :
+**2.2** Le `main` reçoit `argc` dans `edi` :
 
 ```nasm
 main:
@@ -90,7 +90,7 @@ main:
 
 `./programme a b c` affiche `argc vaut 4` (le nom du programme compte pour 1).
 
-**16.3** À l'entrée de `main`, `p/x $rsp` se termine par `8` : après le `call` de la libc, `rsp` vaut `16k + 8`. Appeler `printf` dans cet état plante dans un `movaps` de `printf`. En ajoutant `push rbx` au début (et `pop rbx` avant `ret`), `rsp` perd 8 octets et redevient multiple de 16 : `p/x $rsp` se termine alors par `0` juste avant le `call`, et le programme fonctionne.
+**2.3** À l'entrée de `main`, `p/x $rsp` se termine par `8` : après le `call` de la libc, `rsp` vaut `16k + 8`. Appeler `printf` dans cet état plante dans un `movaps` de `printf`. En ajoutant `push rbx` au début (et `pop rbx` avant `ret`), `rsp` perd 8 octets et redevient multiple de 16 : `p/x $rsp` se termine alors par `0` juste avant le `call`, et le programme fonctionne.
 
 **Fil rouge (étape 2)** Fichier [scripts/keygen_v3.asm](scripts/keygen_v3.asm). La fonction de hachage reprend la boucle de l'étape 1, en remplaçant le comptage par le calcul :
 
@@ -119,11 +119,11 @@ F6E88EDC
 
 Résultat identique au keygen Python. Différences de style qui trahissent le code écrit à la main : `rol` (gcc préfère souvent `shl` + `shr` + `or`), l'absence de cadre de pile complet, et des registres choisis librement plutôt que selon les habitudes du compilateur. Un binaire gcc contiendrait aussi du code de démarrage et des protections (canari) absents ici.
 
-## Chapitre 17
+## Chapitre 3
 
-**17.1** Après `objcopy -O binary -j .text flag flag.bin`, la commande `python3 -c "print(open('flag.bin','rb').read().count(0))"` affiche `0`. En changeant le message (en respectant des blocs de 8 octets et en ajustant la taille passée à `write`), le lanceur affiche le nouveau texte, preuve que les octets sont autonomes.
+**3.1** Après `objcopy -O binary -j .text flag flag.bin`, la commande `python3 -c "print(open('flag.bin','rb').read().count(0))"` affiche `0`. En changeant le message (en respectant des blocs de 8 octets et en ajustant la taille passée à `write`), le lanceur affiche le nouveau texte, preuve que les octets sont autonomes.
 
-**17.2** Shellcode minimal pour `exit(42)`, sans octet nul :
+**3.2** Shellcode minimal pour `exit(42)`, sans octet nul :
 
 ```nasm
 _start:
@@ -136,7 +136,7 @@ _start:
 
 Soit 8 octets, 0 nul. Les `push imm8 / pop` évitent les `mov` avec constante sur 4 octets, qui introduiraient des zéros. Tester avec le lanceur puis `echo $?` affiche `42`.
 
-**17.3** `mov rax, 59` est encodé par NASM en `b8 3b 00 00 00` (`mov eax, 0x3b`) : la constante 59 tient sur 4 octets, dont **3 sont nuls**. `push 59 / pop rax` donne `6a 3b 58`, soit 3 octets sans aucun zéro. C'est pourquoi les shellcodes évitent systématiquement les `mov` avec petite constante.
+**3.3** `mov rax, 59` est encodé par NASM en `b8 3b 00 00 00` (`mov eax, 0x3b`) : la constante 59 tient sur 4 octets, dont **3 sont nuls**. `push 59 / pop rax` donne `6a 3b 58`, soit 3 octets sans aucun zéro. C'est pourquoi les shellcodes évitent systématiquement les `mov` avec petite constante.
 
 **Fil rouge (analyse du loader)** Script de correction [scripts/decode_chargeur.py](scripts/decode_chargeur.py).
 
@@ -146,11 +146,11 @@ Soit 8 octets, 0 nul. Les `push imm8 / pop` évitent les `mov` avec constante su
 4. Méthode statique : le script lit le fichier, extrait `0x41` octets à l'offset `0x2020`, applique `^ 0xA7` (l'octet bas de `0xffffffa7`), et désassemble avec pwntools. On y retrouve la construction de la chaîne sur la pile puis le `write`.
 5. `dump binary memory` dans GDB et le fichier produit par le script sont identiques (`cmp` ne signale aucune différence) : l'analyse statique n'a rien manqué, et le malware n'a jamais eu besoin d'être réellement exécuté.
 
-## Exercices gradués de la partie 3
+## Exercices gradués de la partie 4
 
-### Chapitre 15
+### Chapitre 1
 
-**15.5** Routine `ma_putchar` (l'octet est poussé sur la pile pour avoir une adresse) :
+**1.5** Routine `ma_putchar` (l'octet est poussé sur la pile pour avoir une adresse) :
 
 ```nasm
 ma_putchar:                 ; octet dans dil
@@ -166,7 +166,7 @@ ma_putchar:                 ; octet dans dil
 
 Appelée avec `mov dil, 'A' / call ma_putchar`, puis `mov dil, 10 / call ma_putchar`, elle affiche `A` et un retour à la ligne.
 
-**15.6** `ma_putstr` calcule la longueur puis écrit tout d'un coup :
+**1.6** `ma_putstr` calcule la longueur puis écrit tout d'un coup :
 
 ```nasm
 ma_putstr:                  ; rdi = adresse de la chaîne
@@ -184,7 +184,7 @@ ma_putstr:                  ; rdi = adresse de la chaîne
     ret
 ```
 
-**15.7** Mini-`cat` : boucle `read` / `write` jusqu'à EOF.
+**1.7** Mini-`cat` : boucle `read` / `write` jusqu'à EOF.
 
 ```nasm
 section .bss
@@ -212,9 +212,9 @@ _start:
     syscall
 ```
 
-### Chapitre 16
+### Chapitre 2
 
-**16.4** Fonction feuille :
+**2.4** Fonction feuille :
 
 ```nasm
 global cube
@@ -228,7 +228,7 @@ section .note.GNU-stack noalloc noexec nowrite progbits
 
 `cube(2)=8`, `cube(5)=125`, `cube(-3)=-27`.
 
-**16.5** Somme d'un tableau de `long` :
+**2.5** Somme d'un tableau de `long` :
 
 ```nasm
 global somme_tableau
@@ -247,7 +247,7 @@ somme_tableau:              ; rdi = tableau, rsi = n
 
 Sur `{3, 7, -2, 10, 42}` avec `n = 5`, le résultat est `60`.
 
-**16.6** `main` qui imprime chaque argument. Les trois `push` réalignent la pile (entrée à `16k+8`, trois `push` ramènent à `16k`) et sauvegardent les registres *callee-saved* :
+**2.6** `main` qui imprime chaque argument. Les trois `push` réalignent la pile (entrée à `16k+8`, trois `push` ramènent à `16k`) et sauvegardent les registres *callee-saved* :
 
 ```nasm
 extern printf
@@ -281,9 +281,9 @@ main:                       ; edi = argc, rsi = argv
 
 `./programme alpha beta gamma` affiche le nom du programme puis `alpha`, `beta`, `gamma`, chacun sur sa ligne.
 
-### Chapitre 17
+### Chapitre 3
 
-**17.5** `hey\n` tient sur 4 octets, poussés en une fois ; les petites constantes passent par `push imm8 / pop` :
+**3.5** `hey\n` tient sur 4 octets, poussés en une fois ; les petites constantes passent par `push imm8 / pop` :
 
 ```nasm
 _start:
@@ -304,7 +304,7 @@ _start:
 
 `objcopy -O binary -j .text` puis `count(0)` donne `0` octet nul. Le lanceur affiche `hey`.
 
-**17.6** `reverse\n` fait 8 octets, tous non nuls, donc `mov r64, imm64` ne crée aucun zéro :
+**3.6** `reverse\n` fait 8 octets, tous non nuls, donc `mov r64, imm64` ne crée aucun zéro :
 
 ```nasm
 _start:
@@ -326,7 +326,7 @@ _start:
 
 Une chaîne plus courte laisserait des octets hauts nuls dans la constante `imm64` : c'est pourquoi on complète souvent à 8 octets utiles, ou on construit la chaîne autrement.
 
-**17.7** XOR roulant `cle_i = 0x5A ^ i`. On déchiffre à froid, puis on désassemble sans exécuter :
+**3.7** XOR roulant `cle_i = 0x5A ^ i`. On déchiffre à froid, puis on désassemble sans exécuter :
 
 ```python
 enc = bytes.fromhex(

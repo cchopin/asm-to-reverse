@@ -20,9 +20,9 @@ make            # produit serrure, machine, oignon
 
 Le programme attend un nom et un serial hexadécimal. Pour un nom donné, un seul serial est accepté. Le flag est `FLAG{serrure_XXXXXX}` où `XXXXXX` est ce serial.
 
-**Objectif** : retrouver l'algorithme qui transforme le nom en serial, puis écrire un *keygen* (en Python, ou en assembleur pour les plus ambitieux, sur le modèle du fil rouge de la partie 3) qui donne le serial de n'importe quel nom, à commencer par `Clemence`.
+**Objectif** : retrouver l'algorithme qui transforme le nom en serial, puis écrire un *keygen* (en Python, ou en assembleur pour les plus ambitieux, sur le modèle du fil rouge de la partie 4) qui donne le serial de n'importe quel nom, à commencer par `Clemence`.
 
-**Techniques en jeu** : lecture d'une fonction de hachage en assembleur (boucle, `xor`, rotation, constantes), reconnaissance d'un keygen (partie 2, chapitre 11 ; partie 3, fil rouge).
+**Techniques en jeu** : lecture d'une fonction de hachage en assembleur (boucle, `xor`, rotation, constantes), reconnaissance d'un keygen (partie 3, chapitre 4 ; partie 4, fil rouge).
 
 !!! tip "Indice"
     La fonction de dérivation tient en une boucle sur les caractères du nom. Repérer la constante initiale, l'opération par caractère, et le masque final. Rien n'est chiffré : tout est dans le calcul.
@@ -37,7 +37,7 @@ Ce défi ne compare pas le mot de passe à une chaîne, et n'applique pas non pl
 
 **Objectif** : comprendre le jeu d'instructions de la VM (quelques opcodes), extraire le programme et la cible, puis inverser la transformation pour reconstruire le mot de passe.
 
-**Techniques en jeu** : reconnaissance d'un interpréteur (boucle de dispatch sur un opcode), lecture de tableaux en mémoire (partie 1, chapitre 6), inversion d'opérations (`add`/`sub`, `xor` involutif, `rol`/`ror`). C'est le schéma le plus fréquent des CTF de reverse de niveau intermédiaire.
+**Techniques en jeu** : reconnaissance d'un interpréteur (boucle de dispatch sur un opcode), lecture de tableaux en mémoire (partie 2, chapitre 6), inversion d'opérations (`add`/`sub`, `xor` involutif, `rol`/`ror`). C'est le schéma le plus fréquent des CTF de reverse de niveau intermédiaire.
 
 !!! tip "Indice"
     Chercher la boucle qui lit un octet d'opcode, puis une série de comparaisons (`cmp` avec de petites constantes) dirigeant vers quelques traitements différents : c'est la table de dispatch de la VM. Le même programme est rejoué pour chaque caractère.
@@ -52,10 +52,10 @@ Le plus retors. Il se protège d'un débogueur et ne stocke le mot de passe atte
 
 **Objectif** : neutraliser l'anti-debug si l'on choisit la voie dynamique, repérer comment le mot de passe attendu est recomposé, et le reconstituer. La voie statique (recomposer soi-même sans lancer le binaire) est la plus propre.
 
-**Techniques en jeu** : anti-debug `ptrace` (partie 2, chapitre 12 ; partie 3, section 15.6) et son contournement, XOR entre deux tableaux (partie 2, chapitre 11), lecture de `.data` avec `objdump -s`.
+**Techniques en jeu** : anti-debug `ptrace` (partie 3, chapitre 5 ; partie 4, section 1.6) et son contournement, XOR entre deux tableaux (partie 3, chapitre 4), lecture de `.data` avec `objdump -s`.
 
 !!! tip "Indice"
-    Si le programme affiche `Nope.` et s'arrête, c'est l'anti-debug : le contourner comme au chapitre 12 (patch de l'appel, `LD_PRELOAD` d'un faux `ptrace`, ou forcer `rax` dans GDB). Pour la voie statique, relever les deux tableaux de `.data` et les combiner : l'opération qui les réunit est juste avant le `memcmp`.
+    Si le programme affiche `Nope.` et s'arrête, c'est l'anti-debug : le contourner comme au chapitre 5 de la partie 3 (patch de l'appel, `LD_PRELOAD` d'un faux `ptrace`, ou forcer `rax` dans GDB). Pour la voie statique, relever les deux tableaux de `.data` et les combiner : l'opération qui les réunit est juste avant le `memcmp`.
 
 ## Après les flags
 

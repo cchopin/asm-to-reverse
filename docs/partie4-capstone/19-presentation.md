@@ -4,7 +4,7 @@ Cette dernière partie n'apporte presque aucune notion nouvelle. Elle sert à pr
 
 Elle se compose de deux épreuves complémentaires et d'un livrable :
 
-1. **[Les défis CTF avancés](20-ctf-avance.md)** : trois crackmes qui combinent plusieurs techniques des parties 1 à 3 (keygen, machine virtuelle, multi-couches avec anti-debug). On y gagne un flag par défi.
+1. **[Les défis CTF avancés](20-ctf-avance.md)** : trois crackmes qui combinent plusieurs techniques des parties 3 à 4 (keygen, machine virtuelle, multi-couches avec anti-debug). On y gagne un flag par défi.
 2. **[Le cas de malware](21-cas-malware.md)** : un échantillon pédagogique multi-étapes, à analyser de bout en bout comme en situation réelle, puis à documenter.
 3. **[Le rapport d'analyse](22-rapport-type.md)** : le livrable attendu d'un analyste, avec son modèle réutilisable et le rapport complet du cas étudié.
 
@@ -28,7 +28,7 @@ C'est exactement le profil demandé pour le reverse en CTF et pour l'analyse de 
 
 ## Comment aborder chaque cible
 
-La méthode de la partie 2 reste la colonne vertébrale :
+La méthode de la partie 3 reste la colonne vertébrale :
 
 ```mermaid
 flowchart TD

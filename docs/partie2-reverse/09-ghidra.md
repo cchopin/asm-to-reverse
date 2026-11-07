@@ -1,8 +1,8 @@
-# Chapitre 9 : analyse statique avec Ghidra
+# Chapitre 2 : analyse statique avec Ghidra
 
 Objectif : utiliser un désassembleur et décompilateur pour comprendre un programme sans l'exécuter. Ghidra est gratuit, développé par la NSA et largement suffisant pour les CTF comme pour l'analyse de malware. Il s'installe directement sur macOS (voir le [guide d'installation](../environnement/INSTALLATION-MAC.md#6-ghidra-sur-macos)).
 
-**Analyse statique** : lire le programme sans l'exécuter. **Analyse dynamique** : l'exécuter et l'observer (chapitre 10). Les deux se complètent et s'alternent en permanence.
+**Analyse statique** : lire le programme sans l'exécuter. **Analyse dynamique** : l'exécuter et l'observer (chapitre 3). Les deux se complètent et s'alternent en permanence.
 
 !!! note "Binary Ninja comme alternative"
     Ghidra sert de référence dans ce cours, car il est gratuit et complet. **Binary Ninja** est un autre désassembleur et décompilateur, réputé pour son confort et la qualité de sa vue décompilée. Une version **Free** existe : c'est une application à télécharger (macOS, Windows, Linux) depuis [binary.ninja/free](https://binary.ninja/free), aux fonctions limitées mais suffisantes pour débuter. Pour travailler directement dans le navigateur, sans rien installer, il existe **Binary Ninja Cloud** sur [cloud.binary.ninja](https://cloud.binary.ninja). Voir aussi le [guide d'installation](../environnement/INSTALLATION-MAC.md#7-binary-ninja-optionnel).
@@ -19,14 +19,14 @@ Objectif : utiliser un désassembleur et décompilateur pour comprendre un progr
 
     Les exercices et les captures du cours sont rédigés pour Ghidra. Un lecteur équipé de Binary Ninja peut les suivre en transposant ces raccourcis.
 
-## 9.1 Premier projet
+## 2.1 Premier projet
 
 1. Lancer Ghidra.
 2. `File > New Project > Non-Shared Project`, choisir un dossier et un nom (par exemple `cours-reverse`).
 3. `File > Import File`, sélectionner le binaire (dans le dossier du cours, partagé avec le conteneur). Ghidra détecte le format (ELF, x86 64 bits). Valider.
 4. Double-cliquer sur le fichier importé : la fenêtre **CodeBrowser** s'ouvre et propose d'analyser le programme. Répondre **Yes** puis **Analyze** avec les options par défaut.
 
-## 9.2 Les fenêtres à connaître
+## 2.2 Les fenêtres à connaître
 
 - **Symbol Tree** (à gauche) : la liste des fonctions (`Functions`), des imports, des exports. Commencer par y chercher `main`.
 - **Listing** (au centre) : le désassemblage, avec adresses, octets et instructions. Les références (qui appelle quoi) figurent en commentaire (`XREF`).
@@ -34,7 +34,7 @@ Objectif : utiliser un désassembleur et décompilateur pour comprendre un progr
 - **Defined Strings** (`Window > Defined Strings`) : toutes les chaînes trouvées, avec leur adresse.
 - **Function Graph** (`Window > Function Graph`) : la fonction sous forme de blocs reliés par des flèches. Très utile pour visualiser d'un coup d'œil les `if` et les boucles.
 
-## 9.3 Les actions essentielles
+## 2.3 Les actions essentielles
 
 | Action | Raccourci | Usage |
 |---|---|---|
@@ -46,9 +46,9 @@ Objectif : utiliser un désassembleur et décompilateur pour comprendre un progr
 | Revenir en arrière | `Alt+Gauche` | Après avoir suivi un appel |
 | Changer l'affichage d'une constante | clic droit, `Convert` | Afficher `0x2a` comme `'*'` ou en décimal |
 
-Le renommage est **la** compétence clé dans Ghidra. Le décompilateur produit d'abord des noms comme `param_1`, `local_10`, `uVar2`, `FUN_00101189`. Chaque fois que le rôle d'une variable ou d'une fonction est compris, il faut la renommer. Le code devient progressivement lisible, exactement comme lors de l'annotation du fil rouge de la partie 1.
+Le renommage est **la** compétence clé dans Ghidra. Le décompilateur produit d'abord des noms comme `param_1`, `local_10`, `uVar2`, `FUN_00101189`. Chaque fois que le rôle d'une variable ou d'une fonction est compris, il faut la renommer. Le code devient progressivement lisible, exactement comme lors de l'annotation du fil rouge de la partie 2.
 
-## 9.4 La technique de base : partir des chaînes
+## 2.4 La technique de base : partir des chaînes
 
 ```mermaid
 flowchart TD
@@ -66,7 +66,7 @@ flowchart TD
 
 Cette technique fonctionne sur la grande majorité des crackmes.
 
-## 9.5 Lire le décompilateur avec un regard critique
+## 2.5 Lire le décompilateur avec un regard critique
 
 Le pseudo-C de Ghidra est une **reconstruction**. Il est souvent juste, mais peut induire en erreur :
 
@@ -117,9 +117,9 @@ int verifier(char *saisie)
 }
 ```
 
-Lorsque le décompilateur produit un résultat étrange, il faut **consulter l'assembleur** à côté. C'est précisément l'intérêt de la partie 1.
+Lorsque le décompilateur produit un résultat étrange, il faut **consulter l'assembleur** à côté. C'est précisément l'intérêt de la partie 2.
 
-## 9.6 Extraire des données
+## 2.6 Extraire des données
 
 La clé ou le texte chiffré est souvent un tableau situé dans `.data` ou `.rodata` (`DAT_00102010` ci-dessus). Pour le récupérer :
 
@@ -138,7 +138,7 @@ print(bytes(b ^ 0x2a for b in cle))
 
 C'est le schéma le plus courant des crackmes "easy" : **lire l'algorithme dans Ghidra, copier les données, inverser l'algorithme en Python**.
 
-## 9.7 Structures et types
+## 2.7 Structures et types
 
 Si une fonction accède à `param_1 + 0x10`, `param_1 + 0x14`, etc., il s'agit d'une structure (chapitre 6). Dans Ghidra :
 
@@ -150,11 +150,11 @@ Le code affiche alors `param_1->pv` au lieu de `*(int *)(param_1 + 0x10)`. C'est
 
 ## Exercices
 
-**Exercice 9.1** Ouvrir `mystere` (partie 1) dans Ghidra. Comparer le décompilé de `verifier` avec la version écrite au chapitre 7. Qu'est-ce que Ghidra a mieux restitué ? Moins bien ?
+**Exercice 2.1** Ouvrir `mystere` (partie 2) dans Ghidra. Comparer le décompilé de `verifier` avec la version écrite au chapitre 7. Qu'est-ce que Ghidra a mieux restitué ? Moins bien ?
 
-**Exercice 9.2** Compiler `mystere` en `-O2` (`gcc -O2 -no-pie -fno-stack-protector mystere.c -o mystere_O2`), l'ouvrir dans Ghidra. Le décompilateur s'en sort-il ? Comment a-t-il traduit la séquence `sub eax, 0x30` / `cmp sil, 0x9` / `ja` ?
+**Exercice 2.2** Compiler `mystere` en `-O2` (`gcc -O2 -no-pie -fno-stack-protector mystere.c -o mystere_O2`), l'ouvrir dans Ghidra. Le décompilateur s'en sort-il ? Comment a-t-il traduit la séquence `sub eax, 0x30` / `cmp sil, 0x9` / `ja` ?
 
-**Exercice 9.3** Compiler un programme C de son choix contenant une structure, la retrouver dans Ghidra et la recréer avec le Data Type Manager.
+**Exercice 2.3** Compiler un programme C de son choix contenant une structure, la retrouver dans Ghidra et la recréer avec le Data Type Manager.
 
 ## Fil rouge : coffre v2, en statique
 
@@ -163,14 +163,14 @@ Compiler `coffre_v2`.
 1. **Reconnaître** : `strings coffre_v2`. Le mot de passe est-il visible ? `nm -D` : quelles fonctions de comparaison sont importées ? Qu'en déduire ?
 2. **Observer** : `ltrace ./coffre_v2`. La comparaison est-elle visible ?
 3. **Comprendre** : ouvrir le binaire dans Ghidra, trouver `main` puis la fonction de vérification à partir de la chaîne de succès. Renommer tout ce qui peut l'être. Décrire l'algorithme en une phrase.
-4. Récupérer le tableau de données utilisé dans la comparaison (section 9.6).
+4. Récupérer le tableau de données utilisé dans la comparaison (section 2.6).
 5. **Agir** : écrire un script Python qui calcule le mot de passe, puis le vérifier sur le programme.
-6. Conserver le projet Ghidra : au chapitre 10, le même coffre sera résolu **sans** lire l'algorithme, uniquement avec le débogueur.
+6. Conserver le projet Ghidra : au chapitre 3, le même coffre sera résolu **sans** lire l'algorithme, uniquement avec le débogueur.
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#coffre-v2)
 
 ## Suivi
 
-- [ ] Chapitre 9 : lecture
-- [ ] Chapitre 9 : exercices
-- [ ] Chapitre 9 : fil rouge (coffre v2 en statique)
+- [ ] Partie 3, chapitre 2 : lecture
+- [ ] Partie 3, chapitre 2 : exercices
+- [ ] Partie 3, chapitre 2 : fil rouge (coffre v2 en statique)

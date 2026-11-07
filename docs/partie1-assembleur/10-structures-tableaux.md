@@ -126,5 +126,5 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#structures-tableaux)
 
 ## Suivi
 
-- [ ] Chapitre 10 (structures et tableaux) : lecture
-- [ ] Chapitre 10 (structures et tableaux) : exercices
+- [ ] Partie 2, chapitre 10 (structures et tableaux) : lecture
+- [ ] Partie 2, chapitre 10 (structures et tableaux) : exercices

@@ -1,8 +1,8 @@
-# Chapitre 12 : protections et anti-analyse
+# Chapitre 5 : protections et anti-analyse
 
 Objectif : reconnaître et contourner les protections les plus courantes. Elles sont fréquentes dans les CTF de niveau intermédiaire et quasi systématiques dans les malwares. Elles sont toutefois peu nombreuses, et leurs contournements suivent toujours les mêmes principes.
 
-## 12.1 Le binaire strippé
+## 5.1 Le binaire strippé
 
 `strip programme` supprime les noms des fonctions. Conséquences :
 
@@ -36,7 +36,7 @@ Dans GDB, sur un binaire strippé et PIE :
 
 Autre technique très efficace : partir des **chaînes** et des **imports**, comme d'habitude. Les noms des fonctions de la libc restent visibles, de même que les chaînes.
 
-## 12.2 L'anti-debug par ptrace
+## 5.2 L'anti-debug par ptrace
 
 Sous Linux, un processus ne peut être tracé que par un seul débogueur. Le programme appelle `ptrace(PTRACE_TRACEME, 0, 0, 0)` : s'il est déjà sous GDB, l'appel échoue et renvoie -1.
 
@@ -62,8 +62,8 @@ je     detecte
 Contournements, du plus simple au plus propre :
 
 1. **Modifier le retour dans GDB** : point d'arrêt juste après le `call ptrace`, puis `set $rax = 0`.
-2. **Intercepter l'appel** : `catch syscall ptrace` arrête GDB deux fois, à l'entrée puis à la sortie de l'appel système ; au second arrêt, `set $rax = 0` neutralise le résultat. La procédure pas à pas est détaillée à la section 15.6.
-3. **Patcher** le saut `je detecte` en `nop` (chapitre 11), ou remplacer le `call ptrace` par `xor eax, eax` suivi de `nop`.
+2. **Intercepter l'appel** : `catch syscall ptrace` arrête GDB deux fois, à l'entrée puis à la sortie de l'appel système ; au second arrêt, `set $rax = 0` neutralise le résultat. La procédure pas à pas est détaillée à la section 1.6 de la partie 4.
+3. **Patcher** le saut `je detecte` en `nop` (chapitre 4), ou remplacer le `call ptrace` par `xor eax, eax` suivi de `nop`.
 4. **LD_PRELOAD** : créer une bibliothèque qui définit une fausse fonction `ptrace` renvoyant toujours 0, et la charger avant la libc. Cela ne fonctionne que si le programme appelle bien la fonction de la libc (et non directement l'appel système avec `syscall`).
 
 ```c
@@ -86,7 +86,7 @@ flowchart TD
     X3["LD_PRELOAD :<br/>faux ptrace qui renvoie 0"] -.-> P
 ```
 
-## 12.3 Autres détections de débogueur
+## 5.3 Autres détections de débogueur
 
 | Technique | Principe | Contournement |
 |---|---|---|
@@ -96,11 +96,11 @@ flowchart TD
 | Vérification d'intégrité | somme de contrôle de son propre code, modifiée par un patch ou un point d'arrêt | trouver la comparaison de la somme et la contourner |
 | Signaux | installe un gestionnaire de `SIGTRAP` puis déclenche `int3` : sans débogueur, le gestionnaire s'exécute ; avec, GDB l'intercepte | `handle SIGTRAP nostop pass` dans GDB |
 
-Les malwares Windows utilisent les mêmes idées avec d'autres fonctions, qu'il faut savoir reconnaître dans Ghidra (chapitre 13) : `IsDebuggerPresent`, `CheckRemoteDebuggerPresent`, `NtQueryInformationProcess`, lecture du champ `BeingDebugged` du PEB, `GetTickCount`.
+Les malwares Windows utilisent les mêmes idées avec d'autres fonctions, qu'il faut savoir reconnaître dans Ghidra (chapitre 6) : `IsDebuggerPresent`, `CheckRemoteDebuggerPresent`, `NtQueryInformationProcess`, lecture du champ `BeingDebugged` du PEB, `GetTickCount`.
 
 **Règle générale : une protection est une condition. Il faut trouver le test et forcer son résultat.**
 
-## 12.4 Les packers
+## 5.4 Les packers
 
 Un **packer** compresse ou chiffre le programme réel et y ajoute un court code qui le décompresse en mémoire au lancement. Sur le disque, le code réel est illisible.
 
@@ -135,7 +135,7 @@ Si UPX a été modifié pour empêcher `upx -d` (fréquent dans les malwares), o
 
 Méthode simple pour les CTF : il suffit souvent d'exécuter le programme packé dans GDB, de l'interrompre au moment où il attend la saisie (`Ctrl+C`) et de lire la mémoire, où tout est déjà décompressé.
 
-## 12.5 L'obfuscation
+## 5.5 L'obfuscation
 
 L'obfuscation rend le code difficile à lire, sans le cacher.
 
@@ -148,11 +148,11 @@ Face à l'obfuscation, l'analyse dynamique est le meilleur allié : **le program
 
 ## Exercices
 
-**Exercice 12.1** Écrire un petit programme qui appelle `ptrace(PTRACE_TRACEME, ...)` et affiche "OK" ou "Débogueur". Le compiler, le stripper, puis contourner la protection avec les quatre techniques de la section 12.2.
+**Exercice 5.1** Écrire un petit programme qui appelle `ptrace(PTRACE_TRACEME, ...)` et affiche "OK" ou "Débogueur". Le compiler, le stripper, puis contourner la protection avec les quatre techniques de la section 5.2.
 
-**Exercice 12.2** Compiler un "hello world", puis le packer avec UPX (`upx -o hello_packe hello`). Comparer `strings`, `nm -D` et la taille des deux fichiers. Le dépacker.
+**Exercice 5.2** Compiler un "hello world", puis le packer avec UPX (`upx -o hello_packe hello`). Comparer `strings`, `nm -D` et la taille des deux fichiers. Le dépacker.
 
-**Exercice 12.3** Écrire un programme qui lit `/proc/self/status` et cherche une ligne `TracerPid:` non nulle. Le lancer normalement, puis sous GDB, et observer la différence. Comment le contourner ?
+**Exercice 5.3** Écrire un programme qui lit `/proc/self/status` et cherche une ligne `TracerPid:` non nulle. Le lancer normalement, puis sous GDB, et observer la différence. Comment le contourner ?
 
 ## Fil rouge : coffre v4
 
@@ -171,6 +171,6 @@ Solutions : [solutions/partie2.md](../solutions/partie2.md#coffre-v4)
 
 ## Suivi
 
-- [ ] Chapitre 12 : lecture
-- [ ] Chapitre 12 : exercices
-- [ ] Chapitre 12 : fil rouge (coffre v4)
+- [ ] Partie 3, chapitre 5 : lecture
+- [ ] Partie 3, chapitre 5 : exercices
+- [ ] Partie 3, chapitre 5 : fil rouge (coffre v4)

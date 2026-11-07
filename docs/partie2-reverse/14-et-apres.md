@@ -1,14 +1,14 @@
-# Chapitre 14 : et après ?
+# Chapitre 15 : et après ?
 
 Les bases sont désormais en place : lecture de l'assembleur, méthode, outils et schémas classiques. La suite relève de la pratique, mais d'une pratique **structurée**, afin que chaque challenge apporte quelque chose.
 
-## 14.1 Faire un challenge de façon utile
+## 15.1 Faire un challenge de façon utile
 
 Le sentiment de ne rien apprendre en se faisant guider, et de voir chaque challenge comme un cas nouveau, tient souvent à la façon de travailler plutôt qu'au niveau. La routine suivante y remédie.
 
 ```mermaid
 flowchart TD
-    A["Avant : fixer une durée<br/>(par exemple 1 h 30)"] --> B["Pendant : méthode du chapitre 8<br/>notes à chaque étape"]
+    A["Avant : fixer une durée<br/>(par exemple 1 h 30)"] --> B["Pendant : méthode du chapitre 1<br/>notes à chaque étape"]
     B --> C{"Blocage ?"}
     C -- "oui" --> D["Formuler précisément<br/>le point bloquant"]
     D --> E["Question de connaissance<br/>uniquement"]
@@ -21,7 +21,7 @@ flowchart TD
 
 **Avant** : fixer une durée (par exemple 1 h 30 pour un challenge "easy").
 
-**Pendant** : appliquer la méthode du chapitre 8, dans l'ordre, en consignant chaque étape dans un fichier :
+**Pendant** : appliquer la méthode du chapitre 1, dans l'ordre, en consignant chaque étape dans un fichier :
 
 ```markdown
 # Nom du challenge
@@ -45,7 +45,7 @@ flowchart TD
 ## Ce qui a été appris
 - ...
 
-## Schéma (tableau du chapitre 11)
+## Schéma (tableau du chapitre 4)
 - transformation puis comparaison
 ```
 
@@ -55,7 +55,7 @@ flowchart TD
 
 Tous les dix challenges, relire les fiches "Ce qui a été appris" : les schémas récurrents deviennent évidents.
 
-## 14.2 Plan d'entraînement
+## 15.2 Plan d'entraînement
 
 ### Semaines 1 à 4 : consolider
 
@@ -78,7 +78,7 @@ Tous les dix challenges, relire les fiches "Ce qui a été appris" : les schéma
 - L'analyse d'échantillons réels de familles documentées (MalwareBazaar), dans l'environnement dédié, en comparant son rapport avec des analyses publiées.
 - D'autres langages compilés, qui produisent des binaires très différents : C++ (classes et vtables), Go, Rust, .NET (qui se décompile presque parfaitement avec ILSpy, disponible sur macOS via `ilspycmd` ou AvaloniaILSpy), Python empaqueté avec PyInstaller.
 
-## 14.3 Ressources
+## 15.3 Ressources
 
 ### Assembleur et reverse
 
@@ -105,11 +105,11 @@ Tous les dix challenges, relire les fiches "Ce qui a été appris" : les schéma
 | Flare-On | reverse avancé, archives avec solutions officielles |
 | MalwareBazaar | échantillons réels, à manipuler uniquement dans un environnement dédié |
 
-## 14.4 Conclusion
+## 15.4 Conclusion
 
 Le reverse s'apprend comme une langue : on traduit d'abord mot à mot (comme pour `verifier`), puis on reconnaît des expressions entières, et l'on finit par lire couramment. Les débuts sont lents, c'est normal. Chaque fonction décompilée soi-même, même lentement, apporte davantage que dix challenges résolus par quelqu'un d'autre.
 
 ## Suivi
 
-- [ ] Chapitre 14 : lecture
-- [ ] Chapitre 14 : premier challenge fait avec la routine de la section 14.1
+- [ ] Partie 3, chapitre 15 : lecture
+- [ ] Partie 3, chapitre 15 : premier challenge fait avec la routine de la section 15.1

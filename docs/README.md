@@ -6,101 +6,130 @@ Un cours progressif, en français, qui mène de la lecture d'un premier désasse
 
 En CTF, chaque challenge semble différent des précédents. En réalité, les mêmes briques reviennent sans cesse : une comparaison, une boucle qui transforme une chaîne, un appel de fonction, une protection anti-debug. La difficulté n'est pas de connaître toutes les astuces, mais de **reconnaître les briques**.
 
-Le cours est organisé en trois parties, précédées d'une partie 0 facultative :
+Le cours est organisé en cinq parties :
 
-0. **Partie 0** (facultative) : les bases du langage C, pour qui en a peu fait. On n'y apprend pas à être développeur C, mais à lire le C et à comprendre les notions qui servent au reverse (pointeurs, chaînes, tableaux, structures, `argv`). Elle peut être sautée par qui connaît déjà le C.
-1. **Partie 1** : lire l'assembleur x86-64 produit par un compilateur C. L'objectif n'est pas d'écrire de gros programmes en assembleur, mais de reconnaître un `if`, une boucle, un appel de fonction, un tableau, une structure.
-2. **Partie 2** : appliquer une **méthode** de reverse identique d'un challenge à l'autre (reconnaître, observer, comprendre, agir), puis l'étendre à l'analyse de malware.
-3. **Partie 3** : écrire soi-même quelques programmes en assembleur, ce qui consolide la lecture et prépare aux shellcodes et aux challenges d'exploitation.
+1. **Partie 1 : les bases du C** (facultative pour qui connaît déjà le C). On n'y apprend pas à être développeur C, mais à lire le C et à comprendre les notions qui servent au reverse (pointeurs, chaînes, tableaux, structures, `argv`).
+2. **Partie 2 : l'assembleur**. Lire l'assembleur x86-64 produit par un compilateur C. L'objectif n'est pas d'écrire de gros programmes en assembleur, mais de reconnaître un `if`, une boucle, un appel de fonction, un tableau, une structure.
+3. **Partie 3 : le reverse**. Appliquer une **méthode** de reverse identique d'un challenge à l'autre (reconnaître, observer, comprendre, agir), puis l'étendre à l'analyse de malware.
+4. **Partie 4 : écrire de l'assembleur**. Écrire soi-même quelques programmes en assembleur, ce qui consolide la lecture et prépare aux shellcodes et aux challenges d'exploitation.
+5. **Partie 5 : capstone**. Un projet final qui combine tout : défis CTF avancés, analyse d'un cas de malware et rédaction d'un rapport.
 
 Principe central : **les programmes d'exemple sont compilés par l'apprenant**, désassemblés, puis comparés au code C. Ce va-et-vient entre C et assembleur est beaucoup plus formateur que la résolution guidée de challenges.
 
 ```mermaid
 flowchart LR
-    A["Partie 1 : lire l'assembleur<br/>fil rouge : mystere"] --> B["Partie 2 : méthode et outils<br/>fil rouge : coffre v1 à v5"]
+    Z["Partie 1 : les bases du C<br/>(facultative)"] --> A["Partie 2 : lire l'assembleur<br/>fil rouge : mystere"]
+    A --> B["Partie 3 : méthode et outils<br/>fil rouge : coffre v1 à v5"]
     B --> C["Crackmes et CTF"]
     B --> D["Analyse de malware<br/>fil rouge : coffre v5"]
-    A --> E["Partie 3 : écrire de l'assembleur<br/>fil rouge : keygen et loader"]
+    A --> E["Partie 4 : écrire de l'assembleur<br/>fil rouge : keygen et loader"]
     B --> E
+    B --> F["Partie 5 : capstone<br/>CTF avancés et malware"]
+    E --> F
 ```
 
 ## Prérequis
 
-Le cours suppose quelques bases, utilisées dès le chapitre 1. Il n'est pas nécessaire d'être expert, mais les notions suivantes doivent être familières :
+Le seul vrai prérequis est l'aisance avec un terminal et un peu de Python. Le langage C, lui, n'est **pas** supposé connu : la partie 1 l'enseigne depuis le début, orientée vers ce qui sert au reverse. Qui connaît déjà le C peut sauter la partie 1 et commencer à la partie 2.
 
-- **Langage C** : variables, `if`, boucles, fonctions, pointeurs, `char *`, `struct`, `argv`, et quelques fonctions courantes (`strcmp`, `malloc`). Le code à analyser provient de C compilé. Si le C est nouveau ou lointain, la [partie 0](partie0-c/01-compiler-afficher.md) en donne les bases, orientées reverse, avec des exercices à faire soi-même. Rattrapage complémentaire : [Learn C (en anglais, interactif)](https://www.learn-c.org/) ou le [C book (en français)](https://zestedesavoir.com/tutoriels/755/le-langage-c-1/).
 - **Terminal Unix** : lancer une commande, les redirections (`|`, `<`, `2>`), `echo $?` (code de retour), `chmod +x`. Rattrapage : [la ligne de commande (OpenClassrooms)](https://openclassrooms.com/fr/courses/43538-reprenez-le-controle-a-laide-de-linux).
 - **Python de base** : lancer `python3`, manipuler des chaînes et des octets, une boucle `for`. Les scripts de solution et quelques exercices l'utilisent. Rattrapage : [le tutoriel officiel](https://docs.python.org/fr/3/tutorial/).
+
+Le **langage C** (variables, `if`, boucles, fonctions, pointeurs, `char *`, `struct`, `argv`, `strcmp`, `malloc`) est utile dès la partie 2, puisque le code à analyser provient de C compilé. Mais il n'est pas un prérequis : la [partie 1](partie0-c/01-compiler-afficher.md) en donne les bases, avec des exercices à faire soi-même. Rattrapage complémentaire au besoin : [Learn C (en anglais, interactif)](https://www.learn-c.org/) ou le [C book (en français)](https://zestedesavoir.com/tutoriels/755/le-langage-c-1/).
 
 Les notions d'assembleur, de reverse et les outils (Docker, GDB, Ghidra) sont, eux, expliqués au fil du cours : aucun prérequis de ce côté. Un [glossaire](glossaire.md) regroupe les définitions courtes des termes employés, avec un renvoi au chapitre où chacun est détaillé.
 
 ## Plan
 
-### Partie 0 : les bases du C (facultative)
+### Partie 1 : les bases du C (facultative)
 
-Pour qui a peu ou pas fait de C. Une vraie piscine : beaucoup de petites fonctions à recoder soi-même, des exercices gradués (niveaux 1 à 3) et des contraintes strictes, le tout orienté vers ce qui sert au reverse. On commence sans la bibliothèque standard, puis on l'introduit. Un fil rouge (le mini-crackme `coffre0`) se construit chapitre après chapitre et sera désassemblé en partie 2.
+Pour qui a peu ou pas fait de C. Une vraie piscine : beaucoup de petites fonctions à recoder soi-même, des exercices gradués (niveaux 1 à 3) et des contraintes strictes, le tout orienté vers ce qui sert au reverse. On commence sans la bibliothèque standard, puis on l'introduit. Un fil rouge (le mini-crackme `coffre0`) se construit chapitre après chapitre et sera désassemblé en partie 3.
 
 | Chapitre | Contenu |
 |---|---|
-| [0.1 Compiler et afficher](partie0-c/01-compiler-afficher.md) | `main`, compilation, `write`, `my_putchar`, `printf` |
-| [0.2 Variables et types](partie0-c/02-variables-types.md) | Types, `sizeof`, signé/non signé, débordement, hexadécimal |
-| [0.3 Conditions](partie0-c/03-conditions.md) | `if`/`else`, opérateurs, ternaire, `switch` |
-| [0.4 Boucles](partie0-c/04-boucles.md) | `while`, `for`, `do while`, `break`/`continue`, `my_putnbr` |
-| [0.5 Fonctions](partie0-c/05-fonctions.md) | Prototypes, portée, passage par valeur, récursion |
-| [0.6 Pointeurs](partie0-c/06-pointeurs.md) | Adresses, `&` et `*`, passage par adresse, `int **` |
-| [0.7 Chaînes de caractères](partie0-c/07-chaines.md) | `char *`, `'\0'`, famille `my_str*` recodée |
-| [0.8 Tableaux](partie0-c/08-tableaux.md) | Parcours, tableaux et pointeurs, tri, recherche dichotomique |
-| [0.9 Arguments du programme](partie0-c/09-arguments.md) | `argc`, `argv`, `my_getnbr`, premiers mini-crackmes |
-| [0.10 Structures](partie0-c/10-structures.md) | `struct`, `.` et `->`, tableau de structures |
-| [0.11 Allocation dynamique](partie0-c/11-allocation.md) | `malloc`, `free`, `my_strdup`, fuites et pièges |
-| [0.12 En-têtes et Makefile](partie0-c/12-makefile.md) | `.h`, compilation séparée, `make`, `man` |
-| [0.13 Projet de fin de partie](partie0-c/13-projet.md) | Synthèse `ma_libc` et mini-crackme `coffre0` complet |
+| [1. Compiler et afficher](partie0-c/01-compiler-afficher.md) | `main`, compilation, `write`, `my_putchar`, `printf` |
+| [2. Variables et types](partie0-c/02-variables-types.md) | Types, `sizeof`, signé/non signé, débordement, hexadécimal |
+| [3. Conditions](partie0-c/03-conditions.md) | `if`/`else`, opérateurs, ternaire, `switch` |
+| [4. Boucles](partie0-c/04-boucles.md) | `while`, `for`, `do while`, `break`/`continue`, `my_putnbr` |
+| [5. Fonctions](partie0-c/05-fonctions.md) | Prototypes, portée, passage par valeur, récursion |
+| [6. Pointeurs](partie0-c/06-pointeurs.md) | Adresses, `&` et `*`, passage par adresse, `int **` |
+| [7. Chaînes de caractères](partie0-c/07-chaines.md) | `char *`, `'\0'`, famille `my_str*` recodée |
+| [8. Tableaux](partie0-c/08-tableaux.md) | Parcours, tableaux et pointeurs, tri, recherche dichotomique |
+| [9. Arguments du programme](partie0-c/09-arguments.md) | `argc`, `argv`, `my_getnbr`, premiers mini-crackmes |
+| [10. Structures](partie0-c/10-structures.md) | `struct`, `.` et `->`, tableau de structures |
+| [11. Allocation dynamique](partie0-c/11-allocation.md) | `malloc`, `free`, `my_strdup`, fuites et pièges |
+| [12. En-têtes et Makefile](partie0-c/12-makefile.md) | `.h`, compilation séparée, `make`, `man` |
+| [13. Projet de fin de partie](partie0-c/13-projet.md) | Synthèse `ma_libc` et mini-crackme `coffre0` complet |
 
-### Partie 1 : l'assembleur pour le reverse
-
-| Chapitre | Contenu | Fil rouge |
-|---|---|---|
-| [01 Les bases](partie1-assembleur/01-bases.md) | Binaire, hexadécimal, octets, mémoire, little endian, signé et non signé | Préparation de l'environnement |
-| [02 Registres et premières instructions](partie1-assembleur/02-registres-instructions.md) | Registres, `mov`, `add`, `sub`, `lea`, `imul`, `xor`, opérandes mémoire | Début de `verifier` |
-| [03 Comparaisons et sauts](partie1-assembleur/03-comparaisons-sauts.md) | Flags, `cmp`, `test`, sauts conditionnels, `if` / `else` | Première condition |
-| [04 Boucles](partie1-assembleur/04-boucles.md) | `while`, `for`, repérage des boucles dans un listing | Les deux boucles |
-| [05 La pile et les fonctions](partie1-assembleur/05-pile-fonctions.md) | `push`, `pop`, `call`, `ret`, prologue, variables locales, conventions d'appel | Prototype de la fonction |
-| [06 Mémoire, tableaux, chaînes, structures](partie1-assembleur/06-memoire-donnees.md) | Adressage, `movzx`, `movsx`, tableaux, pointeurs, structures | Accès à `s[i]` |
-| [07 Du C à l'assembleur, et retour](partie1-assembleur/07-patterns-compilateur.md) | `switch`, optimisations, idiomes du compilateur, x86 32 bits | Réécriture complète en C |
-
-### Partie 2 : le reverse engineering
+### Partie 2 : l'assembleur pour le reverse
 
 | Chapitre | Contenu | Fil rouge |
 |---|---|---|
-| [08 La méthode et les premiers outils](partie2-reverse/08-methode-outils.md) | Méthode en 4 étapes, `file`, `strings`, `ltrace`, `strace`, `objdump` | Coffre v1 |
-| [09 Analyse statique avec Ghidra](partie2-reverse/09-ghidra.md) | Projet, décompilateur, renommage, types, références croisées | Coffre v2 (statique) |
-| [10 Analyse dynamique avec GDB](partie2-reverse/10-gdb.md) | Points d'arrêt, pas à pas, lecture de la mémoire, modification des registres, GEF | Coffre v2 (dynamique) |
-| [11 Les grands classiques des crackmes](partie2-reverse/11-classiques-crackmes.md) | Comparaisons, encodages, keygen, patching, catalogue des schémas | Coffre v3 (keygen) |
-| [12 Protections et anti-analyse](partie2-reverse/12-protections.md) | Binaire strippé, anti-debug, mesure du temps, packers, obfuscation | Coffre v4 |
-| [13 Initiation à l'analyse de malware](partie2-reverse/13-malware-analysis.md) | Laboratoire, triage, format PE, IOC, comportements typiques, rapport | Coffre v5 |
-| [14 Et après ?](partie2-reverse/14-et-apres.md) | Plan d'entraînement, ressources, méthode de progression | |
+| [1. Les bases](partie1-assembleur/01-bases.md) | Binaire, hexadécimal, octets, mémoire, little endian, signé et non signé | Préparation de l'environnement |
+| [2. Registres et premières instructions](partie1-assembleur/02-registres-instructions.md) | Registres, `mov`, `add`, `sub`, `lea`, `imul`, `xor`, opérandes mémoire | Début de `verifier` |
+| [3. Comparaisons et sauts](partie1-assembleur/03-comparaisons-sauts.md) | Flags, `cmp`, `test`, sauts conditionnels, `if` / `else` | Première condition |
+| [4. Boucles](partie1-assembleur/04-boucles.md) | `while`, `for`, repérage des boucles dans un listing | Les deux boucles |
+| [5. La pile et les fonctions](partie1-assembleur/05-pile-fonctions.md) | `push`, `pop`, `call`, `ret`, prologue, variables locales, conventions d'appel | Prototype de la fonction |
+| [6. Mémoire, tableaux, chaînes, structures](partie1-assembleur/06-memoire-donnees.md) | Adressage, `movzx`, `movsx`, tableaux, pointeurs, structures | Accès à `s[i]` |
+| [7. Du C à l'assembleur, et retour](partie1-assembleur/07-patterns-compilateur.md) | `switch`, optimisations, idiomes du compilateur, x86 32 bits | Réécriture complète en C |
+| [8. Challenge de synthèse](partie1-assembleur/08-challenge.md) | Reconstruire trois fonctions à partir du seul désassemblage | |
+| [9. Convention d'appel](partie1-assembleur/09-convention-appel.md) | System V, registres, pile, red zone, variadiques (approfondissement) | |
+| [10. Structures et tableaux](partie1-assembleur/10-structures-tableaux.md) | Agencement mémoire, `lea`, indexation (approfondissement) | |
+| [11. Lire du code optimisé](partie1-assembleur/11-optimisations.md) | `cmov`, division par constante, vectorisation (approfondissement) | |
+| [12. C++ et fonctions virtuelles](partie1-assembleur/12-cpp-vtables.md) | Name mangling, `this`, vtables (approfondissement) | |
+| [13. x86 32 bits](partie1-assembleur/13-x86-32bits.md) | `int 0x80`, pile pour les arguments, code PIC 32 bits (approfondissement) | |
 
-### Partie 3 : écrire de l'assembleur
-
-Écrire soi-même quelques programmes en assembleur consolide la lecture et prépare aux shellcodes et aux challenges d'exploitation. Les chapitres 15 et 16 (hors fil rouge) se lisent dès la fin de la partie 1 ; leurs fils rouges et le chapitre 17 supposent la partie 2 (voir le début du chapitre 15).
+### Partie 3 : le reverse engineering
 
 | Chapitre | Contenu | Fil rouge |
 |---|---|---|
-| [15 Premier programme NASM et appels système](partie3-ecriture/15-nasm-syscalls.md) | NASM, sections, `syscall`, descripteurs, `argv` sur la pile, anti-debug sans libc | `fr15` : afficher un argument |
-| [16 Fonctions, libc et alignement](partie3-ecriture/16-fonctions-libc.md) | Écrire une fonction, appeler `printf`, convention System V, alignement de pile sur 16 | keygen v3 en assembleur |
-| [17 Shellcode et loader chiffré](partie3-ecriture/17-shellcode.md) | Contraintes d'un shellcode, chaîne sur la pile, octets sans zéro, `mmap`, loader XOR | Analyser un loader |
+| [1. La méthode et les premiers outils](partie2-reverse/08-methode-outils.md) | Méthode en 4 étapes, `file`, `strings`, `ltrace`, `strace`, `objdump` | Coffre v1 |
+| [2. Analyse statique avec Ghidra](partie2-reverse/09-ghidra.md) | Projet, décompilateur, renommage, types, références croisées | Coffre v2 (statique) |
+| [3. Analyse dynamique avec GDB](partie2-reverse/10-gdb.md) | Points d'arrêt, pas à pas, lecture de la mémoire, modification des registres, GEF | Coffre v2 (dynamique) |
+| [4. Les grands classiques des crackmes](partie2-reverse/11-classiques-crackmes.md) | Comparaisons, encodages, keygen, patching, catalogue des schémas | Coffre v3 (keygen) |
+| [5. Protections et anti-analyse](partie2-reverse/12-protections.md) | Binaire strippé, anti-debug, mesure du temps, packers, obfuscation | Coffre v4 |
+| [6. Initiation à l'analyse de malware](partie2-reverse/13-malware-analysis.md) | Laboratoire, triage, format PE, IOC, comportements typiques, rapport | Coffre v5 |
+| [7. CTF maison](partie2-reverse/15-ctf-maison.md) | Une série de défis internes pour s'entraîner | |
+| [8. Laboratoire malware](partie2-reverse/16-labo-malware.md) | Deux cas à analyser de bout en bout | |
+| [9. Packing et UPX](partie2-reverse/17-packing-upx.md) | Entropie, stub de dépaquetage, dépaquetage statique (approfondissement) | |
+| [10. Anti-reverse avancé](partie2-reverse/18-anti-reverse.md) | Détections empilées et contournements, anti-désassemblage (approfondissement) | |
+| [11. Analyse dynamique avancée](partie2-reverse/19-analyse-dynamique.md) | `strace`, `ltrace`, Frida (approfondissement) | |
+| [12. Résolution automatique : angr et z3](partie2-reverse/20-angr-z3.md) | Exécution symbolique et solveur de contraintes (approfondissement) | |
+| [13. Lire les formats : ELF et PE](partie2-reverse/21-formats-elf-pe.md) | En-têtes, segments, sections, table d'import (approfondissement) | |
+| [14. Écrire des règles YARA](partie2-reverse/22-yara.md) | Signatures, entropie, IOC, imports (approfondissement) | |
+| [15. Et après ?](partie2-reverse/14-et-apres.md) | Plan d'entraînement, ressources, méthode de progression | |
+
+### Partie 4 : écrire de l'assembleur
+
+Écrire soi-même quelques programmes en assembleur consolide la lecture et prépare aux shellcodes et aux challenges d'exploitation. Les chapitres 1 et 2 (hors fil rouge) se lisent dès la fin de la partie 2 ; leurs fils rouges et le chapitre 3 supposent la partie 3 (voir le début du chapitre 1 de la partie 4).
+
+| Chapitre | Contenu | Fil rouge |
+|---|---|---|
+| [1. Premier programme NASM et appels système](partie3-ecriture/15-nasm-syscalls.md) | NASM, sections, `syscall`, descripteurs, `argv` sur la pile, anti-debug sans libc | `fr15` : afficher un argument |
+| [2. Fonctions, libc et alignement](partie3-ecriture/16-fonctions-libc.md) | Écrire une fonction, appeler `printf`, convention System V, alignement de pile sur 16 | keygen v3 en assembleur |
+| [3. Shellcode et loader chiffré](partie3-ecriture/17-shellcode.md) | Contraintes d'un shellcode, chaîne sur la pile, octets sans zéro, `mmap`, loader XOR | Analyser un loader |
+| [4. Challenge de synthèse](partie3-ecriture/18-challenge.md) | Un outil Unix sans libc, écrit et désassemblé | |
+
+### Partie 5 : capstone
+
+| Chapitre | Contenu |
+|---|---|
+| [1. Présentation du capstone](partie4-capstone/19-presentation.md) | Bac à sable, méthode d'approche, objectifs |
+| [2. Défis CTF avancés](partie4-capstone/20-ctf-avance.md) | Trois crackmes combinant plusieurs techniques |
+| [3. Cas de malware](partie4-capstone/21-cas-malware.md) | Triage, IOC, déchiffrement de la charge, identification |
+| [4. Rapport d'analyse](partie4-capstone/22-rapport-type.md) | Un modèle de rapport réutilisable |
 
 Le suivi de l'avancement se fait dans la page [Progression](progression.md) (sur le site, les cases cochées sont conservées dans le navigateur).
 
 ### Fil rouge
 
-- **Partie 1** : la fonction `verifier` du programme [mystere](fil-rouge/partie1/mystere.c). Au départ, seul son désassemblage est disponible ([mystere_O0.txt](fil-rouge/partie1/mystere_O0.txt)). Chaque chapitre permet d'en comprendre un morceau de plus. Au chapitre 7, la fonction est entièrement réécrite en C et un code valide est trouvé.
-- **Partie 2** : le programme "Coffre", de la v1 à la v5 (dossier `fil-rouge/partie2`). Chaque version ajoute une difficulté liée au chapitre : mot de passe en clair, puis chiffré, puis calculé à partir d'un nom, puis protégé contre le débogage, et enfin un faux malware à analyser.
-- **Partie 3** : réécrire le keygen du coffre v3 en assembleur, puis analyser un *loader* qui déchiffre un shellcode en mémoire (dossier `fil-rouge/partie3`).
+- **Partie 2** : la fonction `verifier` du programme [mystere](fil-rouge/partie1/mystere.c). Au départ, seul son désassemblage est disponible ([mystere_O0.txt](fil-rouge/partie1/mystere_O0.txt)). Chaque chapitre permet d'en comprendre un morceau de plus. Au chapitre 7, la fonction est entièrement réécrite en C et un code valide est trouvé.
+- **Partie 3** : le programme "Coffre", de la v1 à la v5 (dossier `fil-rouge/partie2`). Chaque version ajoute une difficulté liée au chapitre : mot de passe en clair, puis chiffré, puis calculé à partir d'un nom, puis protégé contre le débogage, et enfin un faux malware à analyser.
+- **Partie 4** : réécrire le keygen du coffre v3 en assembleur, puis analyser un *loader* qui déchiffre un shellcode en mémoire (dossier `fil-rouge/partie3`).
 
-Les **solutions** se trouvent dans le dossier `solutions` ([partie 1](solutions/partie1.md), [partie 2](solutions/partie2.md), [partie 3](solutions/partie3.md)). Il est recommandé de ne les consulter qu'après une recherche sérieuse (au moins 30 minutes par exercice) : c'est pendant la recherche, erreurs comprises, que l'apprentissage se fait.
+Les **solutions** se trouvent dans le dossier `solutions` ([partie 1](solutions/partie0.md), [partie 2](solutions/partie1.md), [partie 3](solutions/partie2.md), [partie 4](solutions/partie3.md), [partie 5](solutions/partie4.md)). Il est recommandé de ne les consulter qu'après une recherche sérieuse (au moins 30 minutes par exercice) : c'est pendant la recherche, erreurs comprises, que l'apprentissage se fait.
 
-## Règle du jeu pour le fil rouge de la partie 2
+## Règle du jeu pour le fil rouge de la partie 3
 
 Les sources des coffres sont fournies pour pouvoir les compiler. Les lire avant de résoudre l'exercice supprime évidemment tout l'intérêt. Deux options :
 
@@ -119,11 +148,11 @@ colima start reverse --arch x86_64 --cpu 4 --memory 6 --disk 30   # Apple Silico
 ./environnement/lab.sh      # depuis le dossier docs du dépôt : ouvre un shell dans le conteneur
 ```
 
-Ghidra (chapitre 9) s'installe directement sur macOS.
+Ghidra (chapitre 2 de la partie 3) s'installe directement sur macOS.
 
 Sous Linux x86-64 natif, il suffit d'installer les paquets listés dans le [Dockerfile](environnement/Dockerfile) (`build-essential gdb strace ltrace binutils python3...`), ou d'utiliser le même conteneur.
 
-Aucune machine Windows n'est nécessaire. Le chapitre 13 explique comment étudier des malwares Windows sans Windows.
+Aucune machine Windows n'est nécessaire. Le chapitre 6 de la partie 3 explique comment étudier des malwares Windows sans Windows.
 
 ### Compiler tout le fil rouge sans lire les sources
 
@@ -154,4 +183,4 @@ Comptez environ 2 à 4 heures par chapitre. Un chapitre bien assimilé vaut mieu
 
 ## Sur l'usage de l'IA en CTF
 
-Se faire guider pas à pas sur un challenge donne peu de résultats durables : la personne ou l'outil qui guide effectue le travail de reconnaissance, c'est-à-dire précisément la compétence à acquérir. Pendant ce cours, une règle simple : réserver l'aide extérieure aux **questions de connaissance** ("que fait l'instruction `cdqe` ?") et jamais aux **questions de raisonnement** ("que fait ce programme ?"). Le chapitre 14 revient sur ce point.
+Se faire guider pas à pas sur un challenge donne peu de résultats durables : la personne ou l'outil qui guide effectue le travail de reconnaissance, c'est-à-dire précisément la compétence à acquérir. Pendant ce cours, une règle simple : réserver l'aide extérieure aux **questions de connaissance** ("que fait l'instruction `cdqe` ?") et jamais aux **questions de raisonnement** ("que fait ce programme ?"). Le chapitre 15 de la partie 3 revient sur ce point.

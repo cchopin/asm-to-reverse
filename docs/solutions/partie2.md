@@ -1,24 +1,24 @@
-# Solutions de la partie 2
+# Solutions de la partie 3
 
 Les adresses citées viennent de binaires compilés avec gcc 13 (Ubuntu 24.04). Avec un autre compilateur, elles peuvent différer : c'est la démarche qui compte. Dans le conteneur du cours (gcc 13), elles doivent être identiques. Les scripts sont dans le dossier `solutions/scripts` : [keygen_v3.py](scripts/keygen_v3.py), [solve_v2.py](scripts/solve_v2.py), [decode_v4.py](scripts/decode_v4.py), [v4.gdb](scripts/v4.gdb), [decode_v5.py](scripts/decode_v5.py), [coffre_v5.yar](scripts/coffre_v5.yar).
 
 ## Exercices des chapitres
 
-### Chapitre 8
+### Chapitre 1
 
-**8.1** `/bin/ls` : ELF 64 bits, PIE, dynamiquement lié, **strippé** (`nm` répond "no symbols"). `strings` montre les messages d'aide et les options ; `nm -D` montre les fonctions utilisées (`opendir`, `readdir`, `stat`...), ce qui suffit à deviner qu'il liste des fichiers.
+**1.1** `/bin/ls` : ELF 64 bits, PIE, dynamiquement lié, **strippé** (`nm` répond "no symbols"). `strings` montre les messages d'aide et les options ; `nm -D` montre les fonctions utilisées (`opendir`, `readdir`, `stat`...), ce qui suffit à deviner qu'il liste des fichiers.
 
-**8.2** `strings` ne trouve pas `1337` : c'est une constante numérique dans le code (`cmp eax, 0x539`), pas une chaîne. `ltrace` montre `scanf("%d", ...)` mais pas la comparaison (faite par le programme, pas par une fonction de bibliothèque). `objdump` montre le `cmp ..., 0x539` : `0x539` = 1337. Leçon : chaque outil a son angle mort.
+**1.2** `strings` ne trouve pas `1337` : c'est une constante numérique dans le code (`cmp eax, 0x539`), pas une chaîne. `ltrace` montre `scanf("%d", ...)` mais pas la comparaison (faite par le programme, pas par une fonction de bibliothèque). `objdump` montre le `cmp ..., 0x539` : `0x539` = 1337. Leçon : chaque outil a son angle mort.
 
-### Chapitres 9 et 10
+### Chapitres 2 et 3
 
-**9.1 et 9.2** Exercices d'observation, pas de réponse unique. En général, Ghidra retrouve bien la structure et les types simples, mais choisit de mauvais noms et parfois des types trop larges (`ulong` au lieu de `int`). En `-O2`, il affiche souvent le test des chiffres sous la forme `(byte)(c - 0x30) < 10`, qui est la traduction directe du `sub` / `cmp` / `ja`.
+**2.1 et 2.2** Exercices d'observation, pas de réponse unique. En général, Ghidra retrouve bien la structure et les types simples, mais choisit de mauvais noms et parfois des types trop larges (`ulong` au lieu de `int`). En `-O2`, il affiche souvent le test des chiffres sous la forme `(byte)(c - 0x30) < 10`, qui est la traduction directe du `sub` / `cmp` / `ja`.
 
-**10.1** À la première comparaison (`cmp DWORD PTR [rbp-0x4],0x8`), `[rbp-0x4]` vaut 8 : la boucle de longueur a compté les 8 caractères de `12345678`.
+**3.1** À la première comparaison (`cmp DWORD PTR [rbp-0x4],0x8`), `[rbp-0x4]` vaut 8 : la boucle de longueur a compté les 8 caractères de `12345678`.
 
-**10.2** `break verifier`, `run 11111111`, `finish` (GDB s'arrête juste après le `call verifier` dans `main`, avec la valeur de retour dans `eax`), `set $eax = 1`, `continue` : "Code accepte".
+**3.2** `break verifier`, `run 11111111`, `finish` (GDB s'arrête juste après le `call verifier` dans `main`, avec la valeur de retour dans `eax`), `set $eax = 1`, `continue` : "Code accepte".
 
-**10.3**
+**3.3**
 
 ```
 set pagination off
@@ -33,25 +33,25 @@ run 12345678
 
 (`0x4011ef` est le test de la deuxième boucle, atteint à chaque tour. Le binaire est compilé avec `-no-pie`, donc les adresses du listing sont les vraies.)
 
-### Chapitre 11
+### Chapitre 4
 
-**11.1** a) transformation puis comparaison (attention, chaque octet dépend du suivant : il faut résoudre en chaîne, ou avec z3) ; b) comparaison d'empreinte (force brute si l'espace est petit, sinon chercher une faiblesse) ; c) contraintes, z3 ; d) machine virtuelle, écrire un désassembleur du bytecode.
+**4.1** a) transformation puis comparaison (attention, chaque octet dépend du suivant : il faut résoudre en chaîne, ou avec z3) ; b) comparaison d'empreinte (force brute si l'espace est petit, sinon chercher une faiblesse) ; c) contraintes, z3 ; d) machine virtuelle, écrire un désassembleur du bytecode.
 
-**11.2** La solution est `z3ok`. Pour chercher une autre solution : `solveur.add(Or([c != m[c] for c in s]))` puis `check()`. Ici, la réponse est `unsat` : la solution est unique (chaque contrainte fixe un caractère à partir du suivant).
+**4.2** La solution est `z3ok`. Pour chercher une autre solution : `solveur.add(Or([c != m[c] for c in s]))` puis `check()`. Ici, la réponse est `unsat` : la solution est unique (chaque contrainte fixe un caractère à partir du suivant).
 
-**11.3** Dans `main`, le `je` qui suit `test eax, eax` après `call verifier` peut devenir deux `nop` (on tombe toujours sur "Code accepte"). Dans `verifier`, on peut remplacer les premières instructions par `mov eax, 1` / `ret` (`B8 01 00 00 00 C3`).
+**4.3** Dans `main`, le `je` qui suit `test eax, eax` après `call verifier` peut devenir deux `nop` (on tombe toujours sur "Code accepte"). Dans `verifier`, on peut remplacer les premières instructions par `mov eax, 1` / `ret` (`B8 01 00 00 00 C3`).
 
-### Chapitre 12
+### Chapitre 5
 
-**12.1** à **12.3** : voir la solution du coffre v4, les techniques sont les mêmes. Pour `/proc/self/status`, mettre un point d'arrêt après la lecture et modifier la valeur lue, ou patcher la comparaison.
+**5.1** à **5.3** : voir la solution du coffre v4, les techniques sont les mêmes. Pour `/proc/self/status`, mettre un point d'arrêt après la lecture et modifier la valeur lue, ou patcher la comparaison.
 
-### Chapitre 13
+### Chapitre 6
 
-**13.1** Les valeurs dépendent de la version de `putty.exe`. On doit trouver des sections classiques (`.text`, `.rdata`, `.data`, `.pdata`, `.rsrc`, `.reloc`), une entropie modérée (autour de 6 pour `.text`, ce qui indique un binaire non packé), et des imports de `KERNEL32.dll`, `USER32.dll`, `GDI32.dll`, `ADVAPI32.dll` (registre, pour mémoriser les sessions) et de bibliothèques réseau. capa signale par exemple des capacités réseau (connexion TCP), d'accès au registre et de chiffrement : un logiciel légitime peut avoir des capacités "suspectes", c'est leur **combinaison** et leur **contexte** qui comptent.
+**6.1** Les valeurs dépendent de la version de `putty.exe`. On doit trouver des sections classiques (`.text`, `.rdata`, `.data`, `.pdata`, `.rsrc`, `.reloc`), une entropie modérée (autour de 6 pour `.text`, ce qui indique un binaire non packé), et des imports de `KERNEL32.dll`, `USER32.dll`, `GDI32.dll`, `ADVAPI32.dll` (registre, pour mémoriser les sessions) et de bibliothèques réseau. capa signale par exemple des capacités réseau (connexion TCP), d'accès au registre et de chiffrement : un logiciel légitime peut avoir des capacités "suspectes", c'est leur **combinaison** et leur **contexte** qui comptent.
 
-**13.2** a) rançongiciel (parcours de fichiers, lecture, chiffrement, réécriture, suppression des originaux) ; b) injection de code dans un autre processus ; c) keylogger qui envoie les frappes par HTTP ; d) programme packé ou chargeur (loader) : il alloue de la mémoire, y écrit du code, la rend exécutable (`VirtualProtect`) et résout ses imports à la main.
+**6.2** a) rançongiciel (parcours de fichiers, lecture, chiffrement, réécriture, suppression des originaux) ; b) injection de code dans un autre processus ; c) keylogger qui envoie les frappes par HTTP ; d) programme packé ou chargeur (loader) : il alloue de la mémoire, y écrit du code, la rend exécutable (`VirtualProtect`) et résout ses imports à la main.
 
-**13.3** Exemple de règle, à partir des chaînes propres à chaque version :
+**6.3** Exemple de règle, à partir des chaînes propres à chaque version :
 
 ```
 rule Coffre_v1_v2
@@ -66,7 +66,7 @@ rule Coffre_v1_v2
 
 `coffre_v3` affiche "Serial invalide." et non "Acces refuse." : il n'est pas détecté. `/bin/ls` non plus.
 
-**13.4** Exercice ouvert. Points d'attention : distinguer dans le rapport ce qui relève du malware (processus enfants, fichiers déposés, connexions) de l'activité normale du système, et relever en priorité les artefacts stables (mutex, chemins, user-agent) plutôt que les seules adresses IP.
+**6.4** Exercice ouvert. Points d'attention : distinguer dans le rapport ce qui relève du malware (processus enfants, fichiers déposés, connexions) de l'activité normale du système, et relever en priorité les artefacts stables (mutex, chemins, user-agent) plutôt que les seules adresses IP.
 
 ## Coffre v1
 
@@ -336,13 +336,13 @@ print("".join(chr(b ^ 0x11) for b in payload))   # charge factice FLAG{dropper_d
 
 ## Packing et UPX {#packing-upx}
 
-**17.1** Sur un binaire ELF normal, l'entropie est modérée (souvent 1 à 6 bits/octet selon le remplissage), tandis que sa version compressée monte à environ 7.8-7.9. Mesures typiques : binaire normal `1.47`, compressé `7.86`, aléatoire `7.99`. Le seuil pratique est **~7.2 bits/octet** : au-dessus, le contenu est compressé ou chiffré.
+**9.1** Sur un binaire ELF normal, l'entropie est modérée (souvent 1 à 6 bits/octet selon le remplissage), tandis que sa version compressée monte à environ 7.8-7.9. Mesures typiques : binaire normal `1.47`, compressé `7.86`, aléatoire `7.99`. Le seuil pratique est **~7.2 bits/octet** : au-dessus, le contenu est compressé ou chiffré.
 
-**17.2** Après `gcc -O2 -s packed.c -o packed -lz`, `./packed` affiche son message, mais `strings packed | grep -i flag` ne renvoie rien. Le message n'est pas stocké en clair : il fait partie du payload compressé (`blob`), et n'est reconstitué qu'à l'exécution, par `uncompress` dans une zone `mmap`, juste avant le saut dessus. Tant qu'on n'exécute pas, le fichier ne le contient que sous forme compressée, illisible par `strings`.
+**9.2** Après `gcc -O2 -s packed.c -o packed -lz`, `./packed` affiche son message, mais `strings packed | grep -i flag` ne renvoie rien. Le message n'est pas stocké en clair : il fait partie du payload compressé (`blob`), et n'est reconstitué qu'à l'exécution, par `uncompress` dans une zone `mmap`, juste avant le saut dessus. Tant qu'on n'exécute pas, le fichier ne le contient que sous forme compressée, illisible par `strings`.
 
-**17.3** Le binaire packé présente typiquement : un point d'entrée déplacé (vers le stub), une grosse zone de données à forte entropie, peu de chaînes utiles, et pour un vrai UPX des sections nommées `UPX0`/`UPX1`. Sur un échantillon inconnu, la combinaison « entropie élevée + strings vide + point d'entrée hors `.text` habituelle + sections inhabituelles » est une signature de packing. (Le packer de démonstration garde des sections normales, puisqu'il s'agit d'un simple programme C embarquant un blob ; un vrai UPX modifie l'en-tête et les sections.)
+**9.3** Le binaire packé présente typiquement : un point d'entrée déplacé (vers le stub), une grosse zone de données à forte entropie, peu de chaînes utiles, et pour un vrai UPX des sections nommées `UPX0`/`UPX1`. Sur un échantillon inconnu, la combinaison « entropie élevée + strings vide + point d'entrée hors `.text` habituelle + sections inhabituelles » est une signature de packing. (Le packer de démonstration garde des sections normales, puisqu'il s'agit d'un simple programme C embarquant un blob ; un vrai UPX modifie l'en-tête et les sections.)
 
-**17.4** Dépaquetage statique, sans exécution :
+**9.4** Dépaquetage statique, sans exécution :
 
 ```python
 import zlib
@@ -353,48 +353,48 @@ open("depaque.bin", "wb").write(code)
 
 Puis `objdump -D -b binary -m i386:x86-64 -M intel depaque.bin` montre le shellcode original (`jmp`/`call`/`pop` puis `write` et `ret`), et `strings depaque.bin` révèle `code original execute: FLAG{depack_ok}`. Le binaire n'a jamais été lancé : c'est la méthode à privilégier face à un échantillon hostile, quand on connaît (ou devine) l'algorithme de compression.
 
-**17.5** Dépaquetage dynamique générique : en bac à sable, lancer le binaire sous GDB, laisser le stub décompresser, et poser un point d'arrêt sur le **saut vers l'OEP** (le `jmp`/`call` vers l'adresse de la zone fraîchement rendue exécutable, souvent repérable par un `jmp` lointain ou un appel sur registre après un `mprotect`). À cet instant, le code original est en clair en mémoire : on le *dumpe* (`dump binary memory oep.bin debut fin`) et on l'analyse ensuite statiquement. Cette méthode marche pour **n'importe quel** packer, car tout packer finit par dévoiler le code en mémoire pour l'exécuter. Elle est plus générale que `upx -d`, qui ne fonctionne que pour UPX standard non modifié.
+**9.5** Dépaquetage dynamique générique : en bac à sable, lancer le binaire sous GDB, laisser le stub décompresser, et poser un point d'arrêt sur le **saut vers l'OEP** (le `jmp`/`call` vers l'adresse de la zone fraîchement rendue exécutable, souvent repérable par un `jmp` lointain ou un appel sur registre après un `mprotect`). À cet instant, le code original est en clair en mémoire : on le *dumpe* (`dump binary memory oep.bin debut fin`) et on l'analyse ensuite statiquement. Cette méthode marche pour **n'importe quel** packer, car tout packer finit par dévoiler le code en mémoire pour l'exécuter. Elle est plus générale que `upx -d`, qui ne fonctionne que pour UPX standard non modifié.
 
-**17.6** Le binaire à **7.8** bits/octet est le plus probablement packé : cette valeur, proche du maximum de 8, indique un contenu compressé ou chiffré. 4.9 correspond à du code/texte ordinaire, et 6.1 à un binaire mixte non packé. Le seuil d'alerte est autour de 7.2.
+**9.6** Le binaire à **7.8** bits/octet est le plus probablement packé : cette valeur, proche du maximum de 8, indique un contenu compressé ou chiffré. 4.9 correspond à du code/texte ordinaire, et 6.1 à un binaire mixte non packé. Le seuil d'alerte est autour de 7.2.
 
 ## Anti-reverse avancé {#anti-reverse}
 
-**18.1** En exécution normale, aucun test ne se déclenche : `FLAG{anti_debug_contourne}`. Sous `strace` comme sous GDB, le test **TracerPid** se déclenche en premier (`/proc/self/status` indique le PID du traceur attaché, donc non nul). Avec `LD_PRELOAD` défini, c'est le test **LD_PRELOAD** qui bloque. Le test `ptrace` ne se voit que si l'on neutralise d'abord TracerPid tout en restant tracé.
+**10.1** En exécution normale, aucun test ne se déclenche : `FLAG{anti_debug_contourne}`. Sous `strace` comme sous GDB, le test **TracerPid** se déclenche en premier (`/proc/self/status` indique le PID du traceur attaché, donc non nul). Avec `LD_PRELOAD` défini, c'est le test **LD_PRELOAD** qui bloque. Le test `ptrace` ne se voit que si l'on neutralise d'abord TracerPid tout en restant tracé.
 
-**18.2** `faux.so` neutralise deux protections : son constructeur appelle `unsetenv("LD_PRELOAD")` **avant** `main`, donc `getenv("LD_PRELOAD")` ne voit rien (test LD_PRELOAD passé) ; et il définit un `ptrace` qui renvoie toujours 0, masquant celui de la libc (test ptrace passé). Résultat : `LD_PRELOAD=./faux.so ./protege` affiche le flag. Les tests TracerPid et timing passent d'eux-mêmes hors débogueur.
+**10.2** `faux.so` neutralise deux protections : son constructeur appelle `unsetenv("LD_PRELOAD")` **avant** `main`, donc `getenv("LD_PRELOAD")` ne voit rien (test LD_PRELOAD passé) ; et il définit un `ptrace` qui renvoie toujours 0, masquant celui de la libc (test ptrace passé). Résultat : `LD_PRELOAD=./faux.so ./protege` affiche le flag. Les tests TracerPid et timing passent d'eux-mêmes hors débogueur.
 
-**18.3** Le test TracerPid se termine par `test eax,eax` / `jne <bloc détecté>` (`0f 85 8b 00 00 00`). En remplaçant les 6 octets du `jne` par des `NOP`, le saut disparaît. Le binaire patché affiche le flag en temps normal, mais **sous `strace` il est encore détecté** : une fois TracerPid neutralisé, l'exécution atteint le test `ptrace`, qui échoue car `strace` utilise déjà `ptrace`. Une seule couche patchée ne suffit pas.
+**10.3** Le test TracerPid se termine par `test eax,eax` / `jne <bloc détecté>` (`0f 85 8b 00 00 00`). En remplaçant les 6 octets du `jne` par des `NOP`, le saut disparaît. Le binaire patché affiche le flag en temps normal, mais **sous `strace` il est encore détecté** : une fois TracerPid neutralisé, l'exécution atteint le test `ptrace`, qui échoue car `strace` utilise déjà `ptrace`. Une seule couche patchée ne suffit pas.
 
-**18.4** Il faut combiner : patch TracerPid (pour le traceur visible dans `/proc`) **et** `faux.so` (pour `ptrace`). `LD_PRELOAD=./faux.so strace ./protege_patch` franchit alors toutes les couches et affiche le flag. Morale : un binaire multi-protégé demande autant de parades que de couches.
+**10.4** Il faut combiner : patch TracerPid (pour le traceur visible dans `/proc`) **et** `faux.so` (pour `ptrace`). `LD_PRELOAD=./faux.so strace ./protege_patch` franchit alors toutes les couches et affiche le flag. Morale : un binaire multi-protégé demande autant de parades que de couches.
 
-**18.5** Un faux `getppid`/`ptrace` en `LD_PRELOAD` est compilé en bibliothèque partagée (`gcc -shared -fPIC`) et chargé avant la libc ; un programme témoin qui appelle la fonction obtient la version préchargée (valeur forcée). C'est plus souple qu'un patch : rien à modifier dans le binaire (utile s'il est signé ou vérifie son intégrité), et on peut activer ou non le contournement en définissant ou non `LD_PRELOAD`.
+**10.5** Un faux `getppid`/`ptrace` en `LD_PRELOAD` est compilé en bibliothèque partagée (`gcc -shared -fPIC`) et chargé avant la libc ; un programme témoin qui appelle la fonction obtient la version préchargée (valeur forcée). C'est plus souple qu'un patch : rien à modifier dans le binaire (utile s'il est signé ou vérifie son intégrité), et on peut activer ou non le contournement en définissant ou non `LD_PRELOAD`.
 
-**18.6** `antidis` renvoie 7 : le `jmp court` saute par-dessus l'octet `0xE8`, qui n'est donc **jamais exécuté**. En pas à pas sous GDB (`stepi`), on vérifie que l'exécution va directement de `jmp` à `mov eax, 60`. Mais `objdump -d`, qui décode linéairement, lit `0xE8` comme le début d'un `call rel32` et consomme les octets suivants, produisant une instruction fantôme et désynchronisant la suite. C'est tout l'écart entre balayage linéaire et désassemblage par flot de contrôle.
+**10.6** `antidis` renvoie 7 : le `jmp court` saute par-dessus l'octet `0xE8`, qui n'est donc **jamais exécuté**. En pas à pas sous GDB (`stepi`), on vérifie que l'exécution va directement de `jmp` à `mov eax, 60`. Mais `objdump -d`, qui décode linéairement, lit `0xE8` comme le début d'un `call rel32` et consomme les octets suivants, produisant une instruction fantôme et désynchronisant la suite. C'est tout l'écart entre balayage linéaire et désassemblage par flot de contrôle.
 
 ## Analyse dynamique avancée {#analyse-dynamique}
 
-**19.1** La trace `openat(AT_FDCWD, "/etc/hostname", O_RDONLY)` suivie de `connect(..., 127.0.0.1:8080) = ECONNREFUSED` montre que le programme lit le nom de la machine puis tente de se connecter à `127.0.0.1` sur le port 8080 (connexion refusée, aucun service en face). Toute l'activité fichiers + réseau est résumée en deux lignes.
+**11.1** La trace `openat(AT_FDCWD, "/etc/hostname", O_RDONLY)` suivie de `connect(..., 127.0.0.1:8080) = ECONNREFUSED` montre que le programme lit le nom de la machine puis tente de se connecter à `127.0.0.1` sur le port 8080 (connexion refusée, aucun service en face). Toute l'activité fichiers + réseau est résumée en deux lignes.
 
-**19.2** Avec `ltrace` : `strcmp("essai", "sX3-reverse!")` révèle directement le mot de passe attendu. Sans `ltrace`, sous GDB : repérer l'adresse du `call strcmp` dans `main` (`objdump -d`), poser un point d'arrêt dessus, lancer avec un mot quelconque, puis `x/s $rdi` et `x/s $rsi` affichent `"essai"` et `"sX3-reverse!"`. Le mot de passe est `sX3-reverse!`, et `./motdepasse 'sX3-reverse!'` donne `FLAG{ltrace_strcmp}`.
+**11.2** Avec `ltrace` : `strcmp("essai", "sX3-reverse!")` révèle directement le mot de passe attendu. Sans `ltrace`, sous GDB : repérer l'adresse du `call strcmp` dans `main` (`objdump -d`), poser un point d'arrêt dessus, lancer avec un mot quelconque, puis `x/s $rdi` et `x/s $rsi` affichent `"essai"` et `"sX3-reverse!"`. Le mot de passe est `sX3-reverse!`, et `./motdepasse 'sX3-reverse!'` donne `FLAG{ltrace_strcmp}`.
 
 !!! tip "Astuce GDB"
     Passer les arguments de l'inféreur avec `gdb --args ./motdepasse essai`, sinon le programme s'exécute sans argument. Et pour éviter les `strcmp` internes de la résolution de symboles, poser le point d'arrêt sur l'adresse du `call` dans `main`, pas sur le symbole `strcmp`.
 
-**19.3** Sous `strace`, le `specimen` s'arrête tôt car son premier geste est `ptrace(PTRACE_TRACEME, ...)` : `strace` trace déjà le processus, donc cet appel échoue, et le code `if (ptrace(...) < 0) return 0;` fait quitter le programme avant toute action. C'est une protection anti-debug (chapitre 18). Pour voir le vrai comportement, la neutraliser : précharger un faux `ptrace` renvoyant 0 (`LD_PRELOAD`), patcher le test, ou forcer le retour dans GDB. La trace montre alors la reconnaissance, le marqueur, la balise et la charge.
+**11.3** Sous `strace`, le `specimen` s'arrête tôt car son premier geste est `ptrace(PTRACE_TRACEME, ...)` : `strace` trace déjà le processus, donc cet appel échoue, et le code `if (ptrace(...) < 0) return 0;` fait quitter le programme avant toute action. C'est une protection anti-debug (chapitre 10). Pour voir le vrai comportement, la neutraliser : précharger un faux `ptrace` renvoyant 0 (`LD_PRELOAD`), patcher le test, ou forcer le retour dans GDB. La trace montre alors la reconnaissance, le marqueur, la balise et la charge.
 
-**19.4** `strace -f ./prog` n'affiche aucun `clone`/`fork` suivi d'activité enfant : le programme est monoprocessus. `strace -e trace=openat ./prog` liste tous les fichiers ouverts, y compris, au démarrage, les bibliothèques partagées (`/lib/x86_64-linux-gnu/libc.so.6`, le chargeur `ld-linux`...) avant même le `main`. Cela rappelle le coût du démarrage de la libc vu en partie 3.
+**11.4** `strace -f ./prog` n'affiche aucun `clone`/`fork` suivi d'activité enfant : le programme est monoprocessus. `strace -e trace=openat ./prog` liste tous les fichiers ouverts, y compris, au démarrage, les bibliothèques partagées (`/lib/x86_64-linux-gnu/libc.so.6`, le chargeur `ld-linux`...) avant même le `main`. Cela rappelle le coût du démarrage de la libc vu en partie 4.
 
-**19.5** `frida -l hook_strcmp.js ./motdepasse essai` affiche d'abord, via `onEnter`, les deux chaînes comparées (dont le mot de passe) : c'est l'équivalent de `ltrace`, en observation. En activant `retval.replace(0)` dans `onLeave`, `strcmp` renvoie toujours 0 : le programme croit l'égalité vraie et accepte n'importe quelle entrée. Différence fondamentale : `ltrace` et `strace` **observent** sans changer le cours du programme ; Frida **modifie** l'exécution en direct, ce qui permet de contourner un test sans toucher au binaire.
+**11.5** `frida -l hook_strcmp.js ./motdepasse essai` affiche d'abord, via `onEnter`, les deux chaînes comparées (dont le mot de passe) : c'est l'équivalent de `ltrace`, en observation. En activant `retval.replace(0)` dans `onLeave`, `strcmp` renvoie toujours 0 : le programme croit l'égalité vraie et accepte n'importe quelle entrée. Différence fondamentale : `ltrace` et `strace` **observent** sans changer le cours du programme ; Frida **modifie** l'exécution en direct, ce qui permet de contourner un test sans toucher au binaire.
 
-**19.6** `ltrace` (ou GDB sur l'appel) révèle le mot de passe, car la comparaison se fait par un appel à la fonction de bibliothèque `strcmp`, visible dynamiquement. `strace` ne le voit pas : `strcmp` est un calcul en espace utilisateur, sans appel système, donc hors de portée de `strace`, qui n'observe que la frontière avec le noyau. Chaque outil voit une couche différente.
+**11.6** `ltrace` (ou GDB sur l'appel) révèle le mot de passe, car la comparaison se fait par un appel à la fonction de bibliothèque `strcmp`, visible dynamiquement. `strace` ne le voit pas : `strcmp` est un calcul en espace utilisateur, sans appel système, donc hors de portée de `strace`, qui n'observe que la frontière avec le noyau. Chaque outil voit une couche différente.
 
 ## Résolution automatique : angr et z3 {#angr-z3}
 
-**20.1** `solve_crack05.py` affiche `9218`. En passant la somme à 21, z3 répond `unsat` : aucune combinaison de quatre chiffres ne satisfait alors toutes les contraintes. C'est l'intérêt du solveur : il prouve aussi l'**absence** de solution.
+**12.1** `solve_crack05.py` affiche `9218`. En passant la somme à 21, z3 répond `unsat` : aucune combinaison de quatre chiffres ne satisfait alors toutes les contraintes. C'est l'intérêt du solveur : il prouve aussi l'**absence** de solution.
 
-**20.2** `solve_vm.py` retrouve `reverse42`. On a décrit la transformation dans le **sens direct** (`rol8((c ^ 0x2A) + 5, 3) == cible`) et z3 l'a inversée tout seul. La solution manuelle du capstone devait, elle, calculer l'inverse pas à pas (`ror8`, puis `- 5`, puis `^ 0x2A`). Avec z3, inverser devient inutile : on énonce la contrainte, le solveur trouve l'antécédent.
+**12.2** `solve_vm.py` retrouve `reverse42`. On a décrit la transformation dans le **sens direct** (`rol8((c ^ 0x2A) + 5, 3) == cible`) et z3 l'a inversée tout seul. La solution manuelle du capstone devait, elle, calculer l'inverse pas à pas (`ror8`, puis `- 5`, puis `^ 0x2A`). Avec z3, inverser devient inutile : on énonce la contrainte, le solveur trouve l'antécédent.
 
-**20.3** Modélisation du `coffre0` :
+**12.3** Modélisation du `coffre0` :
 
 ```python
 from z3 import BitVec, Solver
@@ -411,25 +411,25 @@ print(''.join(chr(m[k].as_long()) for k in cle))   # -> Clemence
 
 z3 retrouve `Clemence`, puisque `cle[i] = cible[i] - i`.
 
-**20.4** Il suffit d'enchaîner les opérations dans le script z3 exactement comme dans le check (par exemple `v = RotateLeft(((c ^ 0x11) + 7) ^ 0x5A, 2)`), de poser `v == cible[i]`, et d'appeler `s.check()`. Même si l'inversion à la main serait fastidieuse et source d'erreurs, z3 la fait sans qu'on ait à y penser : on ne code que le sens direct.
+**12.4** Il suffit d'enchaîner les opérations dans le script z3 exactement comme dans le check (par exemple `v = RotateLeft(((c ^ 0x11) + 7) ^ 0x5A, 2)`), de poser `v == cible[i]`, et d'appeler `s.check()`. Même si l'inversion à la main serait fastidieuse et source d'erreurs, z3 la fait sans qu'on ait à y penser : on ne code que le sens direct.
 
-**20.5** Avec angr : relever `find` (adresse du bloc affichant le succès) et `avoid` (bloc d'échec) dans `objdump`, lancer `simgr.explore(find=..., avoid=...)`, puis `simgr.found[0].posix.dumps(0)` donne l'entrée gagnante lue sur stdin. Sur un petit crackme, angr trouve la solution sans qu'on ait rien modélisé ; sur un binaire avec de longues boucles ou beaucoup de chemins, il peut devenir très lent (explosion des chemins), là où une modélisation z3 ciblée resterait instantanée.
+**12.5** Avec angr : relever `find` (adresse du bloc affichant le succès) et `avoid` (bloc d'échec) dans `objdump`, lancer `simgr.explore(find=..., avoid=...)`, puis `simgr.found[0].posix.dumps(0)` donne l'entrée gagnante lue sur stdin. Sur un petit crackme, angr trouve la solution sans qu'on ait rien modélisé ; sur un binaire avec de longues boucles ou beaucoup de chemins, il peut devenir très lent (explosion des chemins), là où une modélisation z3 ciblée resterait instantanée.
 
-**20.6** Pour `crack01` (comparaison directe à une chaîne), l'analyse manuelle suffit : la chaîne est lisible, nul besoin d'outil. Pour `crack05` (contraintes arithmétiques claires), z3 est idéal : on lit les conditions et on les transcrit. Pour `machine` (VM), z3 convient aussi (modéliser la transformation par caractère), et angr serait une alternative si l'on ne voulait pas comprendre la VM. La règle : plus on comprend la vérification, plus z3 est direct ; moins on veut lire le code, plus angr est tentant, à condition que le binaire reste petit.
+**12.6** Pour `crack01` (comparaison directe à une chaîne), l'analyse manuelle suffit : la chaîne est lisible, nul besoin d'outil. Pour `crack05` (contraintes arithmétiques claires), z3 est idéal : on lit les conditions et on les transcrit. Pour `machine` (VM), z3 convient aussi (modéliser la transformation par caractère), et angr serait une alternative si l'on ne voulait pas comprendre la VM. La règle : plus on comprend la vérification, plus z3 est direct ; moins on veut lire le code, plus angr est tentant, à condition que le binaire reste petit.
 
 ## Lire les formats : ELF puis PE {#formats-elf-pe}
 
-**21.1** `readelf -h` donne tout : `Class` (`ELF64` ou `ELF32`), `Type` (`EXEC` en `-no-pie`, `DYN` en PIE, `REL` pour un `.o`), et `Entry point address` (par exemple `0x401070`). Le magic se confirme avec `xxd prog | head -1` : les quatre premiers octets sont `7f 45 4c 46`, soit `\x7f` puis `ELF`.
+**13.1** `readelf -h` donne tout : `Class` (`ELF64` ou `ELF32`), `Type` (`EXEC` en `-no-pie`, `DYN` en PIE, `REL` pour un `.o`), et `Entry point address` (par exemple `0x401070`). Le magic se confirme avec `xxd prog | head -1` : les quatre premiers octets sont `7f 45 4c 46`, soit `\x7f` puis `ELF`.
 
-**21.2** `readelf -l` liste les segments. Typiquement : un `PT_LOAD` en `R` (en-têtes), un en `R E` (le code `.text`), un en `R` (constantes `.rodata`), un en `RW` (données `.data`/`.bss`). Aucun n'est à la fois `W` et `E` : du code modifiable serait un terrain idéal pour écraser des instructions à l'exécution (W^X, « write xor execute »). Un segment `RWX` est d'ailleurs un indice classique de packer ou de shellcode.
+**13.2** `readelf -l` liste les segments. Typiquement : un `PT_LOAD` en `R` (en-têtes), un en `R E` (le code `.text`), un en `R` (constantes `.rodata`), un en `RW` (données `.data`/`.bss`). Aucun n'est à la fois `W` et `E` : du code modifiable serait un terrain idéal pour écraser des instructions à l'exécution (W^X, « write xor execute »). Un segment `RWX` est d'ailleurs un indice classique de packer ou de shellcode.
 
-**21.3** `.bss` est de type `NOBITS` : il contient les globales initialisées à zéro, et comme leur valeur est connue (zéro), inutile de les stocker sur le disque. Le noyau réserve la place et la met à zéro au chargement. D'où un `MemSiz` supérieur au `FileSiz` dans le segment `RW`. `readelf -d` montre les dépendances : sur un binaire C simple, une seule ligne `NEEDED  Shared library: [libc.so.6]`.
+**13.3** `.bss` est de type `NOBITS` : il contient les globales initialisées à zéro, et comme leur valeur est connue (zéro), inutile de les stocker sur le disque. Le noyau réserve la place et la met à zéro au chargement. D'où un `MemSiz` supérieur au `FileSiz` dans le segment `RW`. `readelf -d` montre les dépendances : sur un binaire C simple, une seule ligne `NEEDED  Shared library: [libc.so.6]`.
 
-**21.4** `readelf -s` affiche, pour `main`, une ligne du type `... FUNC GLOBAL DEFAULT 15 main` avec son adresse et sa taille. Après `strip prog -o prog2`, `readelf -s prog2 | grep main` ne renvoie plus rien : `strip` retire `.symtab` (les symboles internes). En revanche `.dynsym` demeure, car les symboles externes (`strcmp`, `puts`...) sont indispensables à la liaison dynamique. Résumé : `.symtab` = tous les symboles (optionnel, retiré par `strip`) ; `.dynsym` = seulement les symboles dynamiques (toujours présent sur un binaire lié dynamiquement).
+**13.4** `readelf -s` affiche, pour `main`, une ligne du type `... FUNC GLOBAL DEFAULT 15 main` avec son adresse et sa taille. Après `strip prog -o prog2`, `readelf -s prog2 | grep main` ne renvoie plus rien : `strip` retire `.symtab` (les symboles internes). En revanche `.dynsym` demeure, car les symboles externes (`strcmp`, `puts`...) sont indispensables à la liaison dynamique. Résumé : `.symtab` = tous les symboles (optionnel, retiré par `strip`) ; `.dynsym` = seulement les symboles dynamiques (toujours présent sur un binaire lié dynamiquement).
 
-**21.5** Sur l'original, `strings` révèle les chaînes en clair (par exemple `reverse42`) et le point d'entrée pointe sur le vrai code. Sur la version packée, le point d'entrée a changé (il tombe dans le stub de dépaquetage, par exemple `0x4010b0` au lieu de `0x401070`) et `strings` ne trouve plus la chaîne connue : le vrai code est compressé dans un blob et n'existe en clair nulle part sur le disque. Conclusion : l'en-tête (point d'entrée) plus un `strings` suffisent souvent à classer un binaire (normal / strippé / packé) avant même d'ouvrir le désassembleur.
+**13.5** Sur l'original, `strings` révèle les chaînes en clair (par exemple `reverse42`) et le point d'entrée pointe sur le vrai code. Sur la version packée, le point d'entrée a changé (il tombe dans le stub de dépaquetage, par exemple `0x4010b0` au lieu de `0x401070`) et `strings` ne trouve plus la chaîne connue : le vrai code est compressé dans un blob et n'existe en clair nulle part sur le disque. Conclusion : l'en-tête (point d'entrée) plus un `strings` suffisent souvent à classer un binaire (normal / strippé / packé) avant même d'ouvrir le désassembleur.
 
-**21.6 (PE, conceptuel)** Import par import :
+**13.6 (PE, conceptuel)** Import par import :
 
 - `VirtualAlloc` + `VirtualProtect` + `CreateThread` : le programme réserve de la mémoire, la rend exécutable, puis y lance un thread. C'est le schéma type d'un **dépaquetage en mémoire ou d'une injection de code** (écrire du code puis l'exécuter).
 - `InternetOpenUrlA` + `InternetReadFile` : il **télécharge** un contenu depuis une URL.
@@ -437,36 +437,36 @@ z3 retrouve `Clemence`, puisque `cle[i] = cible[i] - i`.
 
 Hypothèse en une phrase : un **téléchargeur/injecteur** (downloader) qui récupère une charge sur le réseau, l'exécute en mémoire et s'assure une persistance par le registre.
 
-**21.7 (PE, conceptuel)** Correspondances : magic `7f ELF` ↔ signature `MZ` puis `PE\0\0` ; point d'entrée ELF (`Entry point address`) ↔ `ImageBase + AddressOfEntryPoint` ; `.rodata` ↔ `.rdata` ; `readelf -d`/NEEDED et `.plt`/`.got` ↔ table d'import (IAT) et `.idata`. Les chaînes se cherchent dans `.rodata` (ELF) et `.rdata` (PE) ; la liste des fonctions externes se lit via `readelf -d` + `.dynsym` (ELF) et via la table d'import (PE).
+**13.7 (PE, conceptuel)** Correspondances : magic `7f ELF` ↔ signature `MZ` puis `PE\0\0` ; point d'entrée ELF (`Entry point address`) ↔ `ImageBase + AddressOfEntryPoint` ; `.rodata` ↔ `.rdata` ; `readelf -d`/NEEDED et `.plt`/`.got` ↔ table d'import (IAT) et `.idata`. Les chaînes se cherchent dans `.rodata` (ELF) et `.rdata` (PE) ; la liste des fonctions externes se lit via `readelf -d` + `.dynsym` (ELF) et via la table d'import (PE).
 
-**21.8 (PE, conceptuel)** Une table d'import réduite à `LoadLibraryA` et `GetProcAddress` est suspecte précisément parce qu'elle est presque vide : avec ces deux seules fonctions, le programme peut charger **n'importe quelle** DLL et résoudre **n'importe quelle** fonction à l'exécution, sans que cela apparaisse dans l'IAT. C'est de la **résolution dynamique d'API**, une technique d'évasion qui masque les capacités réelles au triage statique. Adaptation de l'analyse : en statique, chercher les chaînes de noms de fonctions et de DLL dans `.rdata` (souvent présentes, parfois obfusquées/chiffrées), repérer les appels à `GetProcAddress` et remonter leurs arguments ; en dynamique (sur une machine d'analyse isolée), observer les appels réels avec un moniteur d'API ou un hook sur `GetProcAddress` pour lister les fonctions effectivement résolues. C'est le pont direct avec le chapitre d'analyse dynamique : ce que le statique cache, l'exécution surveillée le révèle.
+**13.8 (PE, conceptuel)** Une table d'import réduite à `LoadLibraryA` et `GetProcAddress` est suspecte précisément parce qu'elle est presque vide : avec ces deux seules fonctions, le programme peut charger **n'importe quelle** DLL et résoudre **n'importe quelle** fonction à l'exécution, sans que cela apparaisse dans l'IAT. C'est de la **résolution dynamique d'API**, une technique d'évasion qui masque les capacités réelles au triage statique. Adaptation de l'analyse : en statique, chercher les chaînes de noms de fonctions et de DLL dans `.rdata` (souvent présentes, parfois obfusquées/chiffrées), repérer les appels à `GetProcAddress` et remonter leurs arguments ; en dynamique (sur une machine d'analyse isolée), observer les appels réels avec un moniteur d'API ou un hook sur `GetProcAddress` pour lister les fonctions effectivement résolues. C'est le pont direct avec le chapitre d'analyse dynamique : ce que le statique cache, l'exécution surveillée le révèle.
 
 ## Écrire des règles YARA {#yara}
 
 Toutes ces règles ont été testées avec `yara-python` sur `demo`, `packed` et `specimen`. Les règles complètes sont dans `yara/regles.yar`, rejouables avec `yara/tester.py`.
 
-**22.1**
+**14.1**
 ```yara
 rule demo_reverse42 { strings: $s = "reverse42" condition: $s }
 ```
 `demo` correspond (la chaîne est en clair dans `.rodata`), `packed` non : son code (et donc la chaîne) est compressé dans un blob, invisible en clair. Limite d'une signature par chaîne : elle tombe dès que le binaire est packé, chiffré ou simplement modifié. Il faut alors signer autrement (entropie, imports, bout de code).
 
-**22.2**
+**14.2**
 ```yara
 rule est_un_elf { condition: uint32(0) == 0x464c457f }
 ```
 `demo` correspond, un fichier texte non. `uint32(0)` lit les 4 premiers octets en petit-boutiste : le fichier commence par `7f 45 4c 46`, ce qui se lit `0x464c457f`. Équivalent PE : `uint16(0) == 0x5a4d` (les octets `MZ` = `4d 5a`, lus `0x5a4d`).
 
-**22.3**
+**14.3**
 ```yara
 import "math"
 rule packe_probable { condition: math.entropy(0, filesize) >= 7.2 }
 ```
 Mesures réelles : texte répétitif 2.65 (pas de match), données compressées zlib 7.91 (match), données aléatoires 7.95 (match). Le seuil 7.2 distingue le compressé/chiffré du contenu « normal ». Sur un petit binaire, préférer `math.entropy(offset, taille)` sur une section précise, car le remplissage à zéro fait baisser la moyenne globale.
 
-**22.4** Avec `$a`, `$b`, `$c` et `condition: 2 of them`, la règle ne se déclenche que si au moins deux des trois motifs sont présents. `all of them` exige les trois, `any of them` un seul. `N of (...)` est utile pour tolérer une variante qui aurait perdu un des marqueurs tout en gardant les autres.
+**14.4** Avec `$a`, `$b`, `$c` et `condition: 2 of them`, la règle ne se déclenche que si au moins deux des trois motifs sont présents. `all of them` exige les trois, `any of them` un seul. `N of (...)` est utile pour tolérer une variante qui aurait perdu un des marqueurs tout en gardant les autres.
 
-**22.5**
+**14.5**
 ```yara
 rule specimen_campagne_orange {
     strings:
@@ -477,13 +477,13 @@ rule specimen_campagne_orange {
 ```
 `specimen` correspond, et YARA signale `$c2` et `$camp` comme trouvés. Le modificateur `xor(0x3c)` fait chercher la chaîne après XOR par 0x3C, exactement l'obfuscation du specimen : `strings` ne voyait rien, YARA retrouve l'IOC. Bonus : `xor(0x00-0xff)` fait essayer les 256 clés d'un octet ; pratique quand on ignore la clé, au prix d'un peu plus de faux positifs potentiels.
 
-**22.6**
+**14.6**
 ```yara
 rule prologue { strings: $p = { 55 48 89 E5 } condition: $p }
 ```
 `55 48 89 E5` = `push rbp; mov rbp, rsp`, présent dans tout binaire non optimisé. Un joker `??` devient nécessaire dès qu'une instruction contient une valeur variable : par exemple `48 8B 05 ?? ?? ?? ??` pour `mov rax, [rip+déplacement]`, où le déplacement change d'une compilation à l'autre. Les `??` laissent passer ces octets variables tout en figeant l'opcode.
 
-**22.7**
+**14.7**
 ```yara
 import "pe"
 rule pe_telechargeur {
@@ -492,9 +492,9 @@ rule pe_telechargeur {
         pe.imports("kernel32.dll", "CreateProcessA")
 }
 ```
-Signer des imports vise un **comportement** (télécharger puis exécuter), pas un détail : le C2, le nom du fichier ou les chaînes peuvent changer d'une variante à l'autre, mais la façon d'agir (les fonctions appelées) reste stable. C'est le prolongement direct du chapitre 21 : la table d'import révèle les capacités, et YARA permet de signer ces capacités. (Non testable ici faute de PE dans le conteneur ; à vérifier sur votre machine avec un échantillon PE.)
+Signer des imports vise un **comportement** (télécharger puis exécuter), pas un détail : le C2, le nom du fichier ou les chaînes peuvent changer d'une variante à l'autre, mais la façon d'agir (les fonctions appelées) reste stable. C'est le prolongement direct du chapitre 13 : la table d'import révèle les capacités, et YARA permet de signer ces capacités. (Non testable ici faute de PE dans le conteneur ; à vérifier sur votre machine avec un échantillon PE.)
 
-**22.8** Exemple pour un crackme contenant une bannière connue et de taille modeste :
+**14.8** Exemple pour un crackme contenant une bannière connue et de taille modeste :
 ```yara
 rule crackme_ctf_maison {
     strings:

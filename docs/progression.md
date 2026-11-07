@@ -10,293 +10,298 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 
 - [ ] Environnement installé et vérifié
 
-## Partie 0 : les bases du C (facultative)
 
-### [Chapitre 0.1 : compiler et afficher](partie0-c/01-compiler-afficher.md)
+## Partie 1 : les bases du C (facultative)
 
-- [ ] Chapitre 0.1 : lecture
-- [ ] Chapitre 0.1 : exercices
-- [ ] Chapitre 0.1 : fil rouge
+### [1. Compiler et afficher](partie0-c/01-compiler-afficher.md)
 
-### [Chapitre 0.2 : variables et types](partie0-c/02-variables-types.md)
+- [ ] Partie 1, chapitre 1 : lecture
+- [ ] Partie 1, chapitre 1 : exercices
+- [ ] Partie 1, chapitre 1 : fil rouge
 
-- [ ] Chapitre 0.2 : lecture
-- [ ] Chapitre 0.2 : exercices
-- [ ] Chapitre 0.2 : fil rouge
+### [2. Variables et types](partie0-c/02-variables-types.md)
 
-### [Chapitre 0.3 : conditions](partie0-c/03-conditions.md)
+- [ ] Partie 1, chapitre 2 : lecture
+- [ ] Partie 1, chapitre 2 : exercices
+- [ ] Partie 1, chapitre 2 : fil rouge
 
-- [ ] Chapitre 0.3 : lecture
-- [ ] Chapitre 0.3 : exercices
-- [ ] Chapitre 0.3 : fil rouge
+### [3. Conditions](partie0-c/03-conditions.md)
 
-### [Chapitre 0.4 : boucles](partie0-c/04-boucles.md)
+- [ ] Partie 1, chapitre 3 : lecture
+- [ ] Partie 1, chapitre 3 : exercices
+- [ ] Partie 1, chapitre 3 : fil rouge
 
-- [ ] Chapitre 0.4 : lecture
-- [ ] Chapitre 0.4 : exercices
-- [ ] Chapitre 0.4 : fil rouge
+### [4. Boucles](partie0-c/04-boucles.md)
 
-### [Chapitre 0.5 : fonctions](partie0-c/05-fonctions.md)
+- [ ] Partie 1, chapitre 4 : lecture
+- [ ] Partie 1, chapitre 4 : exercices
+- [ ] Partie 1, chapitre 4 : fil rouge
 
-- [ ] Chapitre 0.5 : lecture
-- [ ] Chapitre 0.5 : exercices
-- [ ] Chapitre 0.5 : fil rouge
+### [5. Fonctions](partie0-c/05-fonctions.md)
 
-### [Chapitre 0.6 : pointeurs](partie0-c/06-pointeurs.md)
+- [ ] Partie 1, chapitre 5 : lecture
+- [ ] Partie 1, chapitre 5 : exercices
+- [ ] Partie 1, chapitre 5 : fil rouge
 
-- [ ] Chapitre 0.6 : lecture
-- [ ] Chapitre 0.6 : exercices
-- [ ] Chapitre 0.6 : fil rouge
+### [6. Pointeurs](partie0-c/06-pointeurs.md)
 
-### [Chapitre 0.7 : chaînes de caractères](partie0-c/07-chaines.md)
+- [ ] Partie 1, chapitre 6 : lecture
+- [ ] Partie 1, chapitre 6 : exercices
+- [ ] Partie 1, chapitre 6 : fil rouge
 
-- [ ] Chapitre 0.7 : lecture
-- [ ] Chapitre 0.7 : exercices
-- [ ] Chapitre 0.7 : fil rouge
+### [7. Chaînes de caractères](partie0-c/07-chaines.md)
 
-### [Chapitre 0.8 : tableaux](partie0-c/08-tableaux.md)
+- [ ] Partie 1, chapitre 7 : lecture
+- [ ] Partie 1, chapitre 7 : exercices
+- [ ] Partie 1, chapitre 7 : fil rouge
 
-- [ ] Chapitre 0.8 : lecture
-- [ ] Chapitre 0.8 : exercices
-- [ ] Chapitre 0.8 : fil rouge
+### [8. Tableaux](partie0-c/08-tableaux.md)
 
-### [Chapitre 0.9 : les arguments du programme](partie0-c/09-arguments.md)
+- [ ] Partie 1, chapitre 8 : lecture
+- [ ] Partie 1, chapitre 8 : exercices
+- [ ] Partie 1, chapitre 8 : fil rouge
 
-- [ ] Chapitre 0.9 : lecture
-- [ ] Chapitre 0.9 : exercices
-- [ ] Chapitre 0.9 : fil rouge
+### [9. Arguments du programme](partie0-c/09-arguments.md)
 
-### [Chapitre 0.10 : structures](partie0-c/10-structures.md)
+- [ ] Partie 1, chapitre 9 : lecture
+- [ ] Partie 1, chapitre 9 : exercices
+- [ ] Partie 1, chapitre 9 : fil rouge
 
-- [ ] Chapitre 0.10 : lecture
-- [ ] Chapitre 0.10 : exercices
-- [ ] Chapitre 0.10 : fil rouge
+### [10. Structures](partie0-c/10-structures.md)
 
-### [Chapitre 0.11 : allocation dynamique](partie0-c/11-allocation.md)
+- [ ] Partie 1, chapitre 10 : lecture
+- [ ] Partie 1, chapitre 10 : exercices
+- [ ] Partie 1, chapitre 10 : fil rouge
 
-- [ ] Chapitre 0.11 : lecture
-- [ ] Chapitre 0.11 : exercices
-- [ ] Chapitre 0.11 : fil rouge
+### [11. Allocation dynamique](partie0-c/11-allocation.md)
 
-### [Chapitre 0.12 : en-têtes, compilation séparée et Makefile](partie0-c/12-makefile.md)
+- [ ] Partie 1, chapitre 11 : lecture
+- [ ] Partie 1, chapitre 11 : exercices
+- [ ] Partie 1, chapitre 11 : fil rouge
 
-- [ ] Chapitre 0.12 : lecture
-- [ ] Chapitre 0.12 : exercices
-- [ ] Chapitre 0.12 : fil rouge
+### [12. En-têtes et Makefile](partie0-c/12-makefile.md)
 
-### [Projet de fin de partie](partie0-c/13-projet.md)
+- [ ] Partie 1, chapitre 12 : lecture
+- [ ] Partie 1, chapitre 12 : exercices
+- [ ] Partie 1, chapitre 12 : fil rouge
 
-- [ ] Projet 0.13 : synthèse ma_libc
-- [ ] Projet 0.13 : mini-projet coffre
+### [13. Projet de fin de partie](partie0-c/13-projet.md)
 
-## Partie 1 : l'assembleur pour le reverse
+- [ ] Projet 13 : synthèse ma_libc
+- [ ] Projet 13 : mini-projet coffre
 
-### [Chapitre 1 : les bases](partie1-assembleur/01-bases.md)
 
-- [ ] Chapitre 1 : lecture
-- [ ] Chapitre 1 : exercices
-- [ ] Chapitre 1 : fil rouge
+## Partie 2 : l'assembleur
 
-### [Chapitre 2 : registres et premières instructions](partie1-assembleur/02-registres-instructions.md)
+### [1. Les bases](partie1-assembleur/01-bases.md)
 
-- [ ] Chapitre 2 : lecture
-- [ ] Chapitre 2 : exercices
-- [ ] Chapitre 2 : fil rouge
+- [ ] Partie 2, chapitre 1 : lecture
+- [ ] Partie 2, chapitre 1 : exercices
+- [ ] Partie 2, chapitre 1 : fil rouge
 
-### [Chapitre 3 : comparaisons et sauts](partie1-assembleur/03-comparaisons-sauts.md)
+### [2. Registres et premières instructions](partie1-assembleur/02-registres-instructions.md)
 
-- [ ] Chapitre 3 : lecture
-- [ ] Chapitre 3 : exercices
-- [ ] Chapitre 3 : fil rouge
+- [ ] Partie 2, chapitre 2 : lecture
+- [ ] Partie 2, chapitre 2 : exercices
+- [ ] Partie 2, chapitre 2 : fil rouge
 
-### [Chapitre 4 : les boucles](partie1-assembleur/04-boucles.md)
+### [3. Comparaisons et sauts](partie1-assembleur/03-comparaisons-sauts.md)
 
-- [ ] Chapitre 4 : lecture
-- [ ] Chapitre 4 : exercices
-- [ ] Chapitre 4 : fil rouge
+- [ ] Partie 2, chapitre 3 : lecture
+- [ ] Partie 2, chapitre 3 : exercices
+- [ ] Partie 2, chapitre 3 : fil rouge
 
-### [Chapitre 5 : la pile et les fonctions](partie1-assembleur/05-pile-fonctions.md)
+### [4. Les boucles](partie1-assembleur/04-boucles.md)
 
-- [ ] Chapitre 5 : lecture
-- [ ] Chapitre 5 : exercices
-- [ ] Chapitre 5 : fil rouge
+- [ ] Partie 2, chapitre 4 : lecture
+- [ ] Partie 2, chapitre 4 : exercices
+- [ ] Partie 2, chapitre 4 : fil rouge
 
-### [Chapitre 6 : mémoire, tableaux, chaînes et structures](partie1-assembleur/06-memoire-donnees.md)
+### [5. La pile et les fonctions](partie1-assembleur/05-pile-fonctions.md)
 
-- [ ] Chapitre 6 : lecture
-- [ ] Chapitre 6 : exercices
-- [ ] Chapitre 6 : fil rouge
+- [ ] Partie 2, chapitre 5 : lecture
+- [ ] Partie 2, chapitre 5 : exercices
+- [ ] Partie 2, chapitre 5 : fil rouge
 
-### [Chapitre 7 : du C à l'assembleur, et retour](partie1-assembleur/07-patterns-compilateur.md)
+### [6. Mémoire, tableaux, chaînes et structures](partie1-assembleur/06-memoire-donnees.md)
 
-- [ ] Chapitre 7 : lecture
-- [ ] Chapitre 7 : exercices
-- [ ] Chapitre 7 : fil rouge
+- [ ] Partie 2, chapitre 6 : lecture
+- [ ] Partie 2, chapitre 6 : exercices
+- [ ] Partie 2, chapitre 6 : fil rouge
 
-### [Challenge de synthèse](partie1-assembleur/08-challenge.md)
+### [7. Du C à l'assembleur, et retour](partie1-assembleur/07-patterns-compilateur.md)
 
-- [ ] Challenge partie 1 : les trois fonctions reconstruites
+- [ ] Partie 2, chapitre 7 : lecture
+- [ ] Partie 2, chapitre 7 : exercices
+- [ ] Partie 2, chapitre 7 : fil rouge
 
-### [Chapitre 9 : convention d'appel en profondeur](partie1-assembleur/09-convention-appel.md)
+### [8. Challenge de synthèse](partie1-assembleur/08-challenge.md)
 
-- [ ] Chapitre 9 (convention d'appel) : lecture
-- [ ] Chapitre 9 (convention d'appel) : exercices
+- [ ] Challenge partie 2 : les trois fonctions reconstruites
 
-### [Chapitre 10 : structures et tableaux en assembleur](partie1-assembleur/10-structures-tableaux.md)
+### [9. Convention d'appel](partie1-assembleur/09-convention-appel.md)
 
-- [ ] Chapitre 10 (structures et tableaux) : lecture
-- [ ] Chapitre 10 (structures et tableaux) : exercices
+- [ ] Partie 2, chapitre 9 (convention d'appel) : lecture
+- [ ] Partie 2, chapitre 9 (convention d'appel) : exercices
 
-### [Chapitre 11 : lire du code optimisé](partie1-assembleur/11-optimisations.md)
+### [10. Structures et tableaux](partie1-assembleur/10-structures-tableaux.md)
 
-- [ ] Chapitre 11 (code optimisé) : lecture
-- [ ] Chapitre 11 (code optimisé) : exercices
+- [ ] Partie 2, chapitre 10 (structures et tableaux) : lecture
+- [ ] Partie 2, chapitre 10 (structures et tableaux) : exercices
 
-### [Chapitre 12 : C++ et fonctions virtuelles](partie1-assembleur/12-cpp-vtables.md)
+### [11. Lire du code optimisé](partie1-assembleur/11-optimisations.md)
 
-- [ ] Chapitre 12 (C++ et vtables) : lecture
-- [ ] Chapitre 12 (C++ et vtables) : exercices
+- [ ] Partie 2, chapitre 11 (code optimisé) : lecture
+- [ ] Partie 2, chapitre 11 (code optimisé) : exercices
 
-### [Chapitre 13 : x86 32 bits](partie1-assembleur/13-x86-32bits.md)
+### [12. C++ et fonctions virtuelles](partie1-assembleur/12-cpp-vtables.md)
 
-- [ ] Chapitre 13 (x86 32 bits) : lecture
-- [ ] Chapitre 13 (x86 32 bits) : exercices
+- [ ] Partie 2, chapitre 12 (C++ et vtables) : lecture
+- [ ] Partie 2, chapitre 12 (C++ et vtables) : exercices
 
-## Partie 2 : le reverse engineering
+### [13. x86 32 bits](partie1-assembleur/13-x86-32bits.md)
 
-### [Chapitre 8 : la méthode et les premiers outils](partie2-reverse/08-methode-outils.md)
+- [ ] Partie 2, chapitre 13 (x86 32 bits) : lecture
+- [ ] Partie 2, chapitre 13 (x86 32 bits) : exercices
 
-- [ ] Chapitre 8 : lecture
-- [ ] Chapitre 8 : exercices
-- [ ] Chapitre 8 : fil rouge (coffre v1)
 
-### [Chapitre 9 : analyse statique avec Ghidra](partie2-reverse/09-ghidra.md)
+## Partie 3 : le reverse
 
-- [ ] Chapitre 9 : lecture
-- [ ] Chapitre 9 : exercices
-- [ ] Chapitre 9 : fil rouge (coffre v2 en statique)
+### [1. La méthode et les premiers outils](partie2-reverse/08-methode-outils.md)
 
-### [Chapitre 10 : analyse dynamique avec GDB](partie2-reverse/10-gdb.md)
+- [ ] Partie 3, chapitre 1 : lecture
+- [ ] Partie 3, chapitre 1 : exercices
+- [ ] Partie 3, chapitre 1 : fil rouge (coffre v1)
 
-- [ ] Chapitre 10 : lecture
-- [ ] Chapitre 10 : exercices
-- [ ] Chapitre 10 : fil rouge (coffre v2 en dynamique)
+### [2. Analyse statique avec Ghidra](partie2-reverse/09-ghidra.md)
 
-### [Chapitre 11 : les grands classiques des crackmes](partie2-reverse/11-classiques-crackmes.md)
+- [ ] Partie 3, chapitre 2 : lecture
+- [ ] Partie 3, chapitre 2 : exercices
+- [ ] Partie 3, chapitre 2 : fil rouge (coffre v2 en statique)
 
-- [ ] Chapitre 11 : lecture
-- [ ] Chapitre 11 : exercices
-- [ ] Chapitre 11 : fil rouge (coffre v3)
+### [3. Analyse dynamique avec GDB](partie2-reverse/10-gdb.md)
 
-### [Chapitre 12 : protections et anti-analyse](partie2-reverse/12-protections.md)
+- [ ] Partie 3, chapitre 3 : lecture
+- [ ] Partie 3, chapitre 3 : exercices
+- [ ] Partie 3, chapitre 3 : fil rouge (coffre v2 en dynamique)
 
-- [ ] Chapitre 12 : lecture
-- [ ] Chapitre 12 : exercices
-- [ ] Chapitre 12 : fil rouge (coffre v4)
+### [4. Les grands classiques des crackmes](partie2-reverse/11-classiques-crackmes.md)
 
-### [Chapitre 13 : initiation à l'analyse de malware](partie2-reverse/13-malware-analysis.md)
+- [ ] Partie 3, chapitre 4 : lecture
+- [ ] Partie 3, chapitre 4 : exercices
+- [ ] Partie 3, chapitre 4 : fil rouge (coffre v3)
 
-- [ ] Chapitre 13 : lecture
-- [ ] Chapitre 13 : exercices
-- [ ] Chapitre 13 : fil rouge (coffre v5)
+### [5. Protections et anti-analyse](partie2-reverse/12-protections.md)
 
-### [CTF maison](partie2-reverse/15-ctf-maison.md)
+- [ ] Partie 3, chapitre 5 : lecture
+- [ ] Partie 3, chapitre 5 : exercices
+- [ ] Partie 3, chapitre 5 : fil rouge (coffre v4)
+
+### [6. Initiation à l'analyse de malware](partie2-reverse/13-malware-analysis.md)
+
+- [ ] Partie 3, chapitre 6 : lecture
+- [ ] Partie 3, chapitre 6 : exercices
+- [ ] Partie 3, chapitre 6 : fil rouge (coffre v5)
+
+### [7. CTF maison](partie2-reverse/15-ctf-maison.md)
 
 - [ ] CTF maison : défis 1 à 3
 - [ ] CTF maison : défis 4 à 6
 
-### [Laboratoire malware](partie2-reverse/16-labo-malware.md)
+### [8. Laboratoire malware](partie2-reverse/16-labo-malware.md)
 
 - [ ] Laboratoire malware : cas 1 (balise)
 - [ ] Laboratoire malware : cas 2 (dropper)
 - [ ] Laboratoire malware : rapport rédigé
 
-### [Chapitre 17 : packing et UPX](partie2-reverse/17-packing-upx.md)
+### [9. Packing et UPX](partie2-reverse/17-packing-upx.md)
 
-- [ ] Chapitre packing : lecture
-- [ ] Chapitre packing : exercices (entropie, dépaquetage statique)
+- [ ] Partie 3, chapitre packing : lecture
+- [ ] Partie 3, chapitre packing : exercices (entropie, dépaquetage statique)
 
-### [Chapitre 18 : anti-reverse avancé](partie2-reverse/18-anti-reverse.md)
+### [10. Anti-reverse avancé](partie2-reverse/18-anti-reverse.md)
 
-- [ ] Chapitre anti-reverse : lecture
-- [ ] Chapitre anti-reverse : contournements (LD_PRELOAD, patch, GDB)
-- [ ] Chapitre anti-reverse : anti-désassemblage compris
+- [ ] Partie 3, chapitre anti-reverse : lecture
+- [ ] Partie 3, chapitre anti-reverse : contournements (LD_PRELOAD, patch, GDB)
+- [ ] Partie 3, chapitre anti-reverse : anti-désassemblage compris
 
-### [Chapitre 19 : analyse dynamique avancée](partie2-reverse/19-analyse-dynamique.md)
+### [11. Analyse dynamique avancée](partie2-reverse/19-analyse-dynamique.md)
 
-- [ ] Chapitre analyse dynamique : lecture
-- [ ] Chapitre analyse dynamique : strace et ltrace/GDB pratiqués
-- [ ] Chapitre analyse dynamique : Frida essayé (dans le laboratoire)
+- [ ] Partie 3, chapitre analyse dynamique : lecture
+- [ ] Partie 3, chapitre analyse dynamique : strace et ltrace/GDB pratiqués
+- [ ] Partie 3, chapitre analyse dynamique : Frida essayé (dans le laboratoire)
 
-### [Chapitre 20 : résolution automatique (angr et z3)](partie2-reverse/20-angr-z3.md)
+### [12. Résolution automatique : angr et z3](partie2-reverse/20-angr-z3.md)
 
-- [ ] Chapitre angr/z3 : lecture
-- [ ] Chapitre angr/z3 : z3 pratiqué (crack05, VM)
-- [ ] Chapitre angr/z3 : angr essayé (dans le laboratoire)
+- [ ] Partie 3, chapitre angr/z3 : lecture
+- [ ] Partie 3, chapitre angr/z3 : z3 pratiqué (crack05, VM)
+- [ ] Partie 3, chapitre angr/z3 : angr essayé (dans le laboratoire)
 
-### [Chapitre 21 : lire les formats ELF et PE](partie2-reverse/21-formats-elf-pe.md)
+### [13. Lire les formats : ELF et PE](partie2-reverse/21-formats-elf-pe.md)
 
-- [ ] Chapitre formats : lecture
-- [ ] Chapitre formats : ELF lu avec readelf (-h, -l, -S, -d, -s)
-- [ ] Chapitre formats : table d'import PE comprise (intérêt malware)
+- [ ] Partie 3, chapitre formats : lecture
+- [ ] Partie 3, chapitre formats : ELF lu avec readelf (-h, -l, -S, -d, -s)
+- [ ] Partie 3, chapitre formats : table d'import PE comprise (intérêt malware)
 
-### [Chapitre 22 : écrire des règles YARA](partie2-reverse/22-yara.md)
+### [14. Écrire des règles YARA](partie2-reverse/22-yara.md)
 
-- [ ] Chapitre YARA : lecture
-- [ ] Chapitre YARA : règles écrites et testées (format, entropie, IOC)
-- [ ] Chapitre YARA : passage analyse -> règle réutilisable compris
+- [ ] Partie 3, chapitre YARA : lecture
+- [ ] Partie 3, chapitre YARA : règles écrites et testées (format, entropie, IOC)
+- [ ] Partie 3, chapitre YARA : passage analyse -> règle réutilisable compris
 
-### [Chapitre 14 : et après ?](partie2-reverse/14-et-apres.md)
+### [15. Et après ?](partie2-reverse/14-et-apres.md)
 
-- [ ] Chapitre 14 : lecture
-- [ ] Chapitre 14 : premier challenge fait avec la routine de la section 14.1
+- [ ] Partie 3, chapitre 15 : lecture
+- [ ] Partie 3, chapitre 15 : premier challenge fait avec la routine de la section 15.1
 
-## Partie 3 : écrire de l'assembleur
 
-### [Chapitre 15 : premier programme NASM et appels système](partie3-ecriture/15-nasm-syscalls.md)
+## Partie 4 : écrire de l'assembleur
 
-- [ ] Chapitre 15 : lecture
-- [ ] Chapitre 15 : exercices
-- [ ] Chapitre 15 : fil rouge
+### [1. Premier programme NASM et appels système](partie3-ecriture/15-nasm-syscalls.md)
 
-### [Chapitre 16 : fonctions, libc et alignement](partie3-ecriture/16-fonctions-libc.md)
+- [ ] Partie 4, chapitre 1 : lecture
+- [ ] Partie 4, chapitre 1 : exercices
+- [ ] Partie 4, chapitre 1 : fil rouge
 
-- [ ] Chapitre 16 : lecture
-- [ ] Chapitre 16 : exercices
-- [ ] Chapitre 16 : fil rouge
+### [2. Fonctions, libc et alignement](partie3-ecriture/16-fonctions-libc.md)
 
-### [Chapitre 17 : shellcode et loader chiffré](partie3-ecriture/17-shellcode.md)
+- [ ] Partie 4, chapitre 2 : lecture
+- [ ] Partie 4, chapitre 2 : exercices
+- [ ] Partie 4, chapitre 2 : fil rouge
 
-- [ ] Chapitre 17 : lecture
-- [ ] Chapitre 17 : exercices
-- [ ] Chapitre 17 : fil rouge
+### [3. Shellcode et loader chiffré](partie3-ecriture/17-shellcode.md)
 
-### [Challenge de synthèse](partie3-ecriture/18-challenge.md)
+- [ ] Partie 4, chapitre 3 : lecture
+- [ ] Partie 4, chapitre 3 : exercices
+- [ ] Partie 4, chapitre 3 : fil rouge
 
-- [ ] Challenge partie 3 : filtre majuscules écrit et testé
-- [ ] Challenge partie 3 : filtre désassemblé et annoté
+### [4. Challenge de synthèse](partie3-ecriture/18-challenge.md)
 
-## Partie 4 : capstone
+- [ ] Challenge partie 4 : filtre majuscules écrit et testé
+- [ ] Challenge partie 4 : filtre désassemblé et annoté
 
-### [Présentation du capstone](partie4-capstone/19-presentation.md)
+
+## Partie 5 : capstone
+
+### [1. Présentation du capstone](partie4-capstone/19-presentation.md)
 
 - [ ] Capstone : bac à sable compris et prêt
 - [ ] Capstone : méthode d'approche révisée
 
-### [Défis CTF avancés](partie4-capstone/20-ctf-avance.md)
+### [2. Défis CTF avancés](partie4-capstone/20-ctf-avance.md)
 
 - [ ] Défi 1 (serrure) : flag obtenu et keygen écrit
 - [ ] Défi 2 (machine) : flag obtenu et VM inversée
 - [ ] Défi 3 (oignon) : flag obtenu, anti-debug contourné
 
-### [Cas de malware](partie4-capstone/21-cas-malware.md)
+### [3. Cas de malware](partie4-capstone/21-cas-malware.md)
 
 - [ ] Cas malware : triage statique fait
 - [ ] Cas malware : IOC réseau et fichiers extraits
 - [ ] Cas malware : charge déchiffrée et identifiée (statiquement)
 - [ ] Cas malware : rapport rédigé
 
-### [Rapport d'analyse](partie4-capstone/22-rapport-type.md)
+### [4. Rapport d'analyse](partie4-capstone/22-rapport-type.md)
 
 - [ ] Rapport : modèle compris et réutilisé
 - [ ] Rapport : cas specimen documenté de bout en bout

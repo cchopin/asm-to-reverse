@@ -61,7 +61,7 @@ Inverser une VM revient toujours à inverser chaque opération : `rol` devient `
 
 ### Défi 3 : oignon
 
-Au lancement, le programme appelle `ptrace(PTRACE_TRACEME, ...)` : si un débogueur est déjà attaché, l'appel échoue et le programme affiche `Nope.`. Trois façons de neutraliser cela (chapitre 12) : forcer la valeur de retour dans GDB (`catch syscall ptrace`, puis `set $rax = 0`), précharger un faux `ptrace` avec `LD_PRELOAD`, ou patcher l'appel dans le binaire.
+Au lancement, le programme appelle `ptrace(PTRACE_TRACEME, ...)` : si un débogueur est déjà attaché, l'appel échoue et le programme affiche `Nope.`. Trois façons de neutraliser cela (chapitre 5 de la partie 3) : forcer la valeur de retour dans GDB (`catch syscall ptrace`, puis `set $rax = 0`), précharger un faux `ptrace` avec `LD_PRELOAD`, ou patcher l'appel dans le binaire.
 
 Mais la voie **statique** est la plus propre et évite l'anti-debug entièrement. Dans `objdump -s -j .data oignon`, on relève deux tableaux de 11 octets, et dans le désassemblage, juste avant le `memcmp`, une boucle qui les combine par `xor`. Le mot de passe attendu est donc `couche_a XOR couche_b` ([scripts/solve_oignon.py](scripts/solve_oignon.py)) :
 

@@ -1,10 +1,10 @@
-# Chapitre 10 : analyse dynamique avec GDB
+# Chapitre 3 : analyse dynamique avec GDB
 
 Objectif : exécuter un programme pas à pas, examiner ses registres et sa mémoire, et le modifier en cours d'exécution. Le débogueur offre souvent le chemin le plus court : au lieu de comprendre un algorithme complexe, on laisse le programme calculer la réponse et on la lit.
 
 Rappel pour les Mac Apple Silicon : GDB ne fonctionne que si le conteneur tourne dans une machine virtuelle x86-64 (Colima avec `--arch x86_64`), voir le [guide d'installation](../environnement/INSTALLATION-MAC.md).
 
-## 10.1 GDB et GEF
+## 3.1 GDB et GEF
 
 GDB seul est austère. Le conteneur du cours inclut **GEF** : à chaque arrêt, il affiche automatiquement un grand écran récapitulatif. Toutes les commandes de ce chapitre sont des commandes GDB standard, utilisables avec ou sans GEF (et avec pwndbg, son équivalent).
 
@@ -53,7 +53,7 @@ Les cinq zones :
 
 Les adresses exactes changent à chaque exécution et d'une machine à l'autre : seules comptent les relations entre elles. La commande `context` réaffiche cet écran à tout moment.
 
-## 10.2 Lancer et arrêter
+## 3.2 Lancer et arrêter
 
 ```
 gdb ./coffre_v2               # charge le programme sans le lancer
@@ -66,7 +66,7 @@ gdb ./coffre_v2               # charge le programme sans le lancer
 
 Astuce : pour un programme qui lit au clavier, préparer un fichier `entree.txt` contenant la saisie. C'est plus pratique que de la taper à chaque exécution.
 
-## 10.3 Les points d'arrêt
+## 3.3 Les points d'arrêt
 
 Un **point d'arrêt** (breakpoint) interrompt le programme lorsqu'il atteint une adresse.
 
@@ -81,7 +81,7 @@ delete 2                     # supprime le point d'arrêt n°2
 
 ### Le cas des binaires PIE
 
-Un binaire PIE (chapitre 8) est chargé à une adresse différente à chaque exécution : les adresses affichées par Ghidra (`0x101240`) ne sont pas celles de l'exécution. Solutions :
+Un binaire PIE (chapitre 1) est chargé à une adresse différente à chaque exécution : les adresses affichées par Ghidra (`0x101240`) ne sont pas celles de l'exécution. Solutions :
 
 - GDB désactive la randomisation par défaut : sous GDB, le programme est presque toujours chargé à la base `0x555555554000`. Le calcul pas à pas, pour une instruction vue à `0x101240` dans Ghidra :
     1. retirer la base de Ghidra (par défaut `0x100000`) pour obtenir l'offset dans le fichier : `0x101240 - 0x100000 = 0x1240` ;
@@ -93,7 +93,7 @@ Un binaire PIE (chapitre 8) est chargé à une adresse différente à chaque ex�
 
 Pour ses propres exercices, on peut aussi compiler avec `-no-pie` : les adresses d'objdump sont alors exactement celles de l'exécution.
 
-## 10.4 Avancer
+## 3.4 Avancer
 
 | Commande | Effet |
 |---|---|
@@ -105,7 +105,7 @@ Pour ses propres exercices, on peut aussi compiler avec `-no-pie` : les adresses
 
 `ni` est la commande la plus utilisée. `si` sert uniquement à entrer dans une fonction du programme qui présente un intérêt (jamais dans `printf`, où l'on se perdrait).
 
-## 10.5 Examiner
+## 3.5 Examiner
 
 ```
 info registers               # tous les registres (i r)
@@ -138,7 +138,7 @@ Pour un `strcmp` :
 
 Pour une comparaison écrite à la main (`cmp dl, al`), s'arrêter sur le `cmp` et lire les deux registres.
 
-## 10.6 Modifier
+## 3.6 Modifier
 
 ```
 set $rax = 0                         # changer un registre
@@ -152,7 +152,7 @@ Cette possibilité est très puissante. Face à un `test eax, eax` / `je echec`,
 
 Inverser le Zero Flag juste après un `cmp` produit le même effet : le `je` suivant prend la décision inverse.
 
-## 10.7 Automatiser
+## 3.7 Automatiser
 
 Un script GDB est une simple liste de commandes :
 
@@ -195,7 +195,7 @@ flowchart TD
 
 Pour aller plus loin, GDB s'automatise en Python (`gdb.execute`, `gdb.parse_and_eval`), ce qui n'est pas nécessaire à ce stade.
 
-## 10.8 L'approche boîte noire
+## 3.8 L'approche boîte noire
 
 Il est parfois plus rapide d'observer comment le programme transforme une entrée connue que de lire son code :
 
@@ -207,11 +207,11 @@ Combiner cette observation avec une lecture rapide du code dans Ghidra est la ma
 
 ## Exercices
 
-**Exercice 10.1** Lancer `mystere` dans GDB avec l'argument `12345678`. Placer un point d'arrêt sur `verifier`, puis avancer avec `ni` jusqu'à la première comparaison. Que vaut `[rbp-0x4]` à ce moment ? (`x/dw $rbp-4`)
+**Exercice 3.1** Lancer `mystere` dans GDB avec l'argument `12345678`. Placer un point d'arrêt sur `verifier`, puis avancer avec `ni` jusqu'à la première comparaison. Que vaut `[rbp-0x4]` à ce moment ? (`x/dw $rbp-4`)
 
-**Exercice 10.2** Toujours sur `mystere`, avec un code invalide, faire afficher "Code accepte" en modifiant uniquement la valeur de retour de `verifier` (indice : `finish`, puis `set`).
+**Exercice 3.2** Toujours sur `mystere`, avec un code invalide, faire afficher "Code accepte" en modifiant uniquement la valeur de retour de `verifier` (indice : `finish`, puis `set`).
 
-**Exercice 10.3** Écrire un script GDB qui, pour `mystere` lancé avec `12345678`, affiche à chaque tour de la deuxième boucle la valeur de `i` et de `somme`.
+**Exercice 3.3** Écrire un script GDB qui, pour `mystere` lancé avec `12345678`, affiche à chaque tour de la deuxième boucle la valeur de `i` et de `somme`.
 
 ## Fil rouge : coffre v2, en dynamique
 
@@ -220,14 +220,14 @@ Cette fois, le décompilateur est interdit. Seuls GDB (et le listing, pour trouv
 1. Trouver l'adresse de l'instruction qui compare un caractère transformé de la saisie avec un caractère attendu (indice : `disassemble verifier`, chercher `cmp dl, al`).
 2. Préparer un fichier d'entrée de la bonne longueur (testée au début de `verifier` avec `strlen`). Placer un point d'arrêt sur la comparaison et lancer.
 3. Au premier arrêt, lire `dl` et `al`. La saisie commençait par `A` (0x41) : quelle transformation a été appliquée ?
-4. Écrire le script GDB de la section 10.7 pour récupérer **tous** les caractères attendus en une seule exécution.
+4. Écrire le script GDB de la section 3.7 pour récupérer **tous** les caractères attendus en une seule exécution.
 5. Retrouver le mot de passe à partir de ces valeurs et le vérifier.
-6. Comparer avec la solution du chapitre 9. Quelle approche a été la plus rapide ? Dans quels cas l'une serait-elle préférable à l'autre ?
+6. Comparer avec la solution du chapitre 2. Quelle approche a été la plus rapide ? Dans quels cas l'une serait-elle préférable à l'autre ?
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#coffre-v2)
 
 ## Suivi
 
-- [ ] Chapitre 10 : lecture
-- [ ] Chapitre 10 : exercices
-- [ ] Chapitre 10 : fil rouge (coffre v2 en dynamique)
+- [ ] Partie 3, chapitre 3 : lecture
+- [ ] Partie 3, chapitre 3 : exercices
+- [ ] Partie 3, chapitre 3 : fil rouge (coffre v2 en dynamique)

@@ -97,7 +97,7 @@ Une instruction ne peut pas avoir **deux** opérandes mémoire. C'est pourquoi l
 ```
 
 - l'**adresse** (à gauche) repère l'instruction ;
-- les **octets** (au centre) sont l'instruction telle qu'elle est encodée dans le fichier : c'est le code machine réel. Ici, l'instruction `lea ...` tient sur 4 octets. Cette colonne est essentielle pour le patching (chapitre 11) et les shellcodes (chapitre 17) ;
+- les **octets** (au centre) sont l'instruction telle qu'elle est encodée dans le fichier : c'est le code machine réel. Ici, l'instruction `lea ...` tient sur 4 octets. Cette colonne est essentielle pour le patching (chapitre 4 de la partie 3) et les shellcodes (chapitre 3 de la partie 4) ;
 - l'**instruction** (à droite) est la forme lisible, produite par `objdump`.
 
 Une différence déroute souvent les débutants. Dans un **fichier objet** (`.o`, pas encore lié), les adresses partent de 0, car la position définitive n'est pas encore fixée :
@@ -278,7 +278,7 @@ Les commandes de ce cours emploient quelques options de `gcc`. Les voici regroup
 | `-c` | compiler sans faire l'édition de liens : produit un fichier objet `.o` | section 2.4 |
 | `-no-pie` | exécutable chargé à une adresse fixe (pas de PIE) : adresses stables, plus simples à lire | pour obtenir des listings aux adresses constantes |
 | `-fno-stack-protector` | retire le canari de pile (chapitre 5) | pour des listings épurés |
-| `-s` | retire les symboles : le binaire devient *strippé* (chapitre 8) | pour simuler un vrai échantillon |
+| `-s` | retire les symboles : le binaire devient *strippé* (chapitre 1 de la partie 3) | pour simuler un vrai échantillon |
 | `-m32` | compiler en x86 32 bits | chapitre 7 |
 | `-g` | ajouter les informations de débogage | pour confort dans GDB (chapitres 10, 15) |
 
@@ -304,9 +304,9 @@ C'est exactement le travail d'un décompilateur. Le faire à la main quelques di
 
 ## 2.6 Observer les instructions dans GDB
 
-Suivre les valeurs sur papier est indispensable, mais il est tout aussi utile de **vérifier** ce que fait réellement le processeur. Le débogueur GDB permet d'exécuter un programme instruction par instruction et d'afficher les registres après chacune. Il sera étudié en détail au chapitre 10 ; quatre commandes suffisent pour l'instant.
+Suivre les valeurs sur papier est indispensable, mais il est tout aussi utile de **vérifier** ce que fait réellement le processeur. Le débogueur GDB permet d'exécuter un programme instruction par instruction et d'afficher les registres après chacune. Il sera étudié en détail au chapitre 3 de la partie 3 ; quatre commandes suffisent pour l'instant.
 
-Le fichier [exemples/observe.asm](../exemples/observe.asm) contient quelques instructions de ce chapitre, sans aucun code C autour. Il est écrit pour l'assembleur NASM, qui utilise la syntaxe Intel (l'écriture de programmes en assembleur est l'objet de la partie 3 ; ici, il suffit de l'assembler). Dans le conteneur :
+Le fichier [exemples/observe.asm](../exemples/observe.asm) contient quelques instructions de ce chapitre, sans aucun code C autour. Il est écrit pour l'assembleur NASM, qui utilise la syntaxe Intel (l'écriture de programmes en assembleur est l'objet de la partie 4 ; ici, il suffit de l'assembler). Dans le conteneur :
 
 ```bash
 cd /cours/exemples
@@ -324,7 +324,7 @@ Dans GDB :
 | `p $eax` | Affiche la valeur d'un registre en décimal ; `p/x $rax` l'affiche en hexadécimal |
 | `p $eflags` | Affiche les flags actuellement à 1 (voir chapitre 3) |
 
-Avec l'extension GEF installée dans le conteneur, chaque arrêt affiche en plus un grand écran récapitulatif : registres, pile, prochaines instructions. Ses zones sont décrites au chapitre 10 ; pour l'instant, seules les commandes `p` sont nécessaires.
+Avec l'extension GEF installée dans le conteneur, chaque arrêt affiche en plus un grand écran récapitulatif : registres, pile, prochaines instructions. Ses zones sont décrites au chapitre 3 de la partie 3 ; pour l'instant, seules les commandes `p` sont nécessaires.
 
 Session commentée (les lignes commençant par `$` sont les réponses de GDB) :
 
@@ -456,6 +456,6 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#chapitre-2)
 
 ## Suivi
 
-- [ ] Chapitre 2 : lecture
-- [ ] Chapitre 2 : exercices
-- [ ] Chapitre 2 : fil rouge
+- [ ] Partie 2, chapitre 2 : lecture
+- [ ] Partie 2, chapitre 2 : exercices
+- [ ] Partie 2, chapitre 2 : fil rouge

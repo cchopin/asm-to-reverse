@@ -220,7 +220,7 @@ Les deux formes expriment la même logique ; il faut reconnaître l'une comme l'
 
 ## 3.8 Trouver "le" saut dans un crackme
 
-Dans un crackme, cherchez la chaîne de succès ("Bravo", "Correct", "flag") et remontez : juste avant se trouve presque toujours un `test eax, eax` / `je` ou un `cmp` / `jne` qui décide si elle est atteinte. Ce saut est la **décision**. Comprendre ce qui est comparé, c'est résoudre le challenge ; modifier ce saut (chapitre 11), c'est le contourner.
+Dans un crackme, cherchez la chaîne de succès ("Bravo", "Correct", "flag") et remontez : juste avant se trouve presque toujours un `test eax, eax` / `je` ou un `cmp` / `jne` qui décide si elle est atteinte. Ce saut est la **décision**. Comprendre ce qui est comparé, c'est résoudre le challenge ; modifier ce saut (chapitre 4 de la partie 3), c'est le contourner.
 
 ## Exercices
 
@@ -304,6 +304,6 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#chapitre-3)
 
 ## Suivi
 
-- [ ] Chapitre 3 : lecture
-- [ ] Chapitre 3 : exercices
-- [ ] Chapitre 3 : fil rouge
+- [ ] Partie 2, chapitre 3 : lecture
+- [ ] Partie 2, chapitre 3 : exercices
+- [ ] Partie 2, chapitre 3 : fil rouge

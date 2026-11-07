@@ -1,4 +1,4 @@
-# Solutions - partie 0 (les bases du C)
+# Solutions - partie 1 (les bases du C)
 
 Chaque solution a été compilée et testée avec `gcc -Wall -Wextra`. Ouvrez-les seulement après avoir cherché par vous-même : en reverse comme ailleurs, c'est l'effort de résolution qui fait progresser.
 
@@ -13,11 +13,11 @@ void my_putchar(char c)
 }
 ```
 
-## Chapitre 0.1 {#chapitre-01}
+## Chapitre 1 {#chapitre-01}
 
-**0.1.1 my_putchar** : voir ci-dessus.
+**1.1 my_putchar** : voir ci-dessus.
 
-**0.1.2 afficher 42**
+**1.2 afficher 42**
 
 ```c
 my_putchar('4');
@@ -25,9 +25,9 @@ my_putchar('2');
 my_putchar('\n');
 ```
 
-**0.1.3 prénom** : une suite de `my_putchar`, un par lettre, puis `my_putchar('\n')`.
+**1.3 prénom** : une suite de `my_putchar`, un par lettre, puis `my_putchar('\n')`.
 
-**0.1.4 chiffres**
+**1.4 chiffres**
 
 ```c
 void chiffres(void)
@@ -40,7 +40,7 @@ void chiffres(void)
 
 `printf("%d\n", '0');` affiche 48 : c'est le code ASCII de `'0'`, d'où l'astuce `'0' + n`.
 
-**0.1.5 alphabet**
+**1.5 alphabet**
 
 ```c
 void alphabet(void)
@@ -51,7 +51,7 @@ void alphabet(void)
 }
 ```
 
-**0.1.6 alphabet_inverse et une_lettre_sur_deux**
+**1.6 alphabet_inverse et une_lettre_sur_deux**
 
 ```c
 void alphabet_inverse(void)
@@ -69,7 +69,7 @@ void une_lettre_sur_deux(void)
 }
 ```
 
-### Fil rouge 0.1 {#fil-rouge-01}
+### Fil rouge 1 {#fil-rouge-01}
 
 ```c
 #include <stdio.h>
@@ -82,9 +82,9 @@ int main(void)
 }
 ```
 
-## Chapitre 0.2 {#chapitre-02}
+## Chapitre 2 {#chapitre-02}
 
-**0.2.1 afficher_tailles**
+**2.1 afficher_tailles**
 
 ```c
 #include <stdio.h>
@@ -101,7 +101,7 @@ void afficher_tailles(void)
 
 Sur une machine 64 bits classique : 1, 4, 8, 4, 8.
 
-**0.2.2 afficher des variables**
+**2.2 afficher des variables**
 
 ```c
 int n = -17;
@@ -110,7 +110,7 @@ long g = 1000000000L;
 printf("%d %c %ld\n", n, c, g);
 ```
 
-**0.2.3 hms**
+**2.3 hms**
 
 ```c
 void hms(int total)
@@ -122,7 +122,7 @@ void hms(int total)
 }
 ```
 
-**0.2.4 apres**
+**2.4 apres**
 
 ```c
 unsigned char apres(unsigned char x)
@@ -131,7 +131,7 @@ unsigned char apres(unsigned char x)
 }
 ```
 
-**0.2.5 interpretations**
+**2.5 interpretations**
 
 ```c
 void interpretations(unsigned char b)
@@ -142,7 +142,7 @@ void interpretations(unsigned char b)
 
 Résultats : 0 donne 0, 127 donne 127, 128 donne -128, 200 donne -56, 255 donne -1. Dès que le bit de poids fort est à 1 (valeur 128 ou plus), la lecture signée devient négative.
 
-### Fil rouge 0.2 {#fil-rouge-02}
+### Fil rouge 2 {#fil-rouge-02}
 
 ```c
 #include <stdio.h>
@@ -160,9 +160,9 @@ int main(void)
 
 Affiche `43 6d 67 70 69 73 69 6c`.
 
-## Chapitre 0.3 {#chapitre-03}
+## Chapitre 3 {#chapitre-03}
 
-**0.3.1 signe**
+**3.1 signe**
 
 ```c
 int signe(int n)
@@ -173,7 +173,7 @@ int signe(int n)
 }
 ```
 
-**0.3.2 max2 et max3**
+**3.2 max2 et max3**
 
 ```c
 int max2(int a, int b)
@@ -187,7 +187,7 @@ int max3(int a, int b, int c)
 }
 ```
 
-**0.3.3 est_bissextile**
+**3.3 est_bissextile**
 
 ```c
 int est_bissextile(int annee)
@@ -196,7 +196,7 @@ int est_bissextile(int annee)
 }
 ```
 
-**0.3.4 categorie**
+**3.4 categorie**
 
 ```c
 const char *categorie(int age)
@@ -209,7 +209,7 @@ const char *categorie(int age)
 }
 ```
 
-**0.3.5 applique**
+**3.5 applique**
 
 ```c
 int applique(int a, int b, char op)
@@ -225,7 +225,7 @@ int applique(int a, int b, char op)
 }
 ```
 
-### Fil rouge 0.3 {#fil-rouge-03}
+### Fil rouge 3 {#fil-rouge-03}
 
 ```c
 unsigned char cible[8] = {67, 109, 103, 112, 105, 115, 105, 108};
@@ -239,9 +239,9 @@ else
 
 Le bon caractère en position 0 est `'C'` (code 67), puisque `cible[0]` vaut 67 et que l'on ajoute 0.
 
-## Chapitre 0.4 {#chapitre-04}
+## Chapitre 4 {#chapitre-04}
 
-**0.4.1 compter**
+**4.1 compter**
 
 ```c
 void compter(int n)
@@ -252,7 +252,7 @@ void compter(int n)
 }
 ```
 
-**0.4.2 table**
+**4.2 table**
 
 ```c
 void table(int n)
@@ -262,7 +262,7 @@ void table(int n)
 }
 ```
 
-**0.4.3 my_putnbr**
+**4.3 my_putnbr**
 
 Les chiffres sortent à l'envers, on les stocke puis on les affiche en sens inverse. Le `long` évite le débordement sur `-2147483648`.
 
@@ -281,7 +281,7 @@ void my_putnbr(int n)
 }
 ```
 
-**0.4.4 factorielle**
+**4.4 factorielle**
 
 ```c
 long factorielle(int n)
@@ -293,7 +293,7 @@ long factorielle(int n)
 }
 ```
 
-**0.4.5 somme_chiffres**
+**4.5 somme_chiffres**
 
 ```c
 int somme_chiffres(int n)
@@ -305,7 +305,7 @@ int somme_chiffres(int n)
 }
 ```
 
-**0.4.6 est_premier**
+**4.6 est_premier**
 
 ```c
 int est_premier(int n)
@@ -317,7 +317,7 @@ int est_premier(int n)
 }
 ```
 
-**0.4.7 triangle**
+**4.7 triangle**
 
 ```c
 void triangle(int h)
@@ -331,7 +331,7 @@ void triangle(int h)
 }
 ```
 
-**0.4.8 fizzbuzz**
+**4.8 fizzbuzz**
 
 ```c
 void fizzbuzz(void)
@@ -347,7 +347,7 @@ void fizzbuzz(void)
 }
 ```
 
-### Fil rouge 0.4 {#fil-rouge-04}
+### Fil rouge 4 {#fil-rouge-04}
 
 ```c
 #include <stdio.h>
@@ -369,9 +369,9 @@ int main(void)
 
 La clé valide est `Clemence` : pour chaque position `i`, `Clemence[i] + i` reproduit exactement `cible[i]`.
 
-## Chapitre 0.5 {#chapitre-05}
+## Chapitre 5 {#chapitre-05}
 
-**0.5.1 my_abs**
+**5.1 my_abs**
 
 ```c
 int my_abs(int n)
@@ -380,7 +380,7 @@ int my_abs(int n)
 }
 ```
 
-**0.5.2 puissance**
+**5.2 puissance**
 
 ```c
 long puissance(int base, int exposant)
@@ -392,7 +392,7 @@ long puissance(int base, int exposant)
 }
 ```
 
-**0.5.3 pgcd**
+**5.3 pgcd**
 
 ```c
 int pgcd(int a, int b)
@@ -407,7 +407,7 @@ int pgcd(int a, int b)
 }
 ```
 
-**0.5.4 somme_rec**
+**5.4 somme_rec**
 
 ```c
 long somme_rec(int n)
@@ -417,7 +417,7 @@ long somme_rec(int n)
 }
 ```
 
-**0.5.5 fibonacci**
+**5.5 fibonacci**
 
 ```c
 long fibonacci(int n)                 /* recursif */
@@ -434,7 +434,7 @@ long fibonacci_iter(int n)            /* iteratif, bien plus rapide */
 }
 ```
 
-**0.5.6 rate_echange**
+**5.6 rate_echange**
 
 ```c
 void rate_echange(int a, int b)
@@ -443,9 +443,9 @@ void rate_echange(int a, int b)
 }
 ```
 
-Après `rate_echange(x, y)`, `x` et `y` sont inchangés : la fonction a reçu des copies. Il faut passer les adresses (chapitre 0.6).
+Après `rate_echange(x, y)`, `x` et `y` sont inchangés : la fonction a reçu des copies. Il faut passer les adresses (chapitre 6).
 
-### Fil rouge 0.5 {#fil-rouge-05}
+### Fil rouge 5 {#fil-rouge-05}
 
 ```c
 unsigned char cible[8] = {67, 109, 103, 112, 105, 115, 105, 108};
@@ -461,9 +461,9 @@ int verifier(const char *cle)
 
 `verifier("Clemence")` renvoie 1.
 
-## Chapitre 0.6 {#chapitre-06}
+## Chapitre 6 {#chapitre-06}
 
-**0.6.1 echange**
+**6.1 echange**
 
 ```c
 void echange(int *a, int *b)
@@ -474,7 +474,7 @@ void echange(int *a, int *b)
 }
 ```
 
-**0.6.2 incremente**
+**6.2 incremente**
 
 ```c
 void incremente(int *p)
@@ -483,7 +483,7 @@ void incremente(int *p)
 }
 ```
 
-**0.6.3 div_mod**
+**6.3 div_mod**
 
 ```c
 void div_mod(int a, int b, int *q, int *r)
@@ -493,7 +493,7 @@ void div_mod(int a, int b, int *q, int *r)
 }
 ```
 
-**0.6.4 rotate3**
+**6.4 rotate3**
 
 ```c
 void rotate3(int *a, int *b, int *c)
@@ -507,7 +507,7 @@ void rotate3(int *a, int *b, int *c)
 
 Sur `(1, 2, 3)` : `a` reçoit 3, `b` reçoit 1, `c` reçoit 2.
 
-**0.6.5 echange_pointeurs**
+**6.5 echange_pointeurs**
 
 ```c
 void echange_pointeurs(int **a, int **b)
@@ -518,7 +518,7 @@ void echange_pointeurs(int **a, int **b)
 }
 ```
 
-### Fil rouge 0.6 {#fil-rouge-06}
+### Fil rouge 6 {#fil-rouge-06}
 
 ```c
 int verifier(const char *cle)
@@ -532,9 +532,9 @@ int verifier(const char *cle)
 
 `*(cle + i)` et `cle[i]` sont équivalents : base plus décalage, puis déréférencement.
 
-## Chapitre 0.7 {#chapitre-07}
+## Chapitre 7 {#chapitre-07}
 
-**0.7.1 my_strlen**
+**7.1 my_strlen**
 
 ```c
 int my_strlen(const char *s)
@@ -546,7 +546,7 @@ int my_strlen(const char *s)
 }
 ```
 
-**0.7.2 my_putstr**
+**7.2 my_putstr**
 
 ```c
 void my_putstr(const char *s)
@@ -556,7 +556,7 @@ void my_putstr(const char *s)
 }
 ```
 
-**0.7.3 my_strcmp**
+**7.3 my_strcmp**
 
 ```c
 int my_strcmp(const char *a, const char *b)
@@ -568,7 +568,7 @@ int my_strcmp(const char *a, const char *b)
 }
 ```
 
-**0.7.4 my_strcpy**
+**7.4 my_strcpy**
 
 ```c
 char *my_strcpy(char *dest, const char *src)
@@ -580,7 +580,7 @@ char *my_strcpy(char *dest, const char *src)
 }
 ```
 
-**0.7.5 my_revstr**
+**7.5 my_revstr**
 
 ```c
 char *my_revstr(char *s)
@@ -595,7 +595,7 @@ char *my_revstr(char *s)
 }
 ```
 
-**0.7.6 est_palindrome**
+**7.6 est_palindrome**
 
 ```c
 int est_palindrome(const char *s)
@@ -610,7 +610,7 @@ int est_palindrome(const char *s)
 }
 ```
 
-**0.7.7 my_upcase**
+**7.7 my_upcase**
 
 ```c
 void my_upcase(char *s)
@@ -621,7 +621,7 @@ void my_upcase(char *s)
 }
 ```
 
-### Fil rouge 0.7 {#fil-rouge-07}
+### Fil rouge 7 {#fil-rouge-07}
 
 ```c
 int verifier(const char *cle)
@@ -635,9 +635,9 @@ int verifier(const char *cle)
 }
 ```
 
-## Chapitre 0.8 {#chapitre-08}
+## Chapitre 8 {#chapitre-08}
 
-**0.8.1 somme_tableau**
+**8.1 somme_tableau**
 
 ```c
 int somme_tableau(const int *tab, int n)
@@ -649,7 +649,7 @@ int somme_tableau(const int *tab, int n)
 }
 ```
 
-**0.8.2 max_tableau**
+**8.2 max_tableau**
 
 ```c
 int max_tableau(const int *tab, int n)
@@ -661,7 +661,7 @@ int max_tableau(const int *tab, int n)
 }
 ```
 
-**0.8.3 inverser_tableau**
+**8.3 inverser_tableau**
 
 ```c
 void inverser_tableau(int *tab, int n)
@@ -675,7 +675,7 @@ void inverser_tableau(int *tab, int n)
 }
 ```
 
-**0.8.4 compte_occurrences**
+**8.4 compte_occurrences**
 
 ```c
 int compte_occurrences(const int *tab, int n, int x)
@@ -687,7 +687,7 @@ int compte_occurrences(const int *tab, int n, int x)
 }
 ```
 
-**0.8.5 tri_bulles**
+**8.5 tri_bulles**
 
 ```c
 void tri_bulles(int *tab, int n)
@@ -701,7 +701,7 @@ void tri_bulles(int *tab, int n)
 }
 ```
 
-**0.8.6 recherche_dicho**
+**8.6 recherche_dicho**
 
 ```c
 int recherche_dicho(const int *tab, int n, int x)
@@ -718,7 +718,7 @@ int recherche_dicho(const int *tab, int n, int x)
 }
 ```
 
-### Fil rouge 0.8 {#fil-rouge-08}
+### Fil rouge 8 {#fil-rouge-08}
 
 ```c
 unsigned char cible[8] = {67, 109, 103, 112, 105, 115, 105, 108};
@@ -730,9 +730,9 @@ my_putchar('\n');
 
 Affiche `Clemence` : on a inversé la contrainte pour fabriquer la clé, comme un keygen.
 
-## Chapitre 0.9 {#chapitre-09}
+## Chapitre 9 {#chapitre-09}
 
-**0.9.1 afficher les arguments**
+**9.1 afficher les arguments**
 
 ```c
 #include "libmy.h"   /* ou my_putstr defini plus haut */
@@ -748,9 +748,9 @@ int main(int argc, char **argv)
 }
 ```
 
-**0.9.2 nombre d'arguments** : afficher `argc - 1` (avec `my_putnbr` ou `printf`).
+**9.2 nombre d'arguments** : afficher `argc - 1` (avec `my_putnbr` ou `printf`).
 
-**0.9.3 my_getnbr**
+**9.3 my_getnbr**
 
 ```c
 int my_getnbr(const char *s)
@@ -774,7 +774,7 @@ int my_getnbr(const char *s)
 }
 ```
 
-**0.9.4 somme des arguments**
+**9.4 somme des arguments**
 
 ```c
 int main(int argc, char **argv)
@@ -787,7 +787,7 @@ int main(int argc, char **argv)
 }
 ```
 
-**0.9.5 mini-crackme 1337**
+**9.5 mini-crackme 1337**
 
 ```c
 int main(int argc, char **argv)
@@ -800,7 +800,7 @@ int main(int argc, char **argv)
 }
 ```
 
-### Fil rouge 0.9 {#fil-rouge-09}
+### Fil rouge 9 {#fil-rouge-09}
 
 ```c
 int main(int argc, char **argv)
@@ -817,9 +817,9 @@ int main(int argc, char **argv)
 }
 ```
 
-## Chapitre 0.10 {#chapitre-10}
+## Chapitre 10 {#chapitre-10}
 
-**0.10.1 distance_carre**
+**10.1 distance_carre**
 
 ```c
 struct point { int x; int y; };
@@ -834,7 +834,7 @@ int distance_carre(const struct point *a, const struct point *b)
 
 Entre `{1,2}` et `{4,6}` : `9 + 16 = 25`.
 
-**0.10.2 augmente**
+**10.2 augmente**
 
 ```c
 void augmente(struct point *p, int dx, int dy)
@@ -844,7 +844,7 @@ void augmente(struct point *p, int dx, int dy)
 }
 ```
 
-**0.10.3 moyenne**
+**10.3 moyenne**
 
 ```c
 struct etudiant { const char *nom; int note; };
@@ -858,7 +858,7 @@ double moyenne(const struct etudiant *tab, int n)
 }
 ```
 
-**0.10.4 meilleur**
+**10.4 meilleur**
 
 ```c
 const char *meilleur(const struct etudiant *tab, int n)
@@ -871,7 +871,7 @@ const char *meilleur(const struct etudiant *tab, int n)
 }
 ```
 
-### Fil rouge 0.10 {#fil-rouge-10}
+### Fil rouge 10 {#fil-rouge-10}
 
 ```c
 struct coffre { unsigned char cible[8]; };
@@ -887,9 +887,9 @@ int verifier(const struct coffre *c, const char *cle)
 }
 ```
 
-## Chapitre 0.11 {#chapitre-11}
+## Chapitre 11 {#chapitre-11}
 
-**0.11.1 tableau_rempli**
+**11.1 tableau_rempli**
 
 ```c
 int *tableau_rempli(int n)
@@ -904,7 +904,7 @@ int *tableau_rempli(int n)
 
 Dans l'appelant : `int *t = tableau_rempli(5); ...; free(t);`.
 
-**0.11.2 my_strdup**
+**11.2 my_strdup**
 
 ```c
 char *my_strdup(const char *s)
@@ -918,7 +918,7 @@ char *my_strdup(const char *s)
 }
 ```
 
-**0.11.3 concat**
+**11.3 concat**
 
 ```c
 char *concat(const char *a, const char *b)
@@ -934,7 +934,7 @@ char *concat(const char *a, const char *b)
 }
 ```
 
-**0.11.4 copie_agrandie**
+**11.4 copie_agrandie**
 
 ```c
 int *copie_agrandie(const int *tab, int n)
@@ -948,7 +948,7 @@ int *copie_agrandie(const int *tab, int n)
 }
 ```
 
-### Fil rouge 0.11 {#fil-rouge-11}
+### Fil rouge 11 {#fil-rouge-11}
 
 ```c
 char *copie = my_strdup(argv[1]);
@@ -959,11 +959,11 @@ free(copie);
 my_putstr(ouvert ? "Coffre ouvert\n" : "Refuse\n");
 ```
 
-## Chapitre 0.12 {#chapitre-12}
+## Chapitre 12 {#chapitre-12}
 
-**0.12.1 à 0.12.3** : voir le projet complet ci-dessous. La répartition des fonctions dans `libmy.c`/`libmy.h`, le `main.c` de test et le `Makefile` (avec `clean`) y figurent. `make` ne recompile un `.o` que si son `.c` ou un `.h` dont il dépend a changé : modifier `main.c` ne recompile pas `libmy.o`.
+**12.1 à 12.3** : voir le projet complet ci-dessous. La répartition des fonctions dans `libmy.c`/`libmy.h`, le `main.c` de test et le `Makefile` (avec `clean`) y figurent. `make` ne recompile un `.o` que si son `.c` ou un `.h` dont il dépend a changé : modifier `main.c` ne recompile pas `libmy.o`.
 
-### Fil rouge 0.12 {#fil-rouge-12}
+### Fil rouge 12 {#fil-rouge-12}
 
 Le coffre assemblé en projet (`libmy` + `coffre0.c` + `Makefile`) est donné en entier au chapitre [0.13](../partie0-c/13-projet.md) et reproduit ci-dessous.
 

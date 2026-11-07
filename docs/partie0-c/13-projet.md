@@ -1,10 +1,10 @@
-# 0.13 Projet de fin de partie
+# Chapitre 13 : Projet de fin de partie
 
-Deux travaux récapitulent toute la partie 0 : une petite bibliothèque de chaînes (synthèse), et le coffre, le mini-crackme construit tout au long des chapitres (fil rouge). Les deux se compilent avec un Makefile et réutilisent ce que vous avez écrit.
+Deux travaux récapitulent toute la partie 1 : une petite bibliothèque de chaînes (synthèse), et le coffre, le mini-crackme construit tout au long des chapitres (fil rouge). Les deux se compilent avec un Makefile et réutilisent ce que vous avez écrit.
 
 ## Synthèse : ma_libc
 
-L'objectif est de rassembler, dans un module réutilisable, les fonctions de chaînes recodées en partie 0, et d'en ajouter deux. C'est un « rush » de synthèse typique de piscine.
+L'objectif est de rassembler, dans un module réutilisable, les fonctions de chaînes recodées en partie 1, et d'en ajouter deux. C'est un « rush » de synthèse typique de piscine.
 
 À réaliser :
 
@@ -115,9 +115,9 @@ make
 
 Vous savez maintenant lire et écrire du C : fonctions, variables, conditions, boucles, pointeurs, chaînes, tableaux, arguments, structures, allocation, et même un projet multi-fichiers. C'est tout ce qu'il faut pour aborder l'assembleur.
 
-Gardez votre `coffre0` : au début de la partie 2, vous le compilerez puis le **désassemblerez**, pour retrouver, dans votre propre binaire, la cible `43 6d 67 70 69 73 69 6c` et en déduire la clé. Vous ferez alors, sur votre code, exactement le travail d'un reverser. La [partie 1](../partie1-assembleur/01-bases.md) commence par là : comment ce C se traduit en instructions machine.
+Gardez votre `coffre0` : au début de la partie 3, vous le compilerez puis le **désassemblerez**, pour retrouver, dans votre propre binaire, la cible `43 6d 67 70 69 73 69 6c` et en déduire la clé. Vous ferez alors, sur votre code, exactement le travail d'un reverser. La [partie 2](../partie1-assembleur/01-bases.md) commence par là : comment ce C se traduit en instructions machine.
 
 ## Suivi
 
-- [ ] Projet 0.13 : synthèse ma_libc
-- [ ] Projet 0.13 : mini-projet coffre
+- [ ] Projet 13 : synthèse ma_libc
+- [ ] Projet 13 : mini-projet coffre

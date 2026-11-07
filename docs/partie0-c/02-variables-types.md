@@ -1,4 +1,4 @@
-# 0.2 Variables et types
+# Chapitre 2 : Variables et types
 
 Une variable est une case mémoire nommée, qui contient une valeur d'un certain **type**. En reverse, le type compte énormément : la taille d'une variable et son caractère signé ou non expliquent le choix des instructions et des registres une fois le code compilé. Ce chapitre pose ces bases.
 
@@ -64,15 +64,15 @@ printf("%d en hexa : %x\n", 255, 255);   // 255 en hexa : ff
 
 ## Exercices
 
-**Exercice 0.2.1 (N1)** Écrire `void afficher_tailles(void)` qui affiche, avec `sizeof`, les tailles d'un `char`, d'un `int`, d'un `long`, d'un `unsigned int` et d'un pointeur (`void *`). Noter les valeurs sur votre machine.
+**Exercice 2.1 (N1)** Écrire `void afficher_tailles(void)` qui affiche, avec `sizeof`, les tailles d'un `char`, d'un `int`, d'un `long`, d'un `unsigned int` et d'un pointeur (`void *`). Noter les valeurs sur votre machine.
 
-**Exercice 0.2.2 (N1)** Déclarer trois variables (un `int`, un `char`, un `long`), leur donner une valeur, et les afficher avec `printf` en utilisant les bons formats (`%d`, `%c`, `%ld`).
+**Exercice 2.2 (N1)** Déclarer trois variables (un `int`, un `char`, un `long`), leur donner une valeur, et les afficher avec `printf` en utilisant les bons formats (`%d`, `%c`, `%ld`).
 
-**Exercice 0.2.3 (N2)** Écrire `void hms(int total)` qui affiche une durée en secondes sous la forme `Xh Ym Zs`. Exemple : `hms(3661)` affiche `1h 1m 1s`. Utiliser la division entière et le modulo.
+**Exercice 2.3 (N2)** Écrire `void hms(int total)` qui affiche une durée en secondes sous la forme `Xh Ym Zs`. Exemple : `hms(3661)` affiche `1h 1m 1s`. Utiliser la division entière et le modulo.
 
-**Exercice 0.2.4 (N2)** Écrire `unsigned char apres(unsigned char x)` qui renvoie `x + 1`. Vérifier que `apres(255)` vaut `0`. Expliquer en commentaire pourquoi.
+**Exercice 2.4 (N2)** Écrire `unsigned char apres(unsigned char x)` qui renvoie `x + 1`. Vérifier que `apres(255)` vaut `0`. Expliquer en commentaire pourquoi.
 
-**Exercice 0.2.5 (N3)** Écrire `void interpretations(unsigned char b)` qui affiche la valeur de `b` lue comme non signée (`%u`) puis comme signée (`%d` après conversion en `signed char`). Tester avec `0`, `127`, `128`, `200`, `255`, et expliquer les résultats.
+**Exercice 2.5 (N3)** Écrire `void interpretations(unsigned char b)` qui affiche la valeur de `b` lue comme non signée (`%u`) puis comme signée (`%d` après conversion en `signed char`). Tester avec `0`, `127`, `128`, `200`, `255`, et expliquer les résultats.
 
 Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-02)
 
@@ -90,12 +90,12 @@ for (int i = 0; i < 8; i++)
 printf("\n");
 ```
 
-`%02x` affiche chaque octet sur deux chiffres hexa. Ces octets sont ce qu'un reverser verrait dans le binaire : en partie 2, vous retrouverez exactement ce tableau dans votre propre programme désassemblé, et il faudra en déduire la clé.
+`%02x` affiche chaque octet sur deux chiffres hexa. Ces octets sont ce qu'un reverser verrait dans le binaire : en partie 3, vous retrouverez exactement ce tableau dans votre propre programme désassemblé, et il faudra en déduire la clé.
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-02)
 
 ## Suivi
 
-- [ ] Chapitre 0.2 : lecture
-- [ ] Chapitre 0.2 : exercices
-- [ ] Chapitre 0.2 : fil rouge
+- [ ] Partie 1, chapitre 2 : lecture
+- [ ] Partie 1, chapitre 2 : exercices
+- [ ] Partie 1, chapitre 2 : fil rouge

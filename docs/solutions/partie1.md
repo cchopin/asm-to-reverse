@@ -1,4 +1,4 @@
-# Solutions de la partie 1
+# Solutions de la partie 2
 
 Une solution ne se consulte qu'après une recherche sérieuse. Une réponse différente n'est pas forcément fausse : la vérifier en compilant ou dans GDB.
 

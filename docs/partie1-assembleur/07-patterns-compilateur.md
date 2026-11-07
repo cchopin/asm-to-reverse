@@ -145,7 +145,7 @@ dec rcx             ; rcx = longueur
 
 Le sens de parcours dépend du flag de direction `DF` : `cld` le met à 0 (les adresses croissent, cas normal) et `std` à 1. Un `cld` juste avant une instruction de chaîne n'a pas d'autre signification.
 
-**`loop etiquette`** décrémente `rcx`, puis saute si `rcx` n'est pas nul. C'est une boucle `for` à rebours en une instruction ; gcc ne l'émet plus (elle est lente), mais elle reste courante dans le code écrit à la main, par exemple une boucle de déchiffrement XOR dans un shellcode (chapitre 17).
+**`loop etiquette`** décrémente `rcx`, puis saute si `rcx` n'est pas nul. C'est une boucle `for` à rebours en une instruction ; gcc ne l'émet plus (elle est lente), mais elle reste courante dans le code écrit à la main, par exemple une boucle de déchiffrement XOR dans un shellcode (chapitre 3 de la partie 4).
 
 **`xchg a, b`** échange les deux opérandes. `xchg eax, eax` (octet `90`) est d'ailleurs l'encodage historique de `nop`.
 
@@ -252,7 +252,7 @@ push   0x0
 call   DWORD PTR [MessageBoxA]
 ```
 
-(Rappel : `int MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)`. `HWND` est un identifiant de fenêtre, et `LPCSTR` un simple pointeur de chaîne : ce sont des noms de types Windows détaillés au chapitre 13. `call DWORD PTR [MessageBoxA]` est un **appel indirect** : l'adresse de la fonction n'est pas écrite dans l'instruction mais lue en mémoire, à l'emplacement `MessageBoxA` de la table des imports, puisqu'une fonction de DLL n'est connue qu'au chargement.)
+(Rappel : `int MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)`. `HWND` est un identifiant de fenêtre, et `LPCSTR` un simple pointeur de chaîne : ce sont des noms de types Windows détaillés au chapitre 6 de la partie 3. `call DWORD PTR [MessageBoxA]` est un **appel indirect** : l'adresse de la fonction n'est pas écrite dans l'instruction mais lue en mémoire, à l'emplacement `MessageBoxA` de la table des imports, puisqu'une fonction de DLL n'est connue qu'au chargement.)
 
 **Exercice 7.3** Écrire un petit programme C avec un `switch` de 6 cas sur un caractère (`'a'` à `'f'`) qui appelle 6 fonctions différentes. Compiler en `-O0` et `-O2`, et retrouver la table de sauts. Comment le compilateur fait-il commencer la table à l'indice 0 alors que `'a'` vaut `0x61` ?
 
@@ -316,7 +316,7 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-07)
 
 ## Fil rouge : réécrire verifier
 
-C'est l'aboutissement de la partie 1.
+C'est l'aboutissement de la partie 2.
 
 1. Reprendre la première version écrite à la question 5 du chapitre 6 et la mettre au propre dans un fichier `ma_version.c`, avec des noms de variables explicites. (Le chapitre 6 en demandait un brouillon exact ; ici, la version propre qui sera comparée au binaire.)
 2. Décrire en une phrase ce qu'est un code valide.
@@ -331,10 +331,10 @@ C'est l'aboutissement de la partie 1.
 
 Solutions : [solutions/partie1.md](../solutions/partie1.md#chapitre-7)
 
-La partie 1 est terminée : la lecture de code compilé, compétence de base du reverse, est acquise. La partie 2 montre comment l'exercer efficacement sur de vrais programmes, avec des outils.
+La partie 2 est terminée : la lecture de code compilé, compétence de base du reverse, est acquise. La partie 3 montre comment l'exercer efficacement sur de vrais programmes, avec des outils.
 
 ## Suivi
 
-- [ ] Chapitre 7 : lecture
-- [ ] Chapitre 7 : exercices
-- [ ] Chapitre 7 : fil rouge
+- [ ] Partie 2, chapitre 7 : lecture
+- [ ] Partie 2, chapitre 7 : exercices
+- [ ] Partie 2, chapitre 7 : fil rouge

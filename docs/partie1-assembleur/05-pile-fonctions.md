@@ -121,7 +121,7 @@ Valeur de retour : `rax`. Moyen mnémotechnique : "**D**iane **S**e **D**épêch
 |---|---|---|---|---|---|
 | Registre | `rcx` | `rdx` | `r8` | `r9` | pile |
 
-Valeur de retour : `rax`. L'appelant réserve en outre 32 octets sur la pile (le "shadow space"), d'où le `sub rsp, 0x28` fréquent dans les binaires Windows. Cette convention est indispensable pour lire des malwares Windows dans Ghidra (chapitre 13).
+Valeur de retour : `rax`. L'appelant réserve en outre 32 octets sur la pile (le "shadow space"), d'où le `sub rsp, 0x28` fréquent dans les binaires Windows. Cette convention est indispensable pour lire des malwares Windows dans Ghidra (chapitre 6 de la partie 3).
 
 ### x86 32 bits (cdecl, stdcall)
 
@@ -213,7 +213,7 @@ Se lit immédiatement : `if (strcmp(x, "chaîne en 0x402010") != 0) goto echec;`
 
 Quelques fonctions à connaître avec leurs arguments : `strcmp(a, b)`, `strncmp(a, b, n)`, `memcmp(a, b, n)`, `strlen(s)`, `strcpy(dst, src)`, `memcpy(dst, src, n)`, `printf(fmt, ...)`, `puts(s)`, `fgets(buf, taille, flux)`, `scanf(fmt, ...)`, `atoi(s)`, `strtol(s, fin, base)`, `malloc(taille)`. En cas de doute : `man 3 strcmp`.
 
-Remarque sur `printf` : la convention System V demande de placer dans `al` le nombre de registres vectoriels utilisés (les registres `xmm`, réservés aux nombres à virgule ; voir section 16.2). D'où le `mov eax, 0x0` juste avant un `call printf`, qui n'est pas un argument du programme.
+Remarque sur `printf` : la convention System V demande de placer dans `al` le nombre de registres vectoriels utilisés (les registres `xmm`, réservés aux nombres à virgule ; voir la section 2.2 de la partie 4). D'où le `mov eax, 0x0` juste avant un `call printf`, qui n'est pas un argument du programme.
 
 ## 5.8 Le canari de pile
 
@@ -345,6 +345,6 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#chapitre-5)
 
 ## Suivi
 
-- [ ] Chapitre 5 : lecture
-- [ ] Chapitre 5 : exercices
-- [ ] Chapitre 5 : fil rouge
+- [ ] Partie 2, chapitre 5 : lecture
+- [ ] Partie 2, chapitre 5 : exercices
+- [ ] Partie 2, chapitre 5 : fil rouge

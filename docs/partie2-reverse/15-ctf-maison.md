@@ -1,6 +1,6 @@
 # CTF maison
 
-Une série de six crackmes de difficulté croissante, à résoudre avec la méthode en quatre étapes (reconnaître, observer, comprendre, agir). Chacun exerce une technique vue dans la partie 2. C'est l'entraînement le plus proche d'un vrai CTF.
+Une série de six crackmes de difficulté croissante, à résoudre avec la méthode en quatre étapes (reconnaître, observer, comprendre, agir). Chacun exerce une technique vue dans la partie 3. C'est l'entraînement le plus proche d'un vrai CTF.
 
 !!! warning "Règle du jeu"
     Les sources sont fournies uniquement pour **compiler** les binaires. Les ouvrir avant d'avoir résolu le défi supprime tout l'intérêt. Résolvez sur le binaire (`objdump`, Ghidra, GDB), puis, seulement ensuite, comparez avec le source pour vérifier votre compréhension.
@@ -27,9 +27,9 @@ Pour corser le défi, vous pouvez les stripper (`strip crackNN`) afin de perdre 
 
 **Défi 4 (N2) - crack04.** Un vérificateur de licence : `./crack04 <nom> <serial>`. Le serial est calculé à partir du nom. Comprenez le calcul, puis écrivez un **keygen** qui donne un serial valide pour n'importe quel nom.
 
-**Défi 5 (N3) - crack05.** Un code à quatre chiffres soumis à plusieurs contraintes. Récupérez les contraintes dans le code, puis résolvez-les (à la main ou avec z3, voir chapitre 11). Une seule combinaison fonctionne.
+**Défi 5 (N3) - crack05.** Un code à quatre chiffres soumis à plusieurs contraintes. Récupérez les contraintes dans le code, puis résolvez-les (à la main ou avec z3, voir chapitre 4). Une seule combinaison fonctionne.
 
-**Défi 6 (N3) - crack06.** Un crackme protégé contre le débogage : sous GDB, il refuse de coopérer. Trouvez d'abord le mot de passe par analyse statique, puis trouvez comment neutraliser l'anti-debug pour l'observer en dynamique (voir chapitre 12).
+**Défi 6 (N3) - crack06.** Un crackme protégé contre le débogage : sous GDB, il refuse de coopérer. Trouvez d'abord le mot de passe par analyse statique, puis trouvez comment neutraliser l'anti-debug pour l'observer en dynamique (voir chapitre 5).
 
 ## Vérifier
 

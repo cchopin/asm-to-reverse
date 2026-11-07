@@ -263,6 +263,6 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#chapitre-6)
 
 ## Suivi
 
-- [ ] Chapitre 6 : lecture
-- [ ] Chapitre 6 : exercices
-- [ ] Chapitre 6 : fil rouge
+- [ ] Partie 2, chapitre 6 : lecture
+- [ ] Partie 2, chapitre 6 : exercices
+- [ ] Partie 2, chapitre 6 : fil rouge

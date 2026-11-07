@@ -1,8 +1,8 @@
-# Chapitre 17 : shellcode et loader chiffré
+# Chapitre 3 : shellcode et loader chiffré
 
 Un **shellcode** est une suite d'octets de code machine conçue pour être injectée puis exécutée dans un processus qui n'était pas prévu pour cela. Le nom vient de l'usage historique : ouvrir un interpréteur de commandes (`/bin/sh`). En CTF, la catégorie *pwn* demande souvent d'en écrire un ; en analyse de malware, les shellcodes sont omniprésents, généralement **chiffrés** et déchiffrés en mémoire par un petit programme appelé *loader* (chargeur). Ce chapitre traite les deux côtés : écrire un shellcode, puis analyser un loader.
 
-## 17.1 Les contraintes d'un shellcode
+## 3.1 Les contraintes d'un shellcode
 
 Un shellcode n'est pas un programme complet : c'est un fragment de code copié à une adresse inconnue à l'avance. Il doit donc respecter trois contraintes :
 
@@ -22,7 +22,7 @@ La troisième contrainte demande de regarder les octets produits par l'assembleu
 
 Les constantes 32 bits sont toujours encodées sur 4 octets : une petite valeur est donc complétée par des zéros. `push` accepte en revanche une constante d'un seul octet.
 
-## 17.2 Écrire un shellcode
+## 3.2 Écrire un shellcode
 
 [exemples/flag.asm](../exemples/flag.asm) affiche un message sans utiliser de section de données. La chaîne est découpée en blocs de 8 octets, poussés sur la pile **du dernier au premier**, car la pile croît vers les adresses basses : le dernier bloc poussé se retrouve au sommet, à l'adresse `rsp`, et la chaîne se lit ensuite dans l'ordre.
 
@@ -73,7 +73,7 @@ _start:
 
 Le 0 de fin de chaîne est obtenu en poussant un registre nul, et non en l'écrivant dans le code. Le chemin `/bin//sh` est équivalent à `/bin/sh` pour le système, mais fait exactement 8 octets.
 
-## 17.3 Extraire et tester les octets
+## 3.3 Extraire et tester les octets
 
 Une fois assemblé, seul le contenu de la section `.text` est utile :
 
@@ -106,9 +106,9 @@ FLAG{shellcode_dechiffre}
 
 Ce schéma `mmap` puis saut est exactement celui qu'un malware emploie pour exécuter une charge dissimulée. La seule différence est que la charge y arrive chiffrée, ce qui est l'objet de la section suivante.
 
-## 17.4 Le loader chiffré
+## 3.4 Le loader chiffré
 
-Dans un vrai échantillon, le shellcode n'apparaît jamais en clair dans le fichier : `strings` et un désassemblage direct ne montreraient rien. Il est stocké chiffré, le plus souvent par un simple XOR (chapitre 11), et déchiffré en mémoire juste avant l'exécution. La séquence typique d'un loader est :
+Dans un vrai échantillon, le shellcode n'apparaît jamais en clair dans le fichier : `strings` et un désassemblage direct ne montreraient rien. Il est stocké chiffré, le plus souvent par un simple XOR (chapitre 4 de la partie 3), et déchiffré en mémoire juste avant l'exécution. La séquence typique d'un loader est :
 
 ```mermaid
 flowchart TD
@@ -120,7 +120,7 @@ flowchart TD
 
 Le passage par `mprotect` est caractéristique : la page est d'abord modifiable (pour y écrire le code déchiffré), puis rendue exécutable mais non modifiable. Un `mmap` en lecture-écriture suivi d'un `mprotect` en lecture-exécution, autour d'une boucle avec un `xor`, décrit un loader avec une quasi-certitude.
 
-## 17.5 Analyser un loader
+## 3.5 Analyser un loader
 
 C'est le travail de l'analyste : retrouver le shellcode caché **sans faire confiance** au programme. Deux approches se complètent.
 
@@ -147,27 +147,27 @@ Les deux méthodes doivent donner exactement les mêmes octets : c'est la vérif
 
 ## Exercices
 
-**Exercice 17.1** Assembler `flag.asm`, extraire `flag.bin` avec `objcopy`, et vérifier avec Python qu'il ne contient aucun octet nul. Modifier le message, réassembler, et confirmer que le lanceur affiche le nouveau texte.
+**Exercice 3.1** Assembler `flag.asm`, extraire `flag.bin` avec `objcopy`, et vérifier avec Python qu'il ne contient aucun octet nul. Modifier le message, réassembler, et confirmer que le lanceur affiche le nouveau texte.
 
-**Exercice 17.2** Écrire un shellcode qui termine le processus avec le code de retour 42 (`exit(42)`), en un minimum d'octets et sans aucun octet nul. Le tester avec le lanceur, puis `echo $?`.
+**Exercice 3.2** Écrire un shellcode qui termine le processus avec le code de retour 42 (`exit(42)`), en un minimum d'octets et sans aucun octet nul. Le tester avec le lanceur, puis `echo $?`.
 
-**Exercice 17.3** Dans `shell.asm`, remplacer `push 59 / pop rax` par `mov rax, 59` et comparer les octets avec `objdump`. Combien d'octets nuls apparaissent, et pourquoi ?
+**Exercice 3.3** Dans `shell.asm`, remplacer `push 59 / pop rax` par `mov rax, 59` et comparer les octets avec `objdump`. Combien d'octets nuls apparaissent, et pourquoi ?
 
-**Exercice 17.4** Reprendre `flag.asm`, chiffrer ses octets avec une clé XOR au choix (un court script Python), puis écrire un loader en C qui les déchiffre dans une page `mmap` et saute dessus, sur le modèle du fil rouge. Vérifier que le flag s'affiche bien.
+**Exercice 3.4** Reprendre `flag.asm`, chiffrer ses octets avec une clé XOR au choix (un court script Python), puis écrire un loader en C qui les déchiffre dans une page `mmap` et saute dessus, sur le modèle du fil rouge. Vérifier que le flag s'affiche bien.
 
 ### Exercices gradués (style piscine)
 
-**Exercice 17.5 (niveau 1)** Écrire un shellcode qui affiche `hey\n` puis quitte, sans aucun octet nul. Le tester avec le lanceur et vérifier `count(0) == 0` sur les octets extraits.
+**Exercice 3.5 (niveau 1)** Écrire un shellcode qui affiche `hey\n` puis quitte, sans aucun octet nul. Le tester avec le lanceur et vérifier `count(0) == 0` sur les octets extraits.
 
 !!! note "Contraintes"
     Pas de section `.data` : la chaîne (4 octets) est poussée sur la pile par une seule instruction `push`. Petites constantes via `push imm8 / pop`.
 
-**Exercice 17.6 (niveau 2)** Même programme avec une chaîne de 8 octets (`reverse\n`), chargée dans un registre puis poussée. Vérifier à nouveau l'absence d'octet nul.
+**Exercice 3.6 (niveau 2)** Même programme avec une chaîne de 8 octets (`reverse\n`), chargée dans un registre puis poussée. Vérifier à nouveau l'absence d'octet nul.
 
 !!! note "Contraintes"
     `mov r64, imm64` est autorisé ici, car les 8 octets de la chaîne sont tous non nuls. Observer dans `objdump` pourquoi cela ne vaut pas pour une chaîne plus courte.
 
-**Exercice 17.7 (niveau 3, analyse)** On vous remet un shellcode chiffré par un XOR *roulant* : la clé change à chaque octet selon `cle_i = 0x5A XOR i`. Sans jamais l'exécuter, écrire un script qui le déchiffre, puis désassembler le résultat et décrire ce qu'il fait.
+**Exercice 3.7 (niveau 3, analyse)** On vous remet un shellcode chiffré par un XOR *roulant* : la clé change à chaque octet selon `cle_i = 0x5A XOR i`. Sans jamais l'exécuter, écrire un script qui le déchiffre, puis désassembler le résultat et décrire ce qu'il fait.
 
 Octets chiffrés :
 
@@ -179,7 +179,7 @@ Octets chiffrés :
 !!! warning "Analyse défensive"
     On ne lance jamais un échantillon inconnu pour voir ce qu'il fait : le déchiffrement se fait à froid. Pour le désassemblage, `objdump -D -b binary -m i386:x86-64 -M intel octets.bin` ne dépend que de binutils (toujours présent) ; pwntools ou capstone font aussi l'affaire s'ils sont installés.
 
-## Fil rouge partie 3 : analyser un loader
+## Fil rouge partie 4 : analyser un loader
 
 Le fichier [fil-rouge/partie3/chargeur.c](../fil-rouge/partie3/chargeur.c) est fourni, mais **l'exercice se fait sur le binaire compilé, sans lire la source** (la source n'est là que pour vérifier ensuite). Compiler puis analyser :
 
@@ -193,12 +193,12 @@ gcc -O1 -s chargeur.c -o chargeur     # -s retire les symboles, comme un vrai é
 4. Méthode statique : écrire un script Python qui rejoue le XOR à partir des trois valeurs lues (adresse, taille, clé) et désassemble le résultat avec pwntools, sans jamais lancer le binaire.
 5. Confirmer que les deux méthodes donnent les mêmes octets.
 
-Ce fil rouge réunit toute la progression : écriture d'assembleur (parties 1 et 3), reconnaissance d'un schéma de malware (chapitre 13), déchiffrement XOR et lecture des octets d'une instruction (chapitre 11), et manipulation de la mémoire dans GDB (chapitre 10).
+Ce fil rouge réunit toute la progression : écriture d'assembleur (parties 2 et 4), reconnaissance d'un schéma de malware (chapitre 6 de la partie 3), déchiffrement XOR et lecture des octets d'une instruction (chapitre 4 de la partie 3), et manipulation de la mémoire dans GDB (chapitre 3 de la partie 3).
 
 Solutions : [solutions/partie3.md](../solutions/partie3.md#chapitre-17)
 
 ## Suivi
 
-- [ ] Chapitre 17 : lecture
-- [ ] Chapitre 17 : exercices
-- [ ] Chapitre 17 : fil rouge
+- [ ] Partie 4, chapitre 3 : lecture
+- [ ] Partie 4, chapitre 3 : exercices
+- [ ] Partie 4, chapitre 3 : fil rouge

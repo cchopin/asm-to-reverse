@@ -1,4 +1,4 @@
-# 0.10 Structures
+# Chapitre 10 : Structures
 
 Une structure regroupe plusieurs valeurs, de types éventuellement différents, sous un seul nom. C'est ainsi qu'un programme range un objet : un point, un étudiant, un joueur. En reverse, une structure se repère aux accès réguliers à des décalages fixes depuis une même adresse de base (`[rdi]`, `[rdi+4]`, chapitre 6) ; savoir les reconnaître aide à reconstruire les données manipulées.
 
@@ -47,13 +47,13 @@ On le parcourt comme tout tableau : `classe[i].note`.
 
 ## Exercices
 
-**Exercice 0.10.1 (N1)** Définir `struct point { int x; int y; };` puis écrire `int distance_carre(const struct point *a, const struct point *b)` qui renvoie `(ax-bx)^2 + (ay-by)^2` (on reste en entiers, sans racine). Entre `{1,2}` et `{4,6}`, le résultat est 25.
+**Exercice 10.1 (N1)** Définir `struct point { int x; int y; };` puis écrire `int distance_carre(const struct point *a, const struct point *b)` qui renvoie `(ax-bx)^2 + (ay-by)^2` (on reste en entiers, sans racine). Entre `{1,2}` et `{4,6}`, le résultat est 25.
 
-**Exercice 0.10.2 (N2)** Écrire `void augmente(struct point *p, int dx, int dy)` qui déplace un point en modifiant la structure via le pointeur. Vérifier l'effet dans un `main`.
+**Exercice 10.2 (N2)** Écrire `void augmente(struct point *p, int dx, int dy)` qui déplace un point en modifiant la structure via le pointeur. Vérifier l'effet dans un `main`.
 
-**Exercice 0.10.3 (N2)** Définir `struct etudiant { const char *nom; int note; };` puis écrire `double moyenne(const struct etudiant *tab, int n)` qui renvoie la moyenne des notes.
+**Exercice 10.3 (N2)** Définir `struct etudiant { const char *nom; int note; };` puis écrire `double moyenne(const struct etudiant *tab, int n)` qui renvoie la moyenne des notes.
 
-**Exercice 0.10.4 (N3)** Ajouter `const char *meilleur(const struct etudiant *tab, int n)` qui renvoie le nom de l'étudiant ayant la meilleure note.
+**Exercice 10.4 (N3)** Ajouter `const char *meilleur(const struct etudiant *tab, int n)` qui renvoie le nom de l'étudiant ayant la meilleure note.
 
 Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-10)
 
@@ -82,6 +82,6 @@ Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-
 
 ## Suivi
 
-- [ ] Chapitre 0.10 : lecture
-- [ ] Chapitre 0.10 : exercices
-- [ ] Chapitre 0.10 : fil rouge
+- [ ] Partie 1, chapitre 10 : lecture
+- [ ] Partie 1, chapitre 10 : exercices
+- [ ] Partie 1, chapitre 10 : fil rouge

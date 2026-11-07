@@ -1,8 +1,8 @@
-# Chapitre 16 : fonctions, appel de la libc et alignement de la pile
+# Chapitre 2 : fonctions, appel de la libc et alignement de la pile
 
-Le chapitre 15 a produit des programmes autonomes, qui ne parlent qu'au noyau. Ce chapitre ajoute ce qui manque pour écrire de vrais programmes : des fonctions, et l'accès aux fonctions de la libc comme `printf`. C'est aussi l'occasion de revoir, du côté de l'auteur, les règles de la convention d'appel lues au chapitre 5.
+Le chapitre 1 a produit des programmes autonomes, qui ne parlent qu'au noyau. Ce chapitre ajoute ce qui manque pour écrire de vrais programmes : des fonctions, et l'accès aux fonctions de la libc comme `printf`. C'est aussi l'occasion de revoir, du côté de l'auteur, les règles de la convention d'appel lues au chapitre 5.
 
-## 16.1 Écrire une fonction
+## 2.1 Écrire une fonction
 
 Une fonction n'est qu'une étiquette suivie d'instructions terminées par `ret`. L'appelant utilise `call`, qui empile l'adresse de retour (chapitre 5). [exemples/longueur.asm](../exemples/longueur.asm) :
 
@@ -39,7 +39,7 @@ Rien n'oblige une fonction écrite à la main à respecter la convention System 
 | Retour | lire `rax` | écrire `rax` |
 | Registres librement modifiables : `rax`, `rcx`, `rdx`, `rsi`, `rdi`, `r8` à `r11` | les considérer perdus après un `call` | peut les écraser |
 | Registres conservés : `rbx`, `rbp`, `r12` à `r15` | peut compter sur eux après un `call` | doit les sauvegarder (`push`) et les restaurer (`pop`) s'il les utilise |
-| Pile | `rsp` multiple de 16 au moment du `call` | voir section 16.3 |
+| Pile | `rsp` multiple de 16 au moment du `call` | voir section 2.3 |
 
 Le cadre de pile `push rbp` / `mov rbp, rsp` n'est pas obligatoire : il ne sert qu'à faciliter l'accès aux variables locales et le débogage. Le code optimisé et le code écrit à la main s'en passent souvent.
 
@@ -59,9 +59,9 @@ gcc test_somme3.c somme3.o -o test_somme3
 ./test_somme3                   # affiche 42
 ```
 
-## 16.2 Appeler la libc
+## 2.2 Appeler la libc
 
-Pour utiliser `printf`, trois changements sont nécessaires par rapport au chapitre 15 :
+Pour utiliser `printf`, trois changements sont nécessaires par rapport au chapitre 1 :
 
 1. le point d'entrée devient `main`, appelé par le code de démarrage de la libc avec `argc` dans `rdi` et `argv` dans `rsi` ; `main` se termine par `ret` et renvoie son code de retour dans `eax` ;
 2. la fonction est déclarée `extern printf`, puis appelée avec `call printf wrt ..plt` ;
@@ -81,7 +81,7 @@ Deux détails propres à `printf` et aux fonctions à nombre variable d'argument
 
 Enfin, la ligne `section .note.GNU-stack noalloc noexec nowrite progbits` en fin de fichier indique que la pile ne doit pas être exécutable ; sans elle, `ld` affiche un avertissement.
 
-## 16.3 L'alignement de la pile
+## 2.3 L'alignement de la pile
 
 La convention System V impose une règle supplémentaire, invisible tant qu'elle est respectée : **au moment d'un `call`, `rsp` doit être un multiple de 16**. Certaines instructions vectorielles (`movaps`) exigent en effet des adresses alignées, et les fonctions de la libc s'en servent pour leurs variables locales.
 
@@ -125,30 +125,30 @@ Côté reverse, cette règle explique des instructions qui semblent inutiles dan
 
 ## Exercices
 
-**Exercice 16.1** Écrire en assembleur une fonction `long maximum(long a, long b)` (indice : `cmp` puis `cmovl`, ou un saut), l'appeler depuis un programme C sur le modèle de `test_somme3.c`, et la tester avec des valeurs négatives.
+**Exercice 2.1** Écrire en assembleur une fonction `long maximum(long a, long b)` (indice : `cmp` puis `cmovl`, ou un saut), l'appeler depuis un programme C sur le modèle de `test_somme3.c`, et la tester avec des valeurs négatives.
 
-**Exercice 16.2** Écrire un `main` en assembleur qui affiche `argc vaut N` avec `printf`, où `N` est le nombre d'arguments. Tester avec `./programme a b c`.
+**Exercice 2.2** Écrire un `main` en assembleur qui affiche `argc vaut N` avec `printf`, où `N` est le nombre d'arguments. Tester avec `./programme a b c`.
 
-**Exercice 16.3** Assembler `desaligne.asm`, observer le plantage dans GDB, puis afficher `p/x $rsp` à l'entrée de `main` (`break main`, `run`). Vérifier que la valeur se termine par 8. Corriger le programme et vérifier que `rsp` se termine par 0 juste avant le `call`.
+**Exercice 2.3** Assembler `desaligne.asm`, observer le plantage dans GDB, puis afficher `p/x $rsp` à l'entrée de `main` (`break main`, `run`). Vérifier que la valeur se termine par 8. Corriger le programme et vérifier que `rsp` se termine par 0 juste avant le `call`.
 
 ### Exercices gradués (style piscine)
 
-**Exercice 16.4 (niveau 1)** Écrire `long cube(long n)` en assembleur (deux `imul`), l'appeler depuis un programme C et vérifier le résultat avec une valeur négative.
+**Exercice 2.4 (niveau 1)** Écrire `long cube(long n)` en assembleur (deux `imul`), l'appeler depuis un programme C et vérifier le résultat avec une valeur négative.
 
 !!! note "Contraintes"
     Fonction feuille : pas de cadre de pile, pas de `call`. Ajouter `section .note.GNU-stack noalloc noexec nowrite progbits` en fin de fichier.
 
-**Exercice 16.5 (niveau 2)** Écrire `long somme_tableau(const long *t, long n)` qui additionne les `n` premiers éléments d'un tableau de `long`. L'appeler depuis C sur un tableau mêlant valeurs positives et négatives.
+**Exercice 2.5 (niveau 2)** Écrire `long somme_tableau(const long *t, long n)` qui additionne les `n` premiers éléments d'un tableau de `long`. L'appeler depuis C sur un tableau mêlant valeurs positives et négatives.
 
 !!! note "Contraintes"
     Une seule boucle. Accéder au tableau avec l'adressage indexé `[rdi + rcx*8]` (un `long` occupe 8 octets).
 
-**Exercice 16.6 (niveau 3)** Écrire un `main` en assembleur qui affiche chaque argument de la ligne de commande sur sa propre ligne, avec `printf("%s\n", ...)`. Tester avec `./programme alpha beta gamma`.
+**Exercice 2.6 (niveau 3)** Écrire un `main` en assembleur qui affiche chaque argument de la ligne de commande sur sa propre ligne, avec `printf("%s\n", ...)`. Tester avec `./programme alpha beta gamma`.
 
 !!! note "Contraintes"
     Respecter l'alignement de la pile sur 16 octets avant chaque `call printf`. Conserver `argc`, `argv` et l'indice de boucle dans des registres *callee-saved* (`rbx`, `r12`, `r13`) pour qu'ils survivent aux appels. Astuce : trois `push` en entrée réalignent la pile et sauvegardent ces trois registres d'un coup.
 
-## Fil rouge partie 3 : le keygen complet
+## Fil rouge partie 4 : le keygen complet
 
 Étape 2 : écrire `keygen.asm`, un `main` qui :
 
@@ -156,7 +156,7 @@ Côté reverse, cette règle explique des instructions qui semblent inutiles dan
 2. appelle une fonction `hacher(argv[1])` écrite en assembleur, qui renvoie dans `eax` le serial calculé par l'algorithme du coffre v3 : `h = 0x1337`, puis pour chaque caractère `c` : `h = h * 31 + c`, rotation de `h` de 3 bits à gauche (`rol`), et enfin `h ^ 0xC0FFEE` ;
 3. affiche le résultat avec `printf` et le format `"%08X\n"` (8 chiffres hexadécimaux en majuscules).
 
-La boucle de l'étape 1 (chapitre 15) fournit la structure de `hacher` : au lieu de compter les caractères, elle les incorpore au calcul. Vérification avec le keygen Python :
+La boucle de l'étape 1 (chapitre 1) fournit la structure de `hacher` : au lieu de compter les caractères, elle les incorpore au calcul. Vérification avec le keygen Python :
 
 ```
 $ ./keygen Clemence
@@ -171,6 +171,6 @@ Solutions : [solutions/partie3.md](../solutions/partie3.md#chapitre-16)
 
 ## Suivi
 
-- [ ] Chapitre 16 : lecture
-- [ ] Chapitre 16 : exercices
-- [ ] Chapitre 16 : fil rouge
+- [ ] Partie 4, chapitre 2 : lecture
+- [ ] Partie 4, chapitre 2 : exercices
+- [ ] Partie 4, chapitre 2 : fil rouge

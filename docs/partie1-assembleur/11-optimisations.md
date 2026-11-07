@@ -123,5 +123,5 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#optimisations)
 
 ## Suivi
 
-- [ ] Chapitre 11 (code optimisé) : lecture
-- [ ] Chapitre 11 (code optimisé) : exercices
+- [ ] Partie 2, chapitre 11 (code optimisé) : lecture
+- [ ] Partie 2, chapitre 11 (code optimisé) : exercices

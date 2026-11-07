@@ -1,8 +1,8 @@
 # Challenge de synthèse
 
-Fin de la partie 1. Ce challenge rassemble tout : registres, arithmétique, conditions, boucles, pile et accès mémoire. Trois fonctions ne vous sont données que sous forme désassemblée. Pour chacune, il faut retrouver le code C équivalent.
+Fin de la partie 2. Ce challenge rassemble tout : registres, arithmétique, conditions, boucles, pile et accès mémoire. Trois fonctions ne vous sont données que sous forme désassemblée. Pour chacune, il faut retrouver le code C équivalent.
 
-C'est exactement le travail de la partie 2, mais sur du code simple et non optimisé. Prenez le temps : lisez le prologue, identifiez les arguments, suivez les sauts, nommez les variables locales.
+C'est exactement le travail de la partie 3, mais sur du code simple et non optimisé. Prenez le temps : lisez le prologue, identifiez les arguments, suivez les sauts, nommez les variables locales.
 
 !!! tip "Méthode"
     1. Repérer le prologue et les arguments (registres `rdi`, `esi`, `rdx`... sauvés sur la pile).
@@ -100,4 +100,4 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#challenge-synthese)
 
 ## Suivi
 
-- [ ] Challenge partie 1 : les trois fonctions reconstruites
+- [ ] Challenge partie 2 : les trois fonctions reconstruites

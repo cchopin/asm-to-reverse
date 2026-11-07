@@ -1,4 +1,4 @@
-# 0.5 Fonctions
+# Chapitre 5 : Fonctions
 
 Une fonction est un morceau de programme nommé, qui prend des arguments et renvoie éventuellement une valeur. Découper en fonctions rend le code lisible et réutilisable. En reverse, chaque fonction du source devient un bloc avec un prologue et un épilogue reconnaissables (chapitre 5) : savoir où commence et finit une fonction est une compétence de base.
 
@@ -37,7 +37,7 @@ int carre(int x)       // définition, plus bas
 }
 ```
 
-Les prototypes sont au cœur des fichiers d'en-tête `.h` (chapitre 0.12).
+Les prototypes sont au cœur des fichiers d'en-tête `.h` (chapitre 12).
 
 ## Portée des variables
 
@@ -54,7 +54,7 @@ void rate_echange(int a, int b)   // ne marche PAS
 }
 ```
 
-Après `rate_echange(x, y)`, `x` et `y` sont inchangés. Pour modifier les variables de l'appelant, il faut passer leur **adresse** : c'est tout l'objet du chapitre 0.6.
+Après `rate_echange(x, y)`, `x` et `y` sont inchangés. Pour modifier les variables de l'appelant, il faut passer leur **adresse** : c'est tout l'objet du chapitre 6.
 
 ## Récursion
 
@@ -68,27 +68,27 @@ long factorielle(int n)
 }
 ```
 
-Chaque appel empile ses propres variables locales ; on verra cet empilement concrètement en GDB (chapitre 10).
+Chaque appel empile ses propres variables locales ; on verra cet empilement concrètement en GDB (chapitre 3 de la partie 3).
 
 ## Exercices
 
-**Exercice 0.5.1 (N1)** Écrire `int my_abs(int n)` qui renvoie la valeur absolue de `n`.
+**Exercice 5.1 (N1)** Écrire `int my_abs(int n)` qui renvoie la valeur absolue de `n`.
 
-**Exercice 0.5.2 (N1)** Écrire `long puissance(int base, int exposant)` (exposant positif ou nul) avec une boucle. Vérifier `puissance(2, 10)` vaut 1024.
+**Exercice 5.2 (N1)** Écrire `long puissance(int base, int exposant)` (exposant positif ou nul) avec une boucle. Vérifier `puissance(2, 10)` vaut 1024.
 
-**Exercice 0.5.3 (N2)** Écrire `int pgcd(int a, int b)` par l'algorithme d'Euclide : tant que `b` n'est pas nul, remplacer le couple `(a, b)` par `(b, a % b)`. Vérifier `pgcd(48, 36)` vaut 12.
+**Exercice 5.3 (N2)** Écrire `int pgcd(int a, int b)` par l'algorithme d'Euclide : tant que `b` n'est pas nul, remplacer le couple `(a, b)` par `(b, a % b)`. Vérifier `pgcd(48, 36)` vaut 12.
 
-**Exercice 0.5.4 (N2)** Écrire `long somme_rec(int n)` qui calcule la somme de 1 à `n` de façon récursive. Vérifier `somme_rec(100)` vaut 5050.
+**Exercice 5.4 (N2)** Écrire `long somme_rec(int n)` qui calcule la somme de 1 à `n` de façon récursive. Vérifier `somme_rec(100)` vaut 5050.
 
-**Exercice 0.5.5 (N3)** Écrire `long fibonacci(int n)` de façon récursive (`fib(0) = 0`, `fib(1) = 1`, `fib(n) = fib(n-1) + fib(n-2)`). Vérifier `fibonacci(10)` vaut 55. En bonus, en écrire une version avec une boucle, bien plus rapide.
+**Exercice 5.5 (N3)** Écrire `long fibonacci(int n)` de façon récursive (`fib(0) = 0`, `fib(1) = 1`, `fib(n) = fib(n-1) + fib(n-2)`). Vérifier `fibonacci(10)` vaut 55. En bonus, en écrire une version avec une boucle, bien plus rapide.
 
-**Exercice 0.5.6 (N3)** Écrire `void rate_echange(int a, int b)` qui tente d'échanger `a` et `b`, puis constater dans un `main` que `x` et `y` ne changent pas. Expliquer pourquoi. Ce constat motive le chapitre suivant.
+**Exercice 5.6 (N3)** Écrire `void rate_echange(int a, int b)` qui tente d'échanger `a` et `b`, puis constater dans un `main` que `x` et `y` ne changent pas. Expliquer pourquoi. Ce constat motive le chapitre suivant.
 
 Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-05)
 
 ## Fil rouge : une fonction de vérification
 
-On transforme la boucle du chapitre 0.4 en une fonction propre, qui reçoit la clé et renvoie 1 si elle ouvre le coffre, 0 sinon. La clé est reçue par une adresse (`const char *`) ; on l'utilise comme un tableau de caractères, le chapitre 0.6 détaillera pourquoi.
+On transforme la boucle du chapitre 4 en une fonction propre, qui reçoit la clé et renvoie 1 si elle ouvre le coffre, 0 sinon. La clé est reçue par une adresse (`const char *`) ; on l'utilise comme un tableau de caractères, le chapitre 6 détaillera pourquoi.
 
 ```c
 unsigned char cible[8] = {67, 109, 103, 112, 105, 115, 105, 108};
@@ -102,12 +102,12 @@ int verifier(const char *cle)
 }
 ```
 
-On peut la tester avec `verifier("Clemence")` (renvoie 1). Le chapitre 0.7 ajoutera la vérification de la longueur.
+On peut la tester avec `verifier("Clemence")` (renvoie 1). Le chapitre 7 ajoutera la vérification de la longueur.
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-05)
 
 ## Suivi
 
-- [ ] Chapitre 0.5 : lecture
-- [ ] Chapitre 0.5 : exercices
-- [ ] Chapitre 0.5 : fil rouge
+- [ ] Partie 1, chapitre 5 : lecture
+- [ ] Partie 1, chapitre 5 : exercices
+- [ ] Partie 1, chapitre 5 : fil rouge

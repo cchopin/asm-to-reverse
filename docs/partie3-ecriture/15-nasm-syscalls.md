@@ -1,14 +1,14 @@
-# Chapitre 15 : écrire de l'assembleur, premier programme et appels système
+# Chapitre 1 : écrire de l'assembleur, premier programme et appels système
 
 Les deux premières parties ont appris à **lire** l'assembleur produit par un compilateur. Cette troisième partie fait le chemin inverse : **écrire** de l'assembleur à la main, avec l'assembleur NASM. Ce détour est utile au reverse pour trois raisons :
 
 - écrire une instruction fixe sa signification bien mieux que la lire ;
-- les shellcodes (chapitre 17), une partie des malwares et les challenges de type *pwn* (exploitation) sont écrits ou assemblés à la main ;
+- les shellcodes (chapitre 3), une partie des malwares et les challenges de type *pwn* (exploitation) sont écrits ou assemblés à la main ;
 - un programme écrit en assembleur ne ressemble pas à du code de gcc : il faut savoir le reconnaître.
 
-Quand lire cette partie ? Les chapitres 15 et 16 (hors fil rouge) se lisent dès la fin de la partie 1 : ils ne demandent que les chapitres 2 à 6. En revanche, **les fils rouges et le chapitre 17 supposent la partie 2** : le fil rouge du chapitre 15 reprend le keygen du coffre v3 (chapitre 11), la section 15.6 s'appuie sur l'anti-debug (chapitre 12), et le chapitre 17 mobilise GDB (chapitre 10), le XOR et la lecture des octets (chapitre 11) et les loaders de malware (chapitre 13). L'idéal est donc de lire 15 et 16 en parallèle de la partie 2, et de garder les fils rouges et le chapitre 17 pour la fin.
+Quand lire cette partie ? Les chapitres 1 et 2 (hors fil rouge) se lisent dès la fin de la partie 2 : ils ne demandent que les chapitres 2 à 6 de la partie 2. En revanche, **les fils rouges et le chapitre 3 supposent la partie 3** : le fil rouge du chapitre 1 reprend le keygen du coffre v3 (chapitre 4 de la partie 3), la section 1.6 s'appuie sur l'anti-debug (chapitre 5 de la partie 3), et le chapitre 3 mobilise GDB (chapitre 3 de la partie 3), le XOR et la lecture des octets (chapitre 4 de la partie 3) et les loaders de malware (chapitre 6 de la partie 3). L'idéal est donc de lire les chapitres 1 et 2 en parallèle de la partie 3, et de garder les fils rouges et le chapitre 3 pour la fin.
 
-## 15.1 Structure d'un fichier NASM
+## 1.1 Structure d'un fichier NASM
 
 Un fichier NASM (extension `.asm`) est découpé en **sections**, qui correspondent à celles de l'exécutable final (chapitre 6) :
 
@@ -44,7 +44,7 @@ flowchart LR
 
 L'**assembleur** traduit chaque instruction en octets. L'**éditeur de liens** (`ld`) place les sections à leurs adresses définitives et fixe le point d'entrée. Sans libc, le point d'entrée s'appelle `_start` : il n'y a pas de `main`, et rien n'est exécuté avant la première instruction de `_start`.
 
-## 15.2 Les appels système
+## 1.2 Les appels système
 
 Un programme ne peut pas accéder lui-même à l'écran, aux fichiers ou au réseau : seul le **noyau** (le cœur du système d'exploitation) le peut. Pour lui demander un service, le programme effectue un **appel système** (*syscall*).
 
@@ -71,13 +71,13 @@ Les numéros les plus fréquents en x86-64 :
 | 1 | `write` | `write(fd, tampon, taille)` |
 | 2 | `open` | `open(chemin, drapeaux, mode)` |
 | 3 | `close` | `close(fd)` |
-| 9 | `mmap` | réserve de la mémoire (chapitre 17) |
+| 9 | `mmap` | réserve de la mémoire (chapitre 3) |
 | 10 | `mprotect` | change les droits d'une zone mémoire |
 | 41, 42 | `socket`, `connect` | réseau |
 | 57 | `fork` | crée un processus |
-| 59 | `execve` | remplace le programme par un autre (chapitre 17) |
+| 59 | `execve` | remplace le programme par un autre (chapitre 3) |
 | 60 | `exit` | termine le programme |
-| 101 | `ptrace` | débogage (chapitre 12) |
+| 101 | `ptrace` | débogage (chapitre 5 de la partie 3) |
 
 La liste complète se trouve dans le conteneur :
 
@@ -87,7 +87,7 @@ grep -E '__NR_(read|write|exit|ptrace) ' /usr/include/x86_64-linux-gnu/asm/unist
 
 Les **descripteurs de fichiers** (`fd`) 0, 1 et 2 sont ouverts au lancement de tout programme : 0 est l'entrée standard (le clavier, ou ce qui arrive par `|` ou `<`), 1 la sortie standard (le terminal), 2 la sortie d'erreur. Les numéros diffèrent en 32 bits (`int 0x80`, `eax = 4` pour `write`) et sous Windows (où les programmes passent toujours par les DLL) : une table est donc toujours propre à un système et à une architecture.
 
-## 15.3 Premier programme
+## 1.3 Premier programme
 
 [exemples/bonjour.asm](../exemples/bonjour.asm) :
 
@@ -133,7 +133,7 @@ exit(0)                                 = ?
 
 À titre de comparaison, un `puts("Bonjour")` compilé avec gcc effectue une trentaine d'appels système avant même d'arriver dans `main` (chargement de la libc). C'est aussi pourquoi `file` décrit `bonjour` comme *statically linked* : il ne dépend d'aucune bibliothèque, et `ltrace` n'a rien à afficher.
 
-## 15.4 Lire une entrée
+## 1.4 Lire une entrée
 
 [exemples/saluer.asm](../exemples/saluer.asm) lit un nom puis répond :
 
@@ -189,7 +189,7 @@ Trois remarques :
 
 Dernière remarque sur l'adressage : `bonjour.asm` écrivait `mov rsi, message` (adresse absolue), alors que `saluer.asm` écrit `lea rsi, [rel nom]` (adresse relative à `rip`). Les deux donnent l'adresse d'une donnée. La forme `[rel ...]` est préférable car elle fonctionne quel que soit l'endroit où le programme est chargé en mémoire (code indépendant de la position, chapitre 6) ; c'est aussi celle qu'exige la libc au chapitre 16.
 
-## 15.5 Les arguments de la ligne de commande
+## 1.5 Les arguments de la ligne de commande
 
 Sans libc, personne ne prépare `argc` et `argv` dans `rdi` et `rsi`. Au début de `_start`, le noyau les a placés **sur la pile** :
 
@@ -204,11 +204,11 @@ Sans libc, personne ne prépare `argc` et `argv` dans `rdi` et `rsi`. Au début 
 
 Ainsi, `mov rsi, [rsp+16]` charge l'adresse de la chaîne `argv[1]`. Dans un programme gcc, c'est le code de démarrage de la libc qui lit cette pile et appelle `main(argc, argv, envp)`.
 
-## 15.6 Le lien avec le reverse
+## 1.6 Le lien avec le reverse
 
 **Reconnaître du code écrit à la main.** Un binaire sans `main`, sans libc, très petit, où les appels système sont faits directement et où les conventions sont parfois ignorées (registres utilisés librement, pas de cadre de pile) a probablement été écrit en assembleur. C'est fréquent dans les crackmes "old school" et les shellcodes.
 
-**Les appels système directs échappent à `ltrace` et à `LD_PRELOAD`.** Au chapitre 12, l'anti-debug par `ptrace` passait par la fonction de la libc, qu'il était possible de remplacer. [exemples/detecte.asm](../exemples/detecte.asm) fait l'appel système lui-même :
+**Les appels système directs échappent à `ltrace` et à `LD_PRELOAD`.** Au chapitre 5 de la partie 3, l'anti-debug par `ptrace` passait par la fonction de la libc, qu'il était possible de remplacer. [exemples/detecte.asm](../exemples/detecte.asm) fait l'appel système lui-même :
 
 ```nasm
 _start:
@@ -250,13 +250,13 @@ C'est la technique 2 de la section 12.2, appliquée pas à pas. Dans Ghidra, un 
 
 ## Exercices
 
-**Exercice 15.1** Modifier `bonjour.asm` pour qu'il se termine avec le code de retour 42. Vérifier avec `echo $?` juste après l'exécution.
+**Exercice 1.1** Modifier `bonjour.asm` pour qu'il se termine avec le code de retour 42. Vérifier avec `echo $?` juste après l'exécution.
 
-**Exercice 15.2** Écrire un programme qui affiche deux lignes différentes, la première sur la sortie standard et la seconde sur la sortie d'erreur. Vérifier avec `./programme 2>/dev/null`, qui masque la sortie d'erreur.
+**Exercice 1.2** Écrire un programme qui affiche deux lignes différentes, la première sur la sortie standard et la seconde sur la sortie d'erreur. Vérifier avec `./programme 2>/dev/null`, qui masque la sortie d'erreur.
 
-**Exercice 15.3** Compiler un programme C contenant uniquement `puts("Bonjour")` dans `main`, puis comparer `strace -c ./programme` et `strace -c ./bonjour`. Combien d'appels système chacun effectue-t-il ? Lequel correspond à l'affichage ?
+**Exercice 1.3** Compiler un programme C contenant uniquement `puts("Bonjour")` dans `main`, puis comparer `strace -c ./programme` et `strace -c ./bonjour`. Combien d'appels système chacun effectue-t-il ? Lequel correspond à l'affichage ?
 
-**Exercice 15.4** Contourner l'anti-debug de `detecte` de deux autres façons, en s'aidant de `objdump -d -M intel detecte` pour les adresses :
+**Exercice 1.4** Contourner l'anti-debug de `detecte` de deux autres façons, en s'aidant de `objdump -d -M intel detecte` pour les adresses :
 
 1. poser un point d'arrêt sur l'instruction qui suit le `syscall`, puis modifier `rax` ;
 2. poser un point d'arrêt sur le `js`, puis faire sauter l'exécution à l'instruction suivante avec `set $pc = adresse` (`$pc` désigne `rip`), ce qui revient à ignorer le saut.
@@ -268,24 +268,24 @@ Ces trois exercices construisent une mini-bibliothèque d'affichage sans libc, q
 !!! tip "L'avertissement `.note.GNU-stack`"
     Depuis les versions récentes de `ld`, un objet NASM sans section de pile explicite déclenche un avertissement (`missing .note.GNU-stack section implies executable stack`). Il est sans danger ici, mais pour une sortie propre, ajouter en fin de fichier : `section .note.GNU-stack noalloc noexec nowrite progbits`.
 
-**Exercice 15.5 (niveau 1)** Écrire `ma_putchar`, une routine qui affiche l'octet présent dans `dil` sur la sortie standard. L'utiliser pour afficher `A` puis un retour à la ligne.
+**Exercice 1.5 (niveau 1)** Écrire `ma_putchar`, une routine qui affiche l'octet présent dans `dil` sur la sortie standard. L'utiliser pour afficher `A` puis un retour à la ligne.
 
 !!! note "Contraintes"
     Pas de libc, pas de section `.data`. Pour que `rsi` pointe sur l'octet, le pousser d'abord sur la pile. Un seul `write` par appel.
 
-**Exercice 15.6 (niveau 2)** Écrire `ma_putstr`, qui reçoit dans `rdi` l'adresse d'une chaîne terminée par `\0`, calcule sa longueur avec une boucle, puis l'affiche en un seul `write`. La tester sur deux chaînes différentes.
+**Exercice 1.6 (niveau 2)** Écrire `ma_putstr`, qui reçoit dans `rdi` l'adresse d'une chaîne terminée par `\0`, calcule sa longueur avec une boucle, puis l'affiche en un seul `write`. La tester sur deux chaînes différentes.
 
 !!! note "Contraintes"
     Interdit d'écrire la longueur en dur : elle doit être calculée. Un seul `write` par chaîne.
 
-**Exercice 15.7 (niveau 3)** Écrire un mini-`cat` : lire l'entrée standard par blocs avec `read`, recopier chaque bloc sur la sortie standard avec `write`, et s'arrêter quand `read` renvoie 0 (fin de fichier). Tester avec `printf 'un\ndeux\n' | ./moncat` et avec `./moncat < fichier.txt`.
+**Exercice 1.7 (niveau 3)** Écrire un mini-`cat` : lire l'entrée standard par blocs avec `read`, recopier chaque bloc sur la sortie standard avec `write`, et s'arrêter quand `read` renvoie 0 (fin de fichier). Tester avec `printf 'un\ndeux\n' | ./moncat` et avec `./moncat < fichier.txt`.
 
 !!! note "Contraintes"
     Pas de libc. Utiliser un tampon en section `.bss`. Bien traiter le retour de `read` : `0` signifie EOF, une valeur négative une erreur.
 
-## Fil rouge partie 3 : réécrire le keygen du coffre v3
+## Fil rouge partie 4 : réécrire le keygen du coffre v3
 
-Au chapitre 11, le coffre v3 a été vaincu par un keygen écrit en Python ([keygen_v3.py](../solutions/scripts/keygen_v3.py)). Le fil rouge de la partie 3 consiste à écrire ce même keygen **en assembleur**, en deux temps.
+Au chapitre 11, le coffre v3 a été vaincu par un keygen écrit en Python ([keygen_v3.py](../solutions/scripts/keygen_v3.py)). Le fil rouge de la partie 4 consiste à écrire ce même keygen **en assembleur**, en deux temps.
 
 Étape 1 (ce chapitre) : écrire `fr15.asm`, sans libc, qui :
 
@@ -300,12 +300,12 @@ $ ./fr15
 usage : fr15 <nom>
 ```
 
-La boucle de longueur sera réutilisée au chapitre 16, où elle deviendra la boucle de hachage.
+La boucle de longueur sera réutilisée au chapitre 2, où elle deviendra la boucle de hachage.
 
 Solutions : [solutions/partie3.md](../solutions/partie3.md#chapitre-15)
 
 ## Suivi
 
-- [ ] Chapitre 15 : lecture
-- [ ] Chapitre 15 : exercices
-- [ ] Chapitre 15 : fil rouge
+- [ ] Partie 4, chapitre 1 : lecture
+- [ ] Partie 4, chapitre 1 : exercices
+- [ ] Partie 4, chapitre 1 : fil rouge

@@ -1,6 +1,6 @@
 # Challenge de synthèse : un outil Unix sans libc
 
-Ce challenge clôt la partie 3. Il ne s'agit plus de petits exercices isolés, mais d'écrire un vrai petit outil, utile et autonome, puis de le relire comme le ferait un analyste. Il réunit tout ce que la partie 3 a introduit : appels système `read`/`write`, boucles, manipulation d'octets, et absence totale de libc.
+Ce challenge clôt la partie 4. Il ne s'agit plus de petits exercices isolés, mais d'écrire un vrai petit outil, utile et autonome, puis de le relire comme le ferait un analyste. Il réunit tout ce que la partie 4 a introduit : appels système `read`/`write`, boucles, manipulation d'octets, et absence totale de libc.
 
 ## L'objectif
 
@@ -23,7 +23,7 @@ $ ./filtre_majuscules < mon_fichier.txt > en_majuscules.txt
 ## La démarche
 
 1. Reprendre la boucle de lecture du mini-`cat` (exercice 15.7) : `read(0, buf, 4096)`, puis tester le retour.
-2. Avant le `write`, parcourir les octets lus un par un. Pour chaque octet entre `'a'` et `'z'`, soustraire `0x20` (l'écart constant entre minuscules et majuscules en ASCII, déjà vu en partie 0).
+2. Avant le `write`, parcourir les octets lus un par un. Pour chaque octet entre `'a'` et `'z'`, soustraire `0x20` (l'écart constant entre minuscules et majuscules en ASCII, déjà vu en partie 1).
 3. Écrire le bloc transformé, puis repartir lire le suivant.
 4. Sur fin de fichier, `exit(0)`.
 
@@ -48,5 +48,5 @@ Solutions : [solutions/partie3.md](../solutions/partie3.md#challenge)
 
 ## Suivi
 
-- [ ] Challenge partie 3 : filtre majuscules écrit et testé
-- [ ] Challenge partie 3 : filtre désassemblé et annoté
+- [ ] Challenge partie 4 : filtre majuscules écrit et testé
+- [ ] Challenge partie 4 : filtre désassemblé et annoté

@@ -67,21 +67,21 @@ nav:
   - Progression: progression.md
   - Installation sur Mac: environnement/INSTALLATION-MAC.md
   - Glossaire: glossaire.md
-  - "Partie 0 : les bases du C":
-      - "0.1 Compiler et afficher": partie0-c/01-compiler-afficher.md
-      - "0.2 Variables et types": partie0-c/02-variables-types.md
-      - "0.3 Conditions": partie0-c/03-conditions.md
-      - "0.4 Boucles": partie0-c/04-boucles.md
-      - "0.5 Fonctions": partie0-c/05-fonctions.md
-      - "0.6 Pointeurs": partie0-c/06-pointeurs.md
-      - "0.7 Chaînes de caractères": partie0-c/07-chaines.md
-      - "0.8 Tableaux": partie0-c/08-tableaux.md
-      - "0.9 Arguments du programme": partie0-c/09-arguments.md
-      - "0.10 Structures": partie0-c/10-structures.md
-      - "0.11 Allocation dynamique": partie0-c/11-allocation.md
-      - "0.12 En-têtes et Makefile": partie0-c/12-makefile.md
-      - "0.13 Projet de fin de partie": partie0-c/13-projet.md
-  - "Partie 1 : l'assembleur":
+  - "Partie 1 : les bases du C":
+      - "1. Compiler et afficher": partie0-c/01-compiler-afficher.md
+      - "2. Variables et types": partie0-c/02-variables-types.md
+      - "3. Conditions": partie0-c/03-conditions.md
+      - "4. Boucles": partie0-c/04-boucles.md
+      - "5. Fonctions": partie0-c/05-fonctions.md
+      - "6. Pointeurs": partie0-c/06-pointeurs.md
+      - "7. Chaînes de caractères": partie0-c/07-chaines.md
+      - "8. Tableaux": partie0-c/08-tableaux.md
+      - "9. Arguments du programme": partie0-c/09-arguments.md
+      - "10. Structures": partie0-c/10-structures.md
+      - "11. Allocation dynamique": partie0-c/11-allocation.md
+      - "12. En-têtes et Makefile": partie0-c/12-makefile.md
+      - "13. Projet de fin de partie": partie0-c/13-projet.md
+  - "Partie 2 : l'assembleur":
       - "1. Les bases": partie1-assembleur/01-bases.md
       - "2. Registres et instructions": partie1-assembleur/02-registres-instructions.md
       - "3. Comparaisons et sauts": partie1-assembleur/03-comparaisons-sauts.md
@@ -90,40 +90,40 @@ nav:
       - "6. Mémoire et données": partie1-assembleur/06-memoire-donnees.md
       - "7. Du C à l'assembleur": partie1-assembleur/07-patterns-compilateur.md
       - "8. Challenge de synthèse": partie1-assembleur/08-challenge.md
-      - "9. Convention d'appel (approfondissement)": partie1-assembleur/09-convention-appel.md
-      - "10. Structures et tableaux (approfondissement)": partie1-assembleur/10-structures-tableaux.md
-      - "11. Lire du code optimisé (approfondissement)": partie1-assembleur/11-optimisations.md
-      - "12. C++ et vtables (approfondissement)": partie1-assembleur/12-cpp-vtables.md
-      - "13. x86 32 bits (approfondissement)": partie1-assembleur/13-x86-32bits.md
-  - "Partie 2 : le reverse":
-      - "8. Méthode et outils": partie2-reverse/08-methode-outils.md
-      - "9. Ghidra": partie2-reverse/09-ghidra.md
-      - "10. GDB": partie2-reverse/10-gdb.md
-      - "11. Classiques des crackmes": partie2-reverse/11-classiques-crackmes.md
-      - "12. Protections": partie2-reverse/12-protections.md
-      - "13. Analyse de malware": partie2-reverse/13-malware-analysis.md
-      - "CTF maison": partie2-reverse/15-ctf-maison.md
-      - "Laboratoire malware": partie2-reverse/16-labo-malware.md
-      - "17. Packing et UPX (approfondissement)": partie2-reverse/17-packing-upx.md
-      - "18. Anti-reverse avancé (approfondissement)": partie2-reverse/18-anti-reverse.md
-      - "19. Analyse dynamique avancée (approfondissement)": partie2-reverse/19-analyse-dynamique.md
-      - "20. Résolution automatique : angr et z3 (approfondissement)": partie2-reverse/20-angr-z3.md
-      - "21. Lire les formats : ELF et PE (approfondissement)": partie2-reverse/21-formats-elf-pe.md
-      - "22. Écrire des règles YARA (approfondissement)": partie2-reverse/22-yara.md
-      - "14. Et après ?": partie2-reverse/14-et-apres.md
-  - "Partie 3 : écrire de l'assembleur":
-      - "15. Premiers pas en NASM": partie3-ecriture/15-nasm-syscalls.md
-      - "16. Fonctions et libc": partie3-ecriture/16-fonctions-libc.md
-      - "17. Shellcode et loader": partie3-ecriture/17-shellcode.md
-      - "18. Challenge de synthèse": partie3-ecriture/18-challenge.md
-  - "Partie 4 : capstone":
-      - "19. Présentation du capstone": partie4-capstone/19-presentation.md
-      - "20. Défis CTF avancés": partie4-capstone/20-ctf-avance.md
-      - "21. Cas de malware": partie4-capstone/21-cas-malware.md
-      - "22. Rapport d'analyse": partie4-capstone/22-rapport-type.md
+      - "9. Convention d'appel": partie1-assembleur/09-convention-appel.md
+      - "10. Structures et tableaux": partie1-assembleur/10-structures-tableaux.md
+      - "11. Lire du code optimisé": partie1-assembleur/11-optimisations.md
+      - "12. C++ et vtables": partie1-assembleur/12-cpp-vtables.md
+      - "13. x86 32 bits": partie1-assembleur/13-x86-32bits.md
+  - "Partie 3 : le reverse":
+      - "1. Méthode et outils": partie2-reverse/08-methode-outils.md
+      - "2. Ghidra": partie2-reverse/09-ghidra.md
+      - "3. GDB": partie2-reverse/10-gdb.md
+      - "4. Classiques des crackmes": partie2-reverse/11-classiques-crackmes.md
+      - "5. Protections": partie2-reverse/12-protections.md
+      - "6. Analyse de malware": partie2-reverse/13-malware-analysis.md
+      - "7. CTF maison": partie2-reverse/15-ctf-maison.md
+      - "8. Laboratoire malware": partie2-reverse/16-labo-malware.md
+      - "9. Packing et UPX": partie2-reverse/17-packing-upx.md
+      - "10. Anti-reverse avancé": partie2-reverse/18-anti-reverse.md
+      - "11. Analyse dynamique avancée": partie2-reverse/19-analyse-dynamique.md
+      - "12. Résolution automatique : angr et z3": partie2-reverse/20-angr-z3.md
+      - "13. Lire les formats : ELF et PE": partie2-reverse/21-formats-elf-pe.md
+      - "14. Écrire des règles YARA": partie2-reverse/22-yara.md
+      - "15. Et après ?": partie2-reverse/14-et-apres.md
+  - "Partie 4 : écrire de l'assembleur":
+      - "1. Premiers pas en NASM": partie3-ecriture/15-nasm-syscalls.md
+      - "2. Fonctions et libc": partie3-ecriture/16-fonctions-libc.md
+      - "3. Shellcode et loader": partie3-ecriture/17-shellcode.md
+      - "4. Challenge de synthèse": partie3-ecriture/18-challenge.md
+  - "Partie 5 : capstone":
+      - "1. Présentation du capstone": partie4-capstone/19-presentation.md
+      - "2. Défis CTF avancés": partie4-capstone/20-ctf-avance.md
+      - "3. Cas de malware": partie4-capstone/21-cas-malware.md
+      - "4. Rapport d'analyse": partie4-capstone/22-rapport-type.md
   - Solutions:
-      - "Partie 0": solutions/partie0.md
-      - "Partie 1": solutions/partie1.md
-      - "Partie 2": solutions/partie2.md
-      - "Partie 3": solutions/partie3.md
-      - "Partie 4": solutions/partie4.md
+      - "Partie 1": solutions/partie0.md
+      - "Partie 2": solutions/partie1.md
+      - "Partie 3": solutions/partie2.md
+      - "Partie 4": solutions/partie3.md
+      - "Partie 5": solutions/partie4.md

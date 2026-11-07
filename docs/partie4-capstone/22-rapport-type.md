@@ -103,7 +103,7 @@ flowchart TD
 
 ### 7. Recommandations
 
-- **Détection statique** : règle YARA sur la séquence `mmap`/`mprotect` + la boucle XOR, ou sur les octets chiffrés du domaine C2 (voir la [partie 2, chapitre 13](../partie2-reverse/13-malware-analysis.md) pour l'écriture de règles).
+- **Détection statique** : règle YARA sur la séquence `mmap`/`mprotect` + la boucle XOR, ou sur les octets chiffrés du domaine C2 (voir la [partie 3, chapitre 6](../partie2-reverse/13-malware-analysis.md) pour l'écriture de règles).
 - **Détection dynamique** : alerte sur la création de `/tmp/.syscache.lock` et sur tout `mprotect(..., PROT_EXEC)` suivant un `mmap` anonyme en écriture.
 - **Réseau** : surveiller les résolutions de `*.example.invalid` et les connexions sortantes vers le port `4444`.
 - **Confinement** : aucun effet persistant réel ici ; supprimer les deux fichiers `/tmp/.syscache.*` suffit à nettoyer.

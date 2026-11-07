@@ -180,7 +180,7 @@ Le **XOR** mérite une attention particulière : `(a ^ k) ^ k = a`. Appliquer de
 
 ## 1.7 Le format ELF en bref
 
-Sous Linux, les exécutables sont au format **ELF** ; sous Windows, au format **PE** (chapitre 13). Il n'est pas nécessaire de connaître ELF en détail, seulement de savoir qu'il contient des **sections** (.text, .data, .rodata...) et des **symboles** (les noms des fonctions, s'ils n'ont pas été supprimés).
+Sous Linux, les exécutables sont au format **ELF** ; sous Windows, au format **PE** (chapitre 6 de la partie 3). Il n'est pas nécessaire de connaître ELF en détail, seulement de savoir qu'il contient des **sections** (.text, .data, .rodata...) et des **symboles** (les noms des fonctions, s'ils n'ont pas été supprimés).
 
 ```bash
 file /bin/ls          # type du fichier
@@ -211,6 +211,6 @@ Solutions : [solutions/partie1.md](../solutions/partie1.md#chapitre-1)
 
 ## Suivi
 
-- [ ] Chapitre 1 : lecture
-- [ ] Chapitre 1 : exercices
-- [ ] Chapitre 1 : fil rouge
+- [ ] Partie 2, chapitre 1 : lecture
+- [ ] Partie 2, chapitre 1 : exercices
+- [ ] Partie 2, chapitre 1 : fil rouge

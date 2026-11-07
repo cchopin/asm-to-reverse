@@ -16,4 +16,4 @@ readelf -s demo        # symboles (disparaissent apres strip)
 ```
 
 Pour le packing (point d'entrée qui bascule dans le stub, chaîne qui disparaît),
-voir le dépaqueteur zlib du chapitre 17 dans `docs/packing/`.
+voir le dépaqueteur zlib du chapitre 9 (partie 3) dans `docs/packing/`.

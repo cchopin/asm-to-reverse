@@ -1,12 +1,12 @@
 # Lire les formats : ELF puis PE
 
 !!! info "Chapitre d'approfondissement"
-    Approfondissement de la partie 2. Avant de désassembler, il faut savoir **lire l'enveloppe** d'un binaire : où commence le code, quelles bibliothèques il réclame, quelles fonctions il importe. Sous Linux c'est le format **ELF** ; sous Windows c'est le format **PE**. Les deux racontent la même histoire avec un vocabulaire différent. Savoir les lire oriente toute l'analyse, et sur un malware Windows, la table d'import à elle seule trahit souvent les intentions du programme.
+    Approfondissement de la partie 3. Avant de désassembler, il faut savoir **lire l'enveloppe** d'un binaire : où commence le code, quelles bibliothèques il réclame, quelles fonctions il importe. Sous Linux c'est le format **ELF** ; sous Windows c'est le format **PE**. Les deux racontent la même histoire avec un vocabulaire différent. Savoir les lire oriente toute l'analyse, et sur un malware Windows, la table d'import à elle seule trahit souvent les intentions du programme.
 
 !!! note "Note sur l'environnement"
     ELF est **testable** dans le conteneur du cours : tous les exemples `readelf`/`objdump` ci-dessous sont réels et reproductibles sur vos binaires. PE est le format de Windows : il n'est **pas** exécutable ni inspectable ici. La partie PE est donc présentée avec des schémas et des valeurs typiques, et c'est signalé à chaque fois. Sur votre machine, les mêmes idées se vérifient avec `readpe`, `pev`, `rabin2 -I` (radare2) ou l'onglet Imports de Ghidra/PE-bear.
 
-## 21.1 Pourquoi lire le format avant le code
+## 13.1 Pourquoi lire le format avant le code
 
 Un exécutable n'est pas qu'un bloc d'instructions : c'est un fichier structuré qui dit au système d'exploitation comment le charger en mémoire. Cette structure répond, avant tout désassemblage, à quatre questions décisives :
 
@@ -17,7 +17,7 @@ Un exécutable n'est pas qu'un bloc d'instructions : c'est un fichier structuré
 
 Pour un analyste de malware, la table des fonctions importées est souvent le premier indice, et parfois le plus parlant : un programme qui importe de quoi ouvrir une socket, chiffrer des octets et créer un processus annonce son programme avant qu'on ait lu la moindre instruction.
 
-## 21.2 ELF : l'en-tête
+## 13.2 ELF : l'en-tête
 
 Tout fichier ELF commence par un en-tête fixe. Les quatre premiers octets sont la signature magique `7f 45 4c 46`, soit `\x7f` suivi de `ELF` en ASCII. `readelf -h` le déplie :
 
@@ -38,9 +38,9 @@ ELF Header:
 
 - **Class** : `ELF64` (64 bits) ou `ELF32` (32 bits), rejoint le chapitre sur le x86 32 bits.
 - **Type** : `EXEC` (exécutable à adresse fixe, ici `-no-pie`), `DYN` (exécutable ou bibliothèque repositionnable, le cas d'un binaire PIE moderne), `REL` (fichier objet `.o` pas encore lié).
-- **Entry point address** : l'adresse de la première instruction exécutée. C'est là que GDB place son premier pas, et c'est la valeur que l'on surveille sur un binaire packé (voir 21.6).
+- **Entry point address** : l'adresse de la première instruction exécutée. C'est là que GDB place son premier pas, et c'est la valeur que l'on surveille sur un binaire packé (voir 13.6).
 
-## 21.3 ELF : segments et sections, deux découpages
+## 13.3 ELF : segments et sections, deux découpages
 
 C'est le point qui prête le plus à confusion. ELF décrit le même fichier de **deux manières complémentaires** :
 
@@ -64,7 +64,7 @@ Les segments `PT_LOAD` sont ce qui existe réellement en mémoire à l'exécutio
 !!! tip "Segments pour exécuter, sections pour analyser"
     Le noyau n'a besoin que des segments pour lancer le programme. Les sections peuvent être entièrement supprimées (`strip`, ou un packer qui n'en reconstruit aucune) sans empêcher l'exécution. C'est pourquoi un binaire hostile montre souvent des segments propres mais des sections absentes ou mensongères.
 
-## 21.4 ELF : les sections importantes
+## 13.4 ELF : les sections importantes
 
 ```
 $ readelf -S demo   (extrait)
@@ -83,10 +83,10 @@ Les sections à connaître :
 - **`.text`** : le code. C'est ce que l'on désassemble.
 - **`.rodata`** : les constantes en lecture seule, dont les chaînes de caractères. Premier endroit où `strings` trouve des indices.
 - **`.data`** / **`.bss`** : les variables globales. `.bss` est une astuce : les globales mises à zéro ne sont pas stockées sur disque (`NOBITS`), le noyau se contente de réserver la place et de la mettre à zéro.
-- **`.plt`** / **`.got`** / **`.got.plt`** : la mécanique de liaison dynamique vue aux chapitres 7 et 8. Le `.plt` contient des trampolines ; la `.got.plt` reçoit les vraies adresses des fonctions de la libc une fois résolues.
+- **`.plt`** / **`.got`** / **`.got.plt`** : la mécanique de liaison dynamique vue au chapitre 7 de la partie 2. Le `.plt` contient des trampolines ; la `.got.plt` reçoit les vraies adresses des fonctions de la libc une fois résolues.
 - **`.dynsym`** vs **`.symtab`** : `.dynsym` liste les symboles nécessaires à la liaison dynamique (il survit toujours). `.symtab` liste **tous** les symboles, y compris vos fonctions internes ; c'est lui que `strip` retire.
 
-## 21.5 ELF : symboles et liaison dynamique
+## 13.5 ELF : symboles et liaison dynamique
 
 `readelf -s` liste les symboles. Sur le binaire non supprimé, nos fonctions apparaissent par leur nom :
 
@@ -113,9 +113,9 @@ $ readelf -d demo
 
 Ce binaire ne réclame que la libc. Un échantillon qui réclamerait en plus une bibliothèque de chiffrement ou de réseau en dirait déjà long. C'est l'équivalent ELF de la table d'import PE, qu'on aborde maintenant.
 
-## 21.6 ELF : le point d'entrée trahit le packing
+## 13.6 ELF : le point d'entrée trahit le packing
 
-Le point d'entrée et la visibilité du code se recoupent avec le chapitre 17 (packing). Sur un binaire normal, le vrai travail est en clair ; sur un binaire packé, le point d'entrée tombe dans le **stub** de dépaquetage et le vrai code n'existe en clair nulle part sur disque. Comparaison réelle entre le binaire `demo` et sa version « packée » (dépaqueteur zlib du chapitre 17) :
+Le point d'entrée et la visibilité du code se recoupent avec le chapitre 9 (packing). Sur un binaire normal, le vrai travail est en clair ; sur un binaire packé, le point d'entrée tombe dans le **stub** de dépaquetage et le vrai code n'existe en clair nulle part sur disque. Comparaison réelle entre le binaire `demo` et sa version « packée » (dépaqueteur zlib du chapitre 9) :
 
 ```
 $ readelf -h demo   | grep 'Entry point'   ->  0x401070
@@ -127,7 +127,7 @@ $ strings packed | grep reverse42   ->  (rien : le vrai code est compresse dans 
 
 La leçon : lire l'en-tête et passer un coup de `strings`/`readelf` suffit souvent à **classer** un binaire (normal, strippé, packé) avant d'ouvrir le désassembleur.
 
-## 21.7 PE : le format de Windows (conceptuel)
+## 13.7 PE : le format de Windows (conceptuel)
 
 !!! warning "Non testable dans ce conteneur"
     Tout ce qui suit décrit le format PE (Portable Executable) de Windows. Il n'est ni exécutable ni inspectable sur le Linux du cours. Les valeurs données sont typiques ; vérifiez-les sur votre machine avec `rabin2 -I`, `pev`, PE-bear ou Ghidra. L'objectif est de savoir **quoi chercher** dans un `.exe`/`.dll` Windows.
@@ -163,7 +163,7 @@ Les points clés :
 | `readelf -d` (NEEDED) + `.plt`/`.got` | table d'import (IAT) + `.idata` | dépendances et fonctions externes |
 | `.dynsym` / `.symtab` | table d'export + symboles PDB | symboles |
 
-## 21.8 PE : la table d'import, le réflexe malware
+## 13.8 PE : la table d'import, le réflexe malware
 
 C'est le point à retenir de tout le chapitre. Un PE qui appelle des fonctions du système Windows doit les **importer**, et ces imports sont listés en clair dans la table d'import (IAT, Import Address Table) : pour chaque DLL, les fonctions tirées d'elle. Lire cette liste revient à lire les **capacités** du programme avant toute analyse du code.
 
@@ -181,7 +181,7 @@ Un échantillon qui importe à la fois `WinHttpConnect`, `CreateProcessA` et `Re
 !!! danger "Rester défensif"
     On lit ces tables pour **comprendre et détecter**, jamais pour construire. Tout ce chapitre sert le triage : savoir, en une minute, si un fichier mérite une analyse poussée et dans quelle direction chercher.
 
-## 21.9 Table d'export et DLL
+## 13.9 Table d'export et DLL
 
 Une DLL (ou un `.exe` qui en expose) publie des fonctions via sa **table d'export** : la liste de ce qu'elle offre aux autres modules, par nom ou par numéro (ordinal). Sur un échantillon qui se présente en DLL, la table d'export indique quelles fonctions l'attaquant compte appeler (souvent une seule, nommée de façon anodine, lancée par `rundll32.exe`). C'est le miroir de la table d'import : l'une dit ce que le module **consomme**, l'autre ce qu'il **fournit**.
 
@@ -189,26 +189,26 @@ Une DLL (ou un `.exe` qui en expose) publie des fonctions via sa **table d'expor
 
 Les exercices ELF sont testables ici (`readelf`, `objdump`, `strings`, `strip`). Les exercices PE sont conceptuels : décrivez la démarche et les valeurs attendues ; vérifiez-les sur votre machine Windows ou avec `rabin2 -I`, `pev`, PE-bear si vous en disposez.
 
-**Exercice 21.1 (niveau 1)** Compiler n'importe quel programme C du cours (`gcc -no-pie prog.c -o prog`). Avec `readelf -h`, relever : la classe (32/64 bits), le type (`EXEC`/`DYN`/`REL`) et l'adresse du point d'entrée. Confirmer les quatre premiers octets du magic avec `xxd prog | head -1`.
+**Exercice 13.1 (niveau 1)** Compiler n'importe quel programme C du cours (`gcc -no-pie prog.c -o prog`). Avec `readelf -h`, relever : la classe (32/64 bits), le type (`EXEC`/`DYN`/`REL`) et l'adresse du point d'entrée. Confirmer les quatre premiers octets du magic avec `xxd prog | head -1`.
 
-**Exercice 21.2 (niveau 2)** Sur le même binaire, lister les segments avec `readelf -l`. Pour chaque segment `PT_LOAD`, donner ses permissions (`R`, `R E`, `RW`) et dire ce qu'il contient. Montrer qu'aucun segment n'est à la fois `W` et `E`, et expliquer pourquoi c'est une bonne chose.
+**Exercice 13.2 (niveau 2)** Sur le même binaire, lister les segments avec `readelf -l`. Pour chaque segment `PT_LOAD`, donner ses permissions (`R`, `R E`, `RW`) et dire ce qu'il contient. Montrer qu'aucun segment n'est à la fois `W` et `E`, et expliquer pourquoi c'est une bonne chose.
 
-**Exercice 21.3 (niveau 2)** Avec `readelf -S`, repérer `.text`, `.rodata`, `.data`, `.bss`. Expliquer pourquoi `.bss` est de type `NOBITS` et ne pèse rien sur le disque. Avec `readelf -d`, lister les bibliothèques `NEEDED` du binaire.
+**Exercice 13.3 (niveau 2)** Avec `readelf -S`, repérer `.text`, `.rodata`, `.data`, `.bss`. Expliquer pourquoi `.bss` est de type `NOBITS` et ne pèse rien sur le disque. Avec `readelf -d`, lister les bibliothèques `NEEDED` du binaire.
 
-**Exercice 21.4 (niveau 2)** Avec `readelf -s`, relever l'adresse et la taille d'une de vos fonctions (par exemple `main`). Puis `strip` le binaire dans une copie et montrer que la fonction a disparu de `readelf -s`, alors que les symboles externes de la libc (`.dynsym`) sont toujours là. Expliquer la différence entre `.symtab` et `.dynsym`.
+**Exercice 13.4 (niveau 2)** Avec `readelf -s`, relever l'adresse et la taille d'une de vos fonctions (par exemple `main`). Puis `strip` le binaire dans une copie et montrer que la fonction a disparu de `readelf -s`, alors que les symboles externes de la libc (`.dynsym`) sont toujours là. Expliquer la différence entre `.symtab` et `.dynsym`.
 
-**Exercice 21.5 (niveau 3)** Packer un binaire du cours avec le dépaqueteur zlib du chapitre 17 (ou n'importe quel packer). Comparer, entre l'original et la version packée : l'adresse du point d'entrée (`readelf -h`) et la présence d'une chaîne connue (`strings`). Conclure sur ce que le seul couple en-tête + `strings` permet de dire d'un binaire avant désassemblage.
+**Exercice 13.5 (niveau 3)** Packer un binaire du cours avec le dépaqueteur zlib du chapitre 9 (ou n'importe quel packer). Comparer, entre l'original et la version packée : l'adresse du point d'entrée (`readelf -h`) et la présence d'une chaîne connue (`strings`). Conclure sur ce que le seul couple en-tête + `strings` permet de dire d'un binaire avant désassemblage.
 
-**Exercice 21.6 (niveau 2, conceptuel PE)** On vous donne la table d'import d'un `.exe` Windows : `kernel32.dll` (`VirtualAlloc`, `VirtualProtect`, `CreateThread`), `wininet.dll` (`InternetOpenUrlA`, `InternetReadFile`), `advapi32.dll` (`RegSetValueExA`). Décrire, import par import, le comportement probable du programme, et formuler une hypothèse en une phrase sur sa nature.
+**Exercice 13.6 (niveau 2, conceptuel PE)** On vous donne la table d'import d'un `.exe` Windows : `kernel32.dll` (`VirtualAlloc`, `VirtualProtect`, `CreateThread`), `wininet.dll` (`InternetOpenUrlA`, `InternetReadFile`), `advapi32.dll` (`RegSetValueExA`). Décrire, import par import, le comportement probable du programme, et formuler une hypothèse en une phrase sur sa nature.
 
-**Exercice 21.7 (niveau 2, conceptuel PE)** Établir la correspondance, pour un même programme compilé sous Linux puis sous Windows, entre : le magic ELF et la signature PE ; le point d'entrée ELF et le couple `ImageBase`/`AddressOfEntryPoint` ; `.rodata` et `.rdata` ; `readelf -d` (NEEDED) et la table d'import. Dire où, dans chacun des deux formats, on va chercher les chaînes de caractères et la liste des fonctions externes.
+**Exercice 13.7 (niveau 2, conceptuel PE)** Établir la correspondance, pour un même programme compilé sous Linux puis sous Windows, entre : le magic ELF et la signature PE ; le point d'entrée ELF et le couple `ImageBase`/`AddressOfEntryPoint` ; `.rodata` et `.rdata` ; `readelf -d` (NEEDED) et la table d'import. Dire où, dans chacun des deux formats, on va chercher les chaînes de caractères et la liste des fonctions externes.
 
-**Exercice 21.8 (niveau 3, conceptuel PE)** Un échantillon PE présente une table d'import ne contenant que `kernel32.dll!LoadLibraryA` et `kernel32.dll!GetProcAddress`, et rien d'autre. Pourquoi est-ce suspect alors que la liste est courte ? Quelle technique l'échantillon emploie-t-il probablement, et comment adapteriez-vous l'analyse (statique puis dynamique) pour découvrir ses vraies capacités ?
+**Exercice 13.8 (niveau 3, conceptuel PE)** Un échantillon PE présente une table d'import ne contenant que `kernel32.dll!LoadLibraryA` et `kernel32.dll!GetProcAddress`, et rien d'autre. Pourquoi est-ce suspect alors que la liste est courte ? Quelle technique l'échantillon emploie-t-il probablement, et comment adapteriez-vous l'analyse (statique puis dynamique) pour découvrir ses vraies capacités ?
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#formats-elf-pe)
 
 ## Suivi
 
-- [ ] Chapitre formats : lecture
-- [ ] Chapitre formats : ELF lu avec readelf (-h, -l, -S, -d, -s)
-- [ ] Chapitre formats : table d'import PE comprise (intérêt malware)
+- [ ] Partie 3, chapitre formats : lecture
+- [ ] Partie 3, chapitre formats : ELF lu avec readelf (-h, -l, -S, -d, -s)
+- [ ] Partie 3, chapitre formats : table d'import PE comprise (intérêt malware)

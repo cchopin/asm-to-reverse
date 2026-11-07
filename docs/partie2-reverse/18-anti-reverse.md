@@ -1,9 +1,9 @@
 # Anti-reverse avancé
 
 !!! info "Chapitre d'approfondissement"
-    Approfondissement de la partie 2. Le chapitre 12 a introduit les protections de base (`ptrace`, timing, détection de point d'arrêt). Ici, on combine plusieurs techniques, on en ajoute de nouvelles, et surtout on apprend à **toutes les contourner**. Objectif strictement défensif : analyser et neutraliser des protections pour le reverse légitime, pas aider à protéger un logiciel malveillant. Tous les exemples sont compilés et testés ; les sources sont dans `anti-reverse/`.
+    Approfondissement de la partie 3. Le chapitre 5 a introduit les protections de base (`ptrace`, timing, détection de point d'arrêt). Ici, on combine plusieurs techniques, on en ajoute de nouvelles, et surtout on apprend à **toutes les contourner**. Objectif strictement défensif : analyser et neutraliser des protections pour le reverse légitime, pas aider à protéger un logiciel malveillant. Tous les exemples sont compilés et testés ; les sources sont dans `anti-reverse/`.
 
-## 18.1 Empiler les détections
+## 10.1 Empiler les détections
 
 Un vrai programme protégé ne se contente pas d'un seul test : il en combine plusieurs, pour qu'en neutraliser un ne suffise pas. Le binaire `protege` en empile quatre, et n'affiche son flag que si aucun ne se déclenche :
 
@@ -17,7 +17,7 @@ Un vrai programme protégé ne se contente pas d'un seul test : il en combine pl
 
 Exécuté normalement, `protege` affiche `FLAG{anti_debug_contourne}`. Sous `strace` ou GDB, il affiche « debogueur detecte (TracerPid) ». Avec `LD_PRELOAD` défini, « LD_PRELOAD detecte ».
 
-## 18.2 Contourner, méthode 1 : LD_PRELOAD
+## 10.2 Contourner, méthode 1 : LD_PRELOAD
 
 On peut remplacer une fonction de la libc par la nôtre, chargée en priorité via `LD_PRELOAD`. Ici, une petite bibliothèque `faux.so` fait deux choses :
 
@@ -36,7 +36,7 @@ FLAG{anti_debug_contourne}
 
 Deux protections tombent d'un coup. C'est la force de `LD_PRELOAD` : neutraliser des fonctions sans toucher au binaire.
 
-## 18.3 Contourner, méthode 2 : le patch
+## 10.3 Contourner, méthode 2 : le patch
 
 On peut aussi modifier le binaire pour neutraliser un test. Le test TracerPid se termine par un saut conditionnel vers le bloc « détecté » :
 
@@ -50,7 +50,7 @@ En remplaçant les six octets du `jne` par des `NOP` (`0x90`), le saut disparaî
 !!! tip "Les couches se cumulent"
     Patcher le seul test TracerPid ne suffit pas sous `strace` : le programme atteint alors le test `ptrace`, qui se déclenche à son tour. Pour une analyse dynamique complète, il faut **combiner** les contournements (par exemple patch TracerPid + `faux.so` pour `ptrace`). C'est la règle du jeu face à un binaire bien protégé : chaque couche demande sa parade.
 
-## 18.4 Contourner, méthode 3 : le débogueur lui-même
+## 10.4 Contourner, méthode 3 : le débogueur lui-même
 
 Depuis GDB, on neutralise un test sans modifier le fichier :
 
@@ -58,9 +58,9 @@ Depuis GDB, on neutralise un test sans modifier le fichier :
 - forcer le résultat d'un test : poser un point d'arrêt juste après le `call`, puis `set $eax = 0` avant le `test` ;
 - sauter par-dessus un bloc : `set $pc = adresse_apres_le_test`.
 
-Ces manipulations, vues au chapitre 12, s'appliquent à chaque couche repérée dans le désassemblage.
+Ces manipulations, vues au chapitre 5, s'appliquent à chaque couche repérée dans le désassemblage.
 
-## 18.5 L'anti-désassemblage
+## 10.5 L'anti-désassemblage
 
 Au-delà de l'anti-debug, un binaire peut gêner la **lecture statique** elle-même. La technique la plus simple est l'**octet de leurre** : placer, juste après un saut inconditionnel, un octet qui n'est jamais exécuté mais qui amorce une instruction longue, désalignant un désassembleur à balayage linéaire.
 
@@ -81,22 +81,22 @@ La parade est le **désassemblage par flot de contrôle** (suivre réellement le
 
 Sources dans `anti-reverse/` (`protege.c`, `faux.c`, `antidis.asm`, `patch_tracerpid.py`).
 
-**Exercice 18.1 (niveau 1)** Compiler `protege` (`gcc -O1 -no-pie protege.c -o protege`), le lancer normalement (flag), puis sous `strace` et sous GDB. Quel test se déclenche dans chaque cas, et pourquoi ?
+**Exercice 10.1 (niveau 1)** Compiler `protege` (`gcc -O1 -no-pie protege.c -o protege`), le lancer normalement (flag), puis sous `strace` et sous GDB. Quel test se déclenche dans chaque cas, et pourquoi ?
 
-**Exercice 18.2 (niveau 2)** Écrire et compiler `faux.so`, puis contourner `protege` avec `LD_PRELOAD=./faux.so`. Expliquer précisément quelles deux protections sont neutralisées, et par quel mécanisme chacune.
+**Exercice 10.2 (niveau 2)** Écrire et compiler `faux.so`, puis contourner `protege` avec `LD_PRELOAD=./faux.so`. Expliquer précisément quelles deux protections sont neutralisées, et par quel mécanisme chacune.
 
-**Exercice 18.3 (niveau 2)** Repérer dans le désassemblage le saut conditionnel du test TracerPid, le neutraliser (patch en `NOP`), et vérifier. Pourquoi le binaire patché est-il quand même détecté sous `strace` ?
+**Exercice 10.3 (niveau 2)** Repérer dans le désassemblage le saut conditionnel du test TracerPid, le neutraliser (patch en `NOP`), et vérifier. Pourquoi le binaire patché est-il quand même détecté sous `strace` ?
 
-**Exercice 18.4 (niveau 3)** Combiner deux contournements pour faire passer `protege` sous un traceur (par exemple patch TracerPid + `faux.so` pour `ptrace`). Vérifier que le flag s'affiche malgré la présence du traceur.
+**Exercice 10.4 (niveau 3)** Combiner deux contournements pour faire passer `protege` sous un traceur (par exemple patch TracerPid + `faux.so` pour `ptrace`). Vérifier que le flag s'affiche malgré la présence du traceur.
 
-**Exercice 18.5 (niveau 2)** Écrire un faux `getppid` (ou `ptrace`) en `LD_PRELOAD` et vérifier avec un petit programme témoin que c'est bien votre version qui est appelée. En quoi est-ce plus souple qu'un patch du binaire ?
+**Exercice 10.5 (niveau 2)** Écrire un faux `getppid` (ou `ptrace`) en `LD_PRELOAD` et vérifier avec un petit programme témoin que c'est bien votre version qui est appelée. En quoi est-ce plus souple qu'un patch du binaire ?
 
-**Exercice 18.6 (niveau 3)** Assembler `antidis.asm`, l'exécuter (code de retour attendu 7), puis comparer `objdump -d` (balayage linéaire) et une lecture pas à pas dans GDB. Montrer que l'octet `0xE8` n'est jamais exécuté et explique la désynchronisation.
+**Exercice 10.6 (niveau 3)** Assembler `antidis.asm`, l'exécuter (code de retour attendu 7), puis comparer `objdump -d` (balayage linéaire) et une lecture pas à pas dans GDB. Montrer que l'octet `0xE8` n'est jamais exécuté et explique la désynchronisation.
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#anti-reverse)
 
 ## Suivi
 
-- [ ] Chapitre anti-reverse : lecture
-- [ ] Chapitre anti-reverse : contournements (LD_PRELOAD, patch, GDB)
-- [ ] Chapitre anti-reverse : anti-désassemblage compris
+- [ ] Partie 3, chapitre anti-reverse : lecture
+- [ ] Partie 3, chapitre anti-reverse : contournements (LD_PRELOAD, patch, GDB)
+- [ ] Partie 3, chapitre anti-reverse : anti-désassemblage compris

@@ -1,4 +1,4 @@
-# 0.3 Conditions
+# Chapitre 3 : Conditions
 
 Un programme prend des décisions : faire une chose ou une autre selon une condition. En reverse, chaque condition du code source devient une comparaison suivie d'un saut (chapitre 3) ; les reconnaître dans le C aide à les reconnaître une fois compilées.
 
@@ -32,7 +32,7 @@ if (age >= 0 && age < 18)
     printf("mineur\n");
 ```
 
-L'évaluation est **paresseuse** : dans `a && b`, si `a` est faux, `b` n'est pas évalué. C'est utile pour tester un pointeur avant de l'utiliser (chapitre 0.6).
+L'évaluation est **paresseuse** : dans `a && b`, si `a` est faux, `b` n'est pas évalué. C'est utile pour tester un pointeur avant de l'utiliser (chapitre 6).
 
 ## Le ternaire
 
@@ -61,15 +61,15 @@ Le `break` est indispensable : sans lui, l'exécution « tombe » dans le cas su
 
 ## Exercices
 
-**Exercice 0.3.1 (N1)** Écrire `int signe(int n)` qui renvoie `1` si `n` est positif, `-1` s'il est négatif, `0` s'il est nul.
+**Exercice 3.1 (N1)** Écrire `int signe(int n)` qui renvoie `1` si `n` est positif, `-1` s'il est négatif, `0` s'il est nul.
 
-**Exercice 0.3.2 (N1)** Écrire `int max2(int a, int b)` qui renvoie le plus grand des deux, puis `int max3(int a, int b, int c)` qui réutilise `max2`.
+**Exercice 3.2 (N1)** Écrire `int max2(int a, int b)` qui renvoie le plus grand des deux, puis `int max3(int a, int b, int c)` qui réutilise `max2`.
 
-**Exercice 0.3.3 (N2)** Écrire `int est_bissextile(int annee)` qui renvoie 1 si l'année est bissextile, 0 sinon. Règle : divisible par 4, sauf les multiples de 100 qui ne sont pas multiples de 400. Tester 2000 (oui), 1900 (non), 2024 (oui).
+**Exercice 3.3 (N2)** Écrire `int est_bissextile(int annee)` qui renvoie 1 si l'année est bissextile, 0 sinon. Règle : divisible par 4, sauf les multiples de 100 qui ne sont pas multiples de 400. Tester 2000 (oui), 1900 (non), 2024 (oui).
 
-**Exercice 0.3.4 (N2)** Écrire `const char *categorie(int age)` qui renvoie `"enfant"` (moins de 12), `"adolescent"` (moins de 18), `"adulte"` (moins de 65), `"senior"` au-delà, et `"invalide"` si l'âge est négatif.
+**Exercice 3.4 (N2)** Écrire `const char *categorie(int age)` qui renvoie `"enfant"` (moins de 12), `"adolescent"` (moins de 18), `"adulte"` (moins de 65), `"senior"` au-delà, et `"invalide"` si l'âge est négatif.
 
-**Exercice 0.3.5 (N3)** Écrire `int applique(int a, int b, char op)` qui renvoie le résultat de l'opération `op` (`'+'`, `'-'`, `'*'`, `'/'`) entre `a` et `b`, avec un `switch`. Pour `'/'`, renvoyer 0 si `b` vaut 0 (éviter la division par zéro).
+**Exercice 3.5 (N3)** Écrire `int applique(int a, int b, char op)` qui renvoie le résultat de l'opération `op` (`'+'`, `'-'`, `'*'`, `'/'`) entre `a` et `b`, avec un `switch`. Pour `'/'`, renvoyer 0 si `b` vaut 0 (éviter la division par zéro).
 
 Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-03)
 
@@ -89,12 +89,12 @@ else
     printf("position 0 incorrecte\n");
 ```
 
-Essayez avec d'autres caractères pour voir le message changer. Le chapitre 0.4 généralisera cette vérification à toutes les positions avec une boucle.
+Essayez avec d'autres caractères pour voir le message changer. Le chapitre 4 généralisera cette vérification à toutes les positions avec une boucle.
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-03)
 
 ## Suivi
 
-- [ ] Chapitre 0.3 : lecture
-- [ ] Chapitre 0.3 : exercices
-- [ ] Chapitre 0.3 : fil rouge
+- [ ] Partie 1, chapitre 3 : lecture
+- [ ] Partie 1, chapitre 3 : exercices
+- [ ] Partie 1, chapitre 3 : fil rouge
