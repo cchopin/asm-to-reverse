@@ -57,7 +57,9 @@ markdown_extensions:
 
 extra_javascript:
   - javascripts/progression.js
+  - javascripts/themes.js
 extra_css:
+  - stylesheets/themes.css
   - stylesheets/extra.css
 
 nav:

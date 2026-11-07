@@ -3,6 +3,14 @@
 {#- Accueil : pas de menu latéral ni de table des matières, la page
     d'accueil affiche à la place un bandeau et la carte du parcours. -#}
 {% block extrahead %}
+  {#- Thème de couleur choisi, appliqué avant l'affichage pour éviter un flash -#}
+  <script>
+    try {
+      var t = localStorage.getItem("cours-reverse-theme");
+      if (["kanagawa", "gruvbox", "rosepine", "nord"].indexOf(t) < 0) t = "kanagawa";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) { document.documentElement.setAttribute("data-theme", "kanagawa"); }
+  </script>
   {% if page and page.is_homepage %}
     {% set _ = page.meta.update({"hide": ["navigation", "toc"]}) %}
   {% endif %}
