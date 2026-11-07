@@ -6,7 +6,50 @@ Rappel pour les Mac Apple Silicon : GDB ne fonctionne que si le conteneur tourne
 
 ## 10.1 GDB et GEF
 
-GDB seul est austère. Le conteneur du cours inclut **GEF** : à chaque arrêt, il affiche automatiquement les registres, la pile, le code autour de `rip` et les arguments des appels. Toutes les commandes ci-dessous sont des commandes GDB standard, utilisables avec ou sans GEF (et avec pwndbg, son équivalent).
+GDB seul est austère. Le conteneur du cours inclut **GEF** : à chaque arrêt, il affiche automatiquement un grand écran récapitulatif. Toutes les commandes de ce chapitre sont des commandes GDB standard, utilisables avec ou sans GEF (et avec pwndbg, son équivalent).
+
+Cet écran, le **contexte**, déroute à la première rencontre. Il est en réalité toujours découpé en zones, délimitées par des lignes `[ ... ]`. Voici ce que GEF affiche en s'arrêtant à l'entrée de la fonction `carre` de l'exercice 5.5 (les couleurs sont retirées ici) :
+
+```
+[ Legend: Modified register | Code | Heap | Stack | String ]
+───────────────────────────────────────────────────── registers ────
+$rax   : 0x000000000040111c  ->  <main+0> endbr64
+$rbx   : 0x00007fffffffaee8  ->  0x00007fffffffb1f2
+$rcx   : 0x0000000000403e40  ->  ...
+$rdx   : 0x00007fffffffaef8  ->  0x00007fffffffb1f5
+$rsi   : 0x00007fffffffaee8  ->  0x00007fffffffb1f2
+$rdi   : 0x7
+$rbp   : 0x00007fffffffadc0  ->  0x00007fffffffadd0
+$rsp   : 0x00007fffffffadb8  ->  0x000000000040112e  ->  <main+18> ...
+$rip   : 0x0000000000401106  ->  <carre+0> endbr64
+$eflags: [ZERO carry PARITY adjust sign trap INTERRUPT direction overflow]
+──────────────────────────────────────────────────────── stack ────
+0x00007fffffffadb8│+0x0000: 0x000000000040112e  ->  <main+18>    <- $rsp
+0x00007fffffffadc0│+0x0008: 0x00007fffffffadd0  ->  ...          <- $rbp
+0x00007fffffffadc8│+0x0010: 0x00007ffff7c2a1ca  ->  <__libc_start_call_main+122>
+──────────────────────────────────────────────────────── code:x86:64 ────
+     0x4010fe <main+... >  ...
+ ->  0x401106 <carre+0>    endbr64
+     0x40110a <carre+4>    push   rbp
+     0x40110b <carre+5>    mov    rbp, rsp
+     0x40110e <carre+8>    mov    QWORD PTR [rbp-0x8], rdi
+─────────────────────────────────────────────────────────── threads ────
+[#0] Id 1, Name: "pile", stopped 0x401106 in carre (), reason: BREAKPOINT
+───────────────────────────────────────────────────────────── trace ────
+[#0] 0x401106 -> carre()
+[#1] 0x40112e -> main()
+────────────────────────────────────────────────────────────────────────
+```
+
+Les cinq zones :
+
+- **registers** : la valeur de chaque registre. GEF suit la flèche `->` quand une valeur est une adresse, et affiche ce qu'elle pointe (code, pile, chaîne). Ligne `$eflags` : les drapeaux, en majuscules quand ils sont à 1.
+- **stack** : les premiers mots de la pile à partir de `rsp`, avec leur décalage. Ici, le sommet contient `0x40112e`, l'**adresse de retour** dans `main` (voir l'exercice 5.5).
+- **code:x86:64** : les instructions autour de `rip` ; la flèche `->` marque la prochaine à exécuter.
+- **threads** : les fils d'exécution et la raison de l'arrêt (ici un point d'arrêt).
+- **trace** : la pile des appels (ici `carre` appelé par `main`), utile pour savoir « comment on est arrivé là ».
+
+Les adresses exactes changent à chaque exécution et d'une machine à l'autre : seules comptent les relations entre elles. La commande `context` réaffiche cet écran à tout moment.
 
 ## 10.2 Lancer et arrêter
 

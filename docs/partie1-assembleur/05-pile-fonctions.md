@@ -262,6 +262,46 @@ je     ok
 
 **Exercice 5.4** En 64 bits, après `push rbp` dans une fonction qui vient d'être appelée, à quelle adresse (par rapport à `rsp`) se trouve l'adresse de retour ?
 
+**Exercice 5.5** Observer la pile dans GDB, sur le modèle de la section 2.6. Le fichier [exemples/pile.c](../exemples/pile.c) contient :
+
+```c
+long carre(long x) { return x * x; }
+int main(void) { return (int)carre(7); }
+```
+
+Le compiler et le déboguer dans le conteneur :
+
+```bash
+gcc -O0 -no-pie -fno-stack-protector -g pile.c -o pile
+gdb ./pile
+```
+
+Dans GDB, poser un point d'arrêt sur l'entrée de `carre` (avant son prologue) et lire le sommet de la pile :
+
+```
+(gdb) break *carre
+(gdb) run
+(gdb) p/x $rsp
+$1 = 0x7fffffffadb8
+(gdb) x/gx $rsp            # lire 8 octets au sommet de la pile
+0x7fffffffadb8:	0x000000000040112e
+(gdb) info symbol *(unsigned long *)$rsp
+main + 18 in section .text
+```
+
+Au tout début de `carre`, juste après le `call`, le sommet de la pile contient l'**adresse de retour** : `0x40112e`, qui se trouve dans `main`, à l'instruction suivant immédiatement le `call carre`. C'est GDB qui le confirme avec `info symbol`.
+
+Exécuter ensuite le prologue pas à pas et observer `rsp` :
+
+```
+(gdb) stepi                # endbr64
+(gdb) stepi                # push rbp
+(gdb) p/x $rsp
+$2 = 0x7fffffffadb0
+```
+
+`push rbp` a fait **descendre `rsp` de 8 octets** (de `...adb8` à `...adb0`), puisque la pile croît vers les adresses basses. L'adresse de retour, elle, n'a pas bougé : elle est désormais en `rsp+8`. C'est la réponse de l'exercice 5.4, vérifiée en machine : `x/gx $rsp+8` affiche de nouveau `0x40112e`.
+
 ## Fil rouge : le prototype de verifier
 
 Dans [mystere_O0.txt](../fil-rouge/partie1/mystere_O0.txt) :

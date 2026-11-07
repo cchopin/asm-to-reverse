@@ -31,7 +31,7 @@ Le cours suppose quelques bases, utilisées dès le chapitre 1. Il n'est pas né
 - **Terminal Unix** : lancer une commande, les redirections (`|`, `<`, `2>`), `echo $?` (code de retour), `chmod +x`. Rattrapage : [la ligne de commande (OpenClassrooms)](https://openclassrooms.com/fr/courses/43538-reprenez-le-controle-a-laide-de-linux).
 - **Python de base** : lancer `python3`, manipuler des chaînes et des octets, une boucle `for`. Les scripts de solution et quelques exercices l'utilisent. Rattrapage : [le tutoriel officiel](https://docs.python.org/fr/3/tutorial/).
 
-Les notions d'assembleur, de reverse et les outils (Docker, GDB, Ghidra) sont, eux, expliqués au fil du cours : aucun prérequis de ce côté.
+Les notions d'assembleur, de reverse et les outils (Docker, GDB, Ghidra) sont, eux, expliqués au fil du cours : aucun prérequis de ce côté. Un [glossaire](glossaire.md) regroupe les définitions courtes des termes employés, avec un renvoi au chapitre où chacun est détaillé.
 
 ## Plan
 

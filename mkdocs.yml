@@ -60,6 +60,7 @@ nav:
   - Accueil: README.md
   - Progression: progression.md
   - Installation sur Mac: environnement/INSTALLATION-MAC.md
+  - Glossaire: glossaire.md
   - "Partie 1 : l'assembleur":
       - "1. Les bases": partie1-assembleur/01-bases.md
       - "2. Registres et instructions": partie1-assembleur/02-registres-instructions.md

@@ -154,6 +154,8 @@ int f(int *p, int n) { return *p + n; }
 
 **5.4** `call` a empilé l'adresse de retour (rsp pointait dessus en entrant), puis `push rbp` a empilé 8 octets de plus : l'adresse de retour est en `[rsp+8]`.
 
+**5.5** Au point d'arrêt `*carre` (avant le prologue), `x/gx $rsp` montre l'adresse de retour au sommet, et `info symbol` la situe dans `main`, juste après le `call`. Après `push rbp`, `rsp` a diminué de 8 : l'adresse de retour est passée de `[rsp]` à `[rsp+8]`, ce qui confirme la réponse de 5.4. Les adresses exactes varient d'une machine à l'autre, seule la relation compte.
+
 **Fil rouge**
 
 1. Un seul argument : seul `rdi` est utilisé avant d'être écrit (rangé en `[rbp-0x18]`). `rsi`, `rdx`... ne sont jamais lus.
