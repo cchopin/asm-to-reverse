@@ -269,6 +269,51 @@ call   DWORD PTR [MessageBoxA]
     loop .b
 ```
 
+## Exercices de lecture
+
+Fonction `op`, compilée sans optimisation. Elle choisit une opération selon un troisième argument `k` (rangé en `-0xc(%rbp)`) :
+
+```text
+<op>:
+  mov    %edi,-0x4(%rbp)      ; a
+  mov    %esi,-0x8(%rbp)      ; b
+  mov    %edx,-0xc(%rbp)      ; k
+  cmpl   $0x2,-0xc(%rbp)
+  je     CAS2
+  cmpl   $0x2,-0xc(%rbp)
+  jg     DEFAUT
+  cmpl   $0x0,-0xc(%rbp)
+  je     CAS0
+  cmpl   $0x1,-0xc(%rbp)
+  je     CAS1
+  jmp    DEFAUT
+CAS0:
+  mov    -0x4(%rbp),%edx
+  mov    -0x8(%rbp),%eax
+  add    %edx,%eax
+  jmp    FIN
+CAS1:
+  mov    -0x4(%rbp),%eax
+  sub    -0x8(%rbp),%eax
+  jmp    FIN
+CAS2:
+  mov    -0x4(%rbp),%eax
+  imul   -0x8(%rbp),%eax
+  jmp    FIN
+DEFAUT:
+  mov    $0x0,%eax
+FIN:
+  ret
+```
+
+**Exercice 7.L1 (N1)** Comment le code aiguille-t-il selon la valeur de `k` ? Repérer les comparaisons à 0, 1, 2 et le saut vers `DEFAUT`.
+
+**Exercice 7.L2 (N2)** Associer chaque étiquette `CAS0`, `CAS1`, `CAS2`, `DEFAUT` à l'opération effectuée (`add`, `sub`, `imul`, renvoyer 0).
+
+**Exercice 7.L3 (N3)** Reconstituer `op` en C, sous forme d'un `switch` sur `k`.
+
+Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-07)
+
 ## Fil rouge : réécrire verifier
 
 C'est l'aboutissement de la partie 1.

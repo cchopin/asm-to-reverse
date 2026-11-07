@@ -259,6 +259,37 @@ movzx eax, al
 
 **Exercice 3.4** Écrire en C une fonction `int categorie(int age)` qui renvoie 0 si `age < 12`, 1 si `age < 18`, 2 sinon. Compiler en `-O0`, désassembler et annoter chaque instruction. Recompiler ensuite en `-O2` et expliquer les différences.
 
+## Exercices de lecture
+
+Fonction `classer`, compilée sans optimisation (`gcc -O0 -fno-stack-protector -no-pie`) :
+
+```text
+<classer>:
+  ...
+  cmpl   $0x0,-0x4(%rbp)
+  jns    L1
+  mov    $0xffffffff,%eax
+  jmp    FIN
+L1:
+  cmpl   $0x0,-0x4(%rbp)
+  jne    L2
+  mov    $0x0,%eax
+  jmp    FIN
+L2:
+  mov    $0x1,%eax
+FIN:
+  pop    %rbp
+  ret
+```
+
+**Exercice 3.L1 (N1)** Quelles instructions sont les comparaisons, lesquelles sont les sauts ? Que teste `jns` (rappel : le saut est pris quand le résultat n'est pas négatif) ?
+
+**Exercice 3.L2 (N2)** Dérouler l'exécution pour `n = -5`, `n = 0`, puis `n = 7` : quelle valeur se retrouve dans `eax` à la fin dans chaque cas ? Rappel : `0xffffffff` est l'écriture non signée de `-1`.
+
+**Exercice 3.L3 (N3)** Reconstituer la fonction `classer` en C.
+
+Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-03)
+
 ## Fil rouge : la première condition
 
 Dans [mystere_O0.txt](../fil-rouge/partie1/mystere_O0.txt) :

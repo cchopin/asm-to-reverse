@@ -133,6 +133,10 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre 7 : exercices
 - [ ] Chapitre 7 : fil rouge
 
+### [Challenge de synthèse](partie1-assembleur/08-challenge.md)
+
+- [ ] Challenge partie 1 : les trois fonctions reconstruites
+
 ## Partie 2 : le reverse engineering
 
 ### [Chapitre 8 : la méthode et les premiers outils](partie2-reverse/08-methode-outils.md)

@@ -262,3 +262,116 @@ for (int i = 0; i < 0x40; i++)
    - il appelle `strlen(s + 1)` (`lea rdi, [rdi+0x1]`) car il a déjà lu `s[0]` pour tester s'il est nul (`test bpl, bpl`). Donc `strlen(s + 1) == 7` équivaut à `strlen(s) == 8` ;
    - `movsx eax, [rdx]` / `lea esi, [rax-0x30]` / `cmp sil, 0x9` / `ja refus` : on calcule `c - '0'` et on le compare en **non signé** à 9. Si `c < '0'`, la soustraction donne un nombre négatif, donc énorme en non signé, donc `> 9`. Un seul test remplace `c < '0' || c > '9'` ;
    - `sete al` met `al` à 1 si `s[7] == s[0]`, 0 sinon : c'est le `return s[0] == s[7];` final, sans saut.
+
+## Exercices de lecture
+
+### Chapitre 2 {#lecture-02}
+
+1. **2.L1** : le premier argument arrive dans `edi` et est recopié en `-0x4(%rbp)` ; le deuxième dans `esi`, recopié en `-0x8(%rbp)`.
+2. **2.L2** : `mov %edx,%eax` copie `a` dans `eax` ; `add %eax,%eax` double `eax` (il vaut `2a`) ; `add %eax,%edx` ajoute ce `2a` au `a` déjà dans `edx`, qui vaut donc `3a`. On calcule `a * 3`.
+3. **2.L3** : ensuite `eax` reçoit `b`, on ajoute `3a` (`eax = b + 3a`), puis `sub $0x7`. La fonction renvoie `a * 3 + b - 7`.
+
+### Chapitre 3 {#lecture-03}
+
+1. **3.L1** : les comparaisons sont les deux `cmpl $0x0,-0x4(%rbp)` (comparer `n` à 0). Les sauts sont `jns`, `jne` et les `jmp`. `jns` saute si le résultat n'est pas négatif, donc ici si `n >= 0`.
+2. **3.L2** : `n = -5` : `jns` non pris (négatif), on fait `eax = 0xffffffff`, c'est-à-dire `-1`. `n = 0` : `jns` pris, puis `jne` non pris (égal à 0), `eax = 0`. `n = 7` : `jns` pris, `jne` pris, `eax = 1`.
+3. **3.L3** :
+
+   ```c
+   int classer(int n)
+   {
+       if (n < 0) return -1;
+       else if (n == 0) return 0;
+       else return 1;
+   }
+   ```
+
+### Chapitre 4 {#lecture-04}
+
+1. **4.L1** : le saut arrière est `jle CORPS`, c'est la boucle. `-0x4` est l'accumulateur `s`, `-0x8` le compteur `i`, `-0x14` l'argument `n`.
+2. **4.L2** : (A) `s = 0`, (B) `i = 1`, (C) `s += i`, (D) `i++`. Le code saute d'abord vers `TEST` pour évaluer la condition avant le premier tour : c'est la forme habituelle d'une boucle `for`, dont le test précède le corps (si `n < 1`, le corps n'est jamais exécuté).
+3. **4.L3** :
+
+   ```c
+   int somme(int n)
+   {
+       int s = 0;
+       for (int i = 1; i <= n; i++)
+           s += i;
+       return s;
+   }
+   ```
+
+   `somme(5)` renvoie `1 + 2 + 3 + 4 + 5 = 15`.
+
+### Chapitre 5 {#lecture-05}
+
+1. **5.L1** : `push %rbp` / `mov %rsp,%rbp` installent le cadre de pile (`rbp` sert de base fixe pour désigner les variables locales et les arguments sauvés). `pop %rbp` restaure l'ancien `rbp`, et `ret` dépile l'adresse de retour et y saute.
+2. **5.L2** : le premier argument est sauvé sur 8 octets (`mov %rdi,...`), donc un **pointeur** ; le deuxième sur 4 (`mov %esi,...`), donc un `int` ; le retour est dans `eax`, donc un `int`.
+3. **5.L3** : un prototype plausible est `int element(int *t, int i);`. L'accès final (adresse `t + i*4`, puis lecture) correspond à `return t[i];`.
+
+### Chapitre 6 {#lecture-06}
+
+1. **6.L1** : le `4` est la taille d'un `int` (4 octets). Ensemble, (A) et (B) calculent `base + i * 4`, c'est-à-dire l'adresse de `t[i]`.
+2. **6.L2** : (D) `movslq` étend l'indice de 32 bits signés vers 64 bits, pour le calcul d'adresse. (E) `movzbl (%rax),%eax` lit **un seul octet** à l'adresse `rax` et complète par des zéros : c'est un `char`. (F) `test %al,%al` suivi de `jne` continue tant que l'octet n'est pas nul, donc jusqu'au `'\0'`. On lit un octet car un `char` fait un octet.
+3. **6.L3** :
+
+   ```c
+   int element(const int *t, int i)
+   {
+       return t[i];
+   }
+   ```
+
+### Chapitre 7 {#lecture-07}
+
+1. **7.L1** : le code compare `k` à 2 (`je CAS2`), puis `jg DEFAUT` si `k > 2` ; sinon il compare à 0 (`je CAS0`) et à 1 (`je CAS1`), et termine par `jmp DEFAUT`. C'est l'aiguillage du `switch`.
+2. **7.L2** : `CAS0` fait `add` (`a + b`), `CAS1` fait `sub` (`a - b`), `CAS2` fait `imul` (`a * b`), `DEFAUT` met `eax` à 0.
+3. **7.L3** :
+
+   ```c
+   int op(int a, int b, int k)
+   {
+       switch (k)
+       {
+           case 0: return a + b;
+           case 1: return a - b;
+           case 2: return a * b;
+           default: return 0;
+       }
+   }
+   ```
+
+## Challenge de synthèse {#challenge-synthese}
+
+**g1** : `edx = a + b`, `eax = a - b`, puis `imul` : la fonction renvoie `(a + b) * (a - b)`, c'est-à-dire `a*a - b*b`.
+
+```c
+int g1(int a, int b) { return (a + b) * (a - b); }
+```
+
+**g2** : accumulateur initialisé à 1, boucle qui multiplie par `n` puis décrémente `n` tant que `n > 1`. C'est la **factorielle**.
+
+```c
+int g2(int n)
+{
+    int r = 1;
+    while (n > 1) { r = r * n; n = n - 1; }
+    return r;
+}
+```
+
+`g2(5)` renvoie `5 * 4 * 3 * 2 = 120`.
+
+**g3** : `0x61` est le code ASCII de `'a'`. La fonction parcourt la chaîne jusqu'au `'\0'` et compte les caractères égaux à `'a'`.
+
+```c
+int g3(const char *s)
+{
+    int c = 0;
+    for (int i = 0; s[i]; i++)
+        if (s[i] == 'a')
+            c++;
+    return c;
+}
+```

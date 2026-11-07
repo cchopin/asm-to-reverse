@@ -409,6 +409,37 @@ Pour `f3` en `-O2`, une instruction `shr eax, 0x1f` inattendue apparaît. Cherch
 
 **Exercice 2.6** Après avoir résolu les exercices 2.1 et 2.3 sur papier, recopier `observe.asm` sous un autre nom, remplacer les instructions de `_start` (en gardant les trois dernières lignes, qui terminent le programme) par celles de l'exercice 2.1, puis vérifier les réponses dans GDB. Faire de même avec l'exercice 2.3 (en NASM, `cdq` et `idiv ecx` s'écrivent tels quels).
 
+## Exercices de lecture
+
+Ces exercices portent sur du vrai désassemblage. Pour reproduire les listings : écrire la fonction dans `ex.c`, puis `gcc -O0 -fno-stack-protector -no-pie -c ex.c` et `objdump -d ex.o`. Les adresses peuvent varier d'une machine à l'autre, la logique non.
+
+Fonction `calc`, compilée sans optimisation :
+
+```text
+<calc>:
+  push   %rbp
+  mov    %rsp,%rbp
+  mov    %edi,-0x4(%rbp)
+  mov    %esi,-0x8(%rbp)
+  mov    -0x4(%rbp),%edx
+  mov    %edx,%eax
+  add    %eax,%eax
+  add    %eax,%edx
+  mov    -0x8(%rbp),%eax
+  add    %edx,%eax
+  sub    $0x7,%eax
+  pop    %rbp
+  ret
+```
+
+**Exercice 2.L1 (N1)** Dans quels registres arrivent le premier et le deuxième argument ? À quels emplacements de la pile sont-ils recopiés ?
+
+**Exercice 2.L2 (N2)** Les instructions `mov %edx,%eax` puis `add %eax,%eax` puis `add %eax,%edx` calculent une valeur à partir du premier argument. Laquelle, et pourquoi (que fait `add %eax,%eax` sur `eax`) ?
+
+**Exercice 2.L3 (N3)** Reconstituer l'expression renvoyée par `calc` en fonction de ses deux arguments `a` et `b`.
+
+Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-02)
+
 ## Fil rouge : premières lignes de verifier
 
 Dans [mystere_O0.txt](../fil-rouge/partie1/mystere_O0.txt) :

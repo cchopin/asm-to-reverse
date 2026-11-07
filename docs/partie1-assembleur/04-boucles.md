@@ -181,6 +181,35 @@ fin:
     ret
 ```
 
+## Exercices de lecture
+
+Fonction `somme`, compilée sans optimisation :
+
+```text
+<somme>:
+  movl   $0x0,-0x4(%rbp)      ; (A)
+  movl   $0x1,-0x8(%rbp)      ; (B)
+  jmp    TEST
+CORPS:
+  mov    -0x8(%rbp),%eax
+  add    %eax,-0x4(%rbp)      ; (C)
+  addl   $0x1,-0x8(%rbp)      ; (D)
+TEST:
+  mov    -0x8(%rbp),%eax
+  cmp    -0x14(%rbp),%eax
+  jle    CORPS
+  mov    -0x4(%rbp),%eax
+  ret
+```
+
+**Exercice 4.L1 (N1)** Repérer le saut qui revient en arrière : il marque la boucle. Parmi les trois emplacements `-0x4`, `-0x8`, `-0x14(%rbp)`, lequel est l'accumulateur, lequel le compteur, lequel l'argument ?
+
+**Exercice 4.L2 (N2)** Expliquer les lignes (A), (B), (C), (D). Pourquoi le code saute-t-il d'abord vers `TEST` avant d'exécuter le corps ?
+
+**Exercice 4.L3 (N3)** Reconstituer `somme` en C, et dire ce que renvoie `somme(5)`.
+
+Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-04)
+
 ## Fil rouge : les deux boucles
 
 Dans [mystere_O0.txt](../fil-rouge/partie1/mystere_O0.txt) :

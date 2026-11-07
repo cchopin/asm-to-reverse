@@ -302,6 +302,34 @@ $2 = 0x7fffffffadb0
 
 `push rbp` a fait **descendre `rsp` de 8 octets** (de `...adb8` à `...adb0`), puisque la pile croît vers les adresses basses. L'adresse de retour, elle, n'a pas bougé : elle est désormais en `rsp+8`. C'est la réponse de l'exercice 5.4, vérifiée en machine : `x/gx $rsp+8` affiche de nouveau `0x40112e`.
 
+## Exercices de lecture
+
+Retrouver le prototype d'une fonction, c'est lire la taille des registres d'arguments (64 bits comme `rdi` pour un pointeur, 32 bits comme `esi`/`edi` pour un `int`) et le registre de retour (`eax` pour un `int`). Fonction `element`, compilée sans optimisation :
+
+```text
+<element>:
+  push   %rbp
+  mov    %rsp,%rbp
+  mov    %rdi,-0x8(%rbp)     ; 1er argument (8 octets)
+  mov    %esi,-0xc(%rbp)     ; 2e argument (4 octets)
+  mov    -0xc(%rbp),%eax
+  cltq
+  lea    0x0(,%rax,4),%rdx
+  mov    -0x8(%rbp),%rax
+  add    %rdx,%rax
+  mov    (%rax),%eax
+  pop    %rbp
+  ret
+```
+
+**Exercice 5.L1 (N1)** Repérer le prologue et l'épilogue. À quoi servent `push %rbp` / `mov %rsp,%rbp` au début, et `pop %rbp` / `ret` à la fin ?
+
+**Exercice 5.L2 (N2)** Le premier argument est sauvé sur 8 octets (`mov %rdi,...`), le deuxième sur 4 (`mov %esi,...`), et le retour se fait dans `eax`. Quels types C cela suggère-t-il pour les deux arguments et pour le retour ?
+
+**Exercice 5.L3 (N3)** En déduire un prototype plausible pour `element`. Que calcule la fonction, d'après l'accès mémoire final (on détaille ce calcul au chapitre 6) ?
+
+Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-05)
+
 ## Fil rouge : le prototype de verifier
 
 Dans [mystere_O0.txt](../fil-rouge/partie1/mystere_O0.txt) :

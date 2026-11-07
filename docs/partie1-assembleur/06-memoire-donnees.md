@@ -211,6 +211,44 @@ mov    DWORD PTR [rbp-0x18],0x6e696d61
 mov    BYTE  PTR [rbp-0x14],0x0
 ```
 
+## Exercices de lecture
+
+Deux accès mémoire typiques, compilés sans optimisation. D'abord `element` (un tableau d'entiers) :
+
+```text
+<element>:
+  mov    %rdi,-0x8(%rbp)
+  mov    %esi,-0xc(%rbp)
+  mov    -0xc(%rbp),%eax
+  cltq
+  lea    0x0(,%rax,4),%rdx   ; (A)
+  mov    -0x8(%rbp),%rax
+  add    %rdx,%rax           ; (B)
+  mov    (%rax),%eax         ; (C)
+  ret
+```
+
+Puis la boucle de `longueur` (une chaîne) :
+
+```text
+  ...
+  mov    -0x4(%rbp),%eax
+  movslq %eax,%rdx           ; (D)
+  mov    -0x18(%rbp),%rax
+  add    %rdx,%rax
+  movzbl (%rax),%eax         ; (E)
+  test   %al,%al             ; (F)
+  jne    ...
+```
+
+**Exercice 6.L1 (N1)** Dans la ligne (A), d'où vient le facteur `4` du `lea ...,%rax,4` ? Que représentent ensemble (A) et (B) ?
+
+**Exercice 6.L2 (N2)** Expliquer (D) `movslq`, (E) `movzbl (%rax),%eax`, et (F) `test %al,%al` suivi de `jne`. Pourquoi lit-on un seul octet, et non quatre ?
+
+**Exercice 6.L3 (N3)** Reconstituer `element` en C (une seule ligne de calcul).
+
+Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-06)
+
 ## Fil rouge : les accès à s[i]
 
 Dans [mystere_O0.txt](../fil-rouge/partie1/mystere_O0.txt) :
