@@ -1,8 +1,8 @@
 # 0.1 Compiler et afficher
 
-Cette partie 0 est une initiation au langage C, destinée à ceux qui en ont peu ou pas fait. Elle n'a pas pour but de former des développeurs C, mais de donner les bases strictement utiles au reverse : lire du C, comprendre les pointeurs, les chaînes, les tableaux, les structures et les arguments de la ligne de commande. Tout le reste du cours (lecture de l'assembleur) s'appuie dessus.
+Bienvenue dans la partie 0, l'initiation au langage C. C'est une piscine : beaucoup de pratique, des exercices gradués, une montée en difficulté régulière. L'objectif n'est pas de devenir développeur C, mais de savoir lire du C et de maîtriser les notions qui servent au reverse (adresses, pointeurs, pile, chaînes, tableaux, structures). Tout le reste du cours s'appuie dessus.
 
-Elle peut être sautée par ceux qui connaissent déjà le C. Pour les autres, elle se complète très bien avec la ressource en français citée dans les [prérequis](../README.md#prerequis). Les exercices sont dans l'esprit des « piscines » de programmation : courts, progressifs, à écrire soi-même. On commence sans la bibliothèque standard, pour bien voir ce qui se passe.
+Elle peut être sautée par ceux qui connaissent déjà bien le C, mais la série d'exercices vaut le détour même pour réviser. Pour les autres, elle se complète avec la ressource en français citée dans les [prérequis](../README.md#prerequis).
 
 !!! note "De quoi a-t-on besoin pour cette partie 0 ?"
     Juste d'un compilateur C. Deux possibilités :
@@ -52,7 +52,7 @@ int main(void)
 }
 ```
 
-`&c` est l'**adresse** de la variable `c` : `write` a besoin de savoir *où* se trouve l'octet à écrire, pas seulement sa valeur. Cette notion d'adresse est au cœur du C et du reverse ; elle est détaillée en 0.3.
+`&c` est l'**adresse** de la variable `c` : `write` a besoin de savoir *où* se trouve l'octet à écrire, pas seulement sa valeur. Cette notion d'adresse est au cœur du C et du reverse ; elle est détaillée au chapitre 0.6.
 
 Pour éviter de répéter `write`, on écrit une petite fonction, exactement comme le fera le compilateur :
 
@@ -84,7 +84,25 @@ int main(void)
 }
 ```
 
-On le compile et on l'exécute comme précédemment (`gcc fichier.c -o fichier`, puis `./fichier`). Dans les exemples suivants, on ne répètera pas le `main` ni les `#include` à chaque fois, mais ils restent nécessaires : chaque fonction se place au-dessus d'un `main` qui l'appelle.
+On le compile et on l'exécute comme précédemment. Dans les exemples suivants, on ne répètera pas le `main` ni les `#include` à chaque fois, mais ils restent nécessaires : chaque fonction se place au-dessus d'un `main` qui l'appelle.
+
+## Un caractère est un petit entier
+
+En C, le type `char` est un entier sur un octet. Le caractère `'A'` vaut en réalité 65 (son code ASCII), `'0'` vaut 48, et les lettres comme les chiffres se suivent dans la table. Deux conséquences très utiles :
+
+- `'a' + 1` vaut `'b'` : on peut parcourir l'alphabet en ajoutant 1 ;
+- `'0' + 7` vaut `'7'` : on obtient le caractère d'un chiffre en l'ajoutant à `'0'`.
+
+## Répéter avec une boucle
+
+Pour afficher plusieurs caractères, on répète avec une boucle `for`. Les boucles sont détaillées au chapitre 0.4 ; on en utilise ici la forme la plus simple :
+
+```c
+for (char c = 'a'; c <= 'z'; c++)   // de 'a' à 'z'
+    my_putchar(c);                  // afficher chaque lettre
+```
+
+`c++` ajoute 1 à `c` à chaque tour. La boucle s'arrête dès que la condition `c <= 'z'` devient fausse.
 
 ## Afficher avec printf
 
@@ -104,19 +122,39 @@ int main(void)
 
 ## Exercices
 
-Écrire et compiler chaque fonction, et la tester depuis un `main`.
+Écrire chaque fonction, la compiler et la tester depuis un `main`. Les niveaux indiquent la difficulté : **N1** découverte, **N2** consolidation, **N3** défi.
 
-**Exercice 0.1.1** Écrire `void my_putchar(char c)` qui affiche un caractère avec `write`. C'est la brique de base des exercices suivants.
+**Exercice 0.1.1 (N1)** Écrire `void my_putchar(char c)` qui affiche un caractère avec `write`. C'est la brique de base de tous les exercices suivants.
 
-**Exercice 0.1.2** Écrire `void alphabet(void)` qui affiche `abcdefghijklmnopqrstuvwxyz` suivi d'un retour à la ligne, en utilisant `my_putchar` dans une boucle. Indice : en C, un `char` est un petit entier ; `'a' + 1` vaut `'b'`.
+**Exercice 0.1.2 (N1)** Sans utiliser `printf`, afficher la ligne `42` (les deux caractères `'4'` et `'2'`, puis un retour à la ligne) avec `my_putchar` uniquement.
 
-**Exercice 0.1.3** Écrire `void chiffres(void)` qui affiche `0123456789`. Afficher ensuite la valeur numérique du caractère `'0'` avec `printf("%d\n", '0');` : un caractère est en réalité un petit entier, et cette valeur (son code ASCII) explique l'astuce `'0' + n` pour obtenir le caractère d'un chiffre.
+**Exercice 0.1.3 (N1)** Afficher votre prénom suivi d'un retour à la ligne, un caractère à la fois avec `my_putchar`.
 
-**Exercice 0.1.4** Sans utiliser `printf`, afficher la ligne `42` (les deux caractères `'4'` et `'2'`, puis un retour à la ligne) avec `my_putchar` uniquement.
+**Exercice 0.1.4 (N2)** Écrire `void chiffres(void)` qui affiche `0123456789`. Afficher ensuite la valeur numérique du caractère `'0'` avec `printf("%d\n", '0');` et vérifier que c'est bien 48.
+
+**Exercice 0.1.5 (N2)** Écrire `void alphabet(void)` qui affiche `abcdefghijklmnopqrstuvwxyz` suivi d'un retour à la ligne, avec une boucle et `my_putchar`.
+
+**Exercice 0.1.6 (N3)** Écrire `void alphabet_inverse(void)` qui affiche `zyxwvutsrqponmlkjihgfedcba`. Puis, en bonus, écrire `void une_lettre_sur_deux(void)` qui affiche `acegikmoqsuwy`.
 
 Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-01)
+
+## Fil rouge : le coffre
+
+Le fil rouge de cette partie 0 est un petit programme que l'on construit chapitre après chapitre : **coffre0**, un mini-crackme. Il demandera une clé et répondra si elle ouvre le coffre. À la fin de la partie, il sera complet, et on le réutilisera au début de la partie 2 pour le désassembler : vous analyserez votre propre programme.
+
+Pour ce premier chapitre, on pose seulement le décor. Écrire un programme `coffre0` qui affiche, avec `printf` :
+
+```text
+=== Coffre 0 ===
+Usage : ./coffre0 <cle>
+```
+
+C'est tout pour l'instant. Les chapitres suivants ajouteront la lecture de la clé, la vérification, puis la logique complète.
+
+Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-01)
 
 ## Suivi
 
 - [ ] Chapitre 0.1 : lecture
 - [ ] Chapitre 0.1 : exercices
+- [ ] Chapitre 0.1 : fil rouge

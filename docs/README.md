@@ -38,14 +38,23 @@ Les notions d'assembleur, de reverse et les outils (Docker, GDB, Ghidra) sont, e
 
 ### Partie 0 : les bases du C (facultative)
 
-Pour qui a peu ou pas fait de C. Exercices courts à écrire soi-même, dans l'esprit des piscines de programmation, orientés vers ce qui sert au reverse. On commence sans la bibliothèque standard, puis on l'introduit.
+Pour qui a peu ou pas fait de C. Une vraie piscine : beaucoup de petites fonctions à recoder soi-même, des exercices gradués (niveaux 1 à 3) et des contraintes strictes, le tout orienté vers ce qui sert au reverse. On commence sans la bibliothèque standard, puis on l'introduit. Un fil rouge (le mini-crackme `coffre0`) se construit chapitre après chapitre et sera désassemblé en partie 2.
 
 | Chapitre | Contenu |
 |---|---|
-| [0.1 Compiler et afficher](partie0-c/01-compiler-afficher.md) | `main`, compilation avec gcc, affichage avec `write`, `my_putchar`, `printf` |
-| [0.2 Variables, conditions, boucles](partie0-c/02-variables-conditions-boucles.md) | Types, `if`, `while`, `for`, affichage d'un nombre (`my_putnbr`) |
-| [0.3 Pointeurs et chaînes](partie0-c/03-pointeurs-chaines.md) | Adresses, `&` et `*`, chaînes et `'\0'`, `my_strlen`, `my_revstr` |
-| [0.4 Tableaux, arguments, structures](partie0-c/04-tableaux-argv-structures.md) | Tableaux, `argv`, conversion chaîne vers nombre (`my_getnbr`), `struct` |
+| [0.1 Compiler et afficher](partie0-c/01-compiler-afficher.md) | `main`, compilation, `write`, `my_putchar`, `printf` |
+| [0.2 Variables et types](partie0-c/02-variables-types.md) | Types, `sizeof`, signé/non signé, débordement, hexadécimal |
+| [0.3 Conditions](partie0-c/03-conditions.md) | `if`/`else`, opérateurs, ternaire, `switch` |
+| [0.4 Boucles](partie0-c/04-boucles.md) | `while`, `for`, `do while`, `break`/`continue`, `my_putnbr` |
+| [0.5 Fonctions](partie0-c/05-fonctions.md) | Prototypes, portée, passage par valeur, récursion |
+| [0.6 Pointeurs](partie0-c/06-pointeurs.md) | Adresses, `&` et `*`, passage par adresse, `int **` |
+| [0.7 Chaînes de caractères](partie0-c/07-chaines.md) | `char *`, `'\0'`, famille `my_str*` recodée |
+| [0.8 Tableaux](partie0-c/08-tableaux.md) | Parcours, tableaux et pointeurs, tri, recherche dichotomique |
+| [0.9 Arguments du programme](partie0-c/09-arguments.md) | `argc`, `argv`, `my_getnbr`, premiers mini-crackmes |
+| [0.10 Structures](partie0-c/10-structures.md) | `struct`, `.` et `->`, tableau de structures |
+| [0.11 Allocation dynamique](partie0-c/11-allocation.md) | `malloc`, `free`, `my_strdup`, fuites et pièges |
+| [0.12 En-têtes et Makefile](partie0-c/12-makefile.md) | `.h`, compilation séparée, `make`, `man` |
+| [0.13 Projet de fin de partie](partie0-c/13-projet.md) | Synthèse `ma_libc` et mini-crackme `coffre0` complet |
 
 ### Partie 1 : l'assembleur pour le reverse
 

@@ -69,9 +69,18 @@ nav:
   - Glossaire: glossaire.md
   - "Partie 0 : les bases du C":
       - "0.1 Compiler et afficher": partie0-c/01-compiler-afficher.md
-      - "0.2 Variables, conditions, boucles": partie0-c/02-variables-conditions-boucles.md
-      - "0.3 Pointeurs et chaînes": partie0-c/03-pointeurs-chaines.md
-      - "0.4 Tableaux, arguments, structures": partie0-c/04-tableaux-argv-structures.md
+      - "0.2 Variables et types": partie0-c/02-variables-types.md
+      - "0.3 Conditions": partie0-c/03-conditions.md
+      - "0.4 Boucles": partie0-c/04-boucles.md
+      - "0.5 Fonctions": partie0-c/05-fonctions.md
+      - "0.6 Pointeurs": partie0-c/06-pointeurs.md
+      - "0.7 Chaînes de caractères": partie0-c/07-chaines.md
+      - "0.8 Tableaux": partie0-c/08-tableaux.md
+      - "0.9 Arguments du programme": partie0-c/09-arguments.md
+      - "0.10 Structures": partie0-c/10-structures.md
+      - "0.11 Allocation dynamique": partie0-c/11-allocation.md
+      - "0.12 En-têtes et Makefile": partie0-c/12-makefile.md
+      - "0.13 Projet de fin de partie": partie0-c/13-projet.md
   - "Partie 1 : l'assembleur":
       - "1. Les bases": partie1-assembleur/01-bases.md
       - "2. Registres et instructions": partie1-assembleur/02-registres-instructions.md

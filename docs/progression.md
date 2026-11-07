@@ -16,21 +16,78 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 
 - [ ] Chapitre 0.1 : lecture
 - [ ] Chapitre 0.1 : exercices
+- [ ] Chapitre 0.1 : fil rouge
 
-### [Chapitre 0.2 : variables, conditions et boucles](partie0-c/02-variables-conditions-boucles.md)
+### [Chapitre 0.2 : variables et types](partie0-c/02-variables-types.md)
 
 - [ ] Chapitre 0.2 : lecture
 - [ ] Chapitre 0.2 : exercices
+- [ ] Chapitre 0.2 : fil rouge
 
-### [Chapitre 0.3 : pointeurs et chaînes](partie0-c/03-pointeurs-chaines.md)
+### [Chapitre 0.3 : conditions](partie0-c/03-conditions.md)
 
 - [ ] Chapitre 0.3 : lecture
 - [ ] Chapitre 0.3 : exercices
+- [ ] Chapitre 0.3 : fil rouge
 
-### [Chapitre 0.4 : tableaux, arguments et structures](partie0-c/04-tableaux-argv-structures.md)
+### [Chapitre 0.4 : boucles](partie0-c/04-boucles.md)
 
 - [ ] Chapitre 0.4 : lecture
 - [ ] Chapitre 0.4 : exercices
+- [ ] Chapitre 0.4 : fil rouge
+
+### [Chapitre 0.5 : fonctions](partie0-c/05-fonctions.md)
+
+- [ ] Chapitre 0.5 : lecture
+- [ ] Chapitre 0.5 : exercices
+- [ ] Chapitre 0.5 : fil rouge
+
+### [Chapitre 0.6 : pointeurs](partie0-c/06-pointeurs.md)
+
+- [ ] Chapitre 0.6 : lecture
+- [ ] Chapitre 0.6 : exercices
+- [ ] Chapitre 0.6 : fil rouge
+
+### [Chapitre 0.7 : chaînes de caractères](partie0-c/07-chaines.md)
+
+- [ ] Chapitre 0.7 : lecture
+- [ ] Chapitre 0.7 : exercices
+- [ ] Chapitre 0.7 : fil rouge
+
+### [Chapitre 0.8 : tableaux](partie0-c/08-tableaux.md)
+
+- [ ] Chapitre 0.8 : lecture
+- [ ] Chapitre 0.8 : exercices
+- [ ] Chapitre 0.8 : fil rouge
+
+### [Chapitre 0.9 : les arguments du programme](partie0-c/09-arguments.md)
+
+- [ ] Chapitre 0.9 : lecture
+- [ ] Chapitre 0.9 : exercices
+- [ ] Chapitre 0.9 : fil rouge
+
+### [Chapitre 0.10 : structures](partie0-c/10-structures.md)
+
+- [ ] Chapitre 0.10 : lecture
+- [ ] Chapitre 0.10 : exercices
+- [ ] Chapitre 0.10 : fil rouge
+
+### [Chapitre 0.11 : allocation dynamique](partie0-c/11-allocation.md)
+
+- [ ] Chapitre 0.11 : lecture
+- [ ] Chapitre 0.11 : exercices
+- [ ] Chapitre 0.11 : fil rouge
+
+### [Chapitre 0.12 : en-têtes, compilation séparée et Makefile](partie0-c/12-makefile.md)
+
+- [ ] Chapitre 0.12 : lecture
+- [ ] Chapitre 0.12 : exercices
+- [ ] Chapitre 0.12 : fil rouge
+
+### [Projet de fin de partie](partie0-c/13-projet.md)
+
+- [ ] Projet 0.13 : synthèse ma_libc
+- [ ] Projet 0.13 : mini-projet coffre
 
 ## Partie 1 : l'assembleur pour le reverse
 
