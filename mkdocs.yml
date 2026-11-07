@@ -97,6 +97,8 @@ nav:
       - "11. Classiques des crackmes": partie2-reverse/11-classiques-crackmes.md
       - "12. Protections": partie2-reverse/12-protections.md
       - "13. Analyse de malware": partie2-reverse/13-malware-analysis.md
+      - "CTF maison": partie2-reverse/15-ctf-maison.md
+      - "Laboratoire malware": partie2-reverse/16-labo-malware.md
       - "14. Et après ?": partie2-reverse/14-et-apres.md
   - "Partie 3 : écrire de l'assembleur":
       - "15. Premiers pas en NASM": partie3-ecriture/15-nasm-syscalls.md

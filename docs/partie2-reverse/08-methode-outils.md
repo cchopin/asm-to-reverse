@@ -168,6 +168,27 @@ objdump -s -j .rodata coffre_v1
 
 Pratique : les archives sont souvent des `.zip` protégés par le mot de passe `crackmes.one`. Pour transférer le fichier téléchargé sur le Mac vers le conteneur, le déposer dans le dossier du cours (partagé dans `/cours`, voir le guide d'installation), puis le décompresser côté conteneur. La difficulté affichée sur le site est donnée par l'auteur et reste approximative : un "1.0" peut bloquer, ce n'est pas anormal. Les crackmes de ce site sont censés être sûrs, mais par principe ils s'analysent dans le conteneur.
 
+## Exercice de pont : votre propre coffre0
+
+Avant d'attaquer des binaires inconnus, commencez par le plus familier : le `coffre0` que vous avez écrit en [partie 0](../partie0-c/13-projet.md). Vous connaissez son code, donc vous pouvez vérifier que votre lecture du désassemblage est correcte. C'est le meilleur pont entre écrire du C et le lire en assembleur.
+
+Compilez-le, puis analysez-le **sans rouvrir le source** :
+
+```bash
+gcc -O1 -o coffre0 coffre0.c libmy.c
+objdump -d coffre0 | less        # ou dans Ghidra
+strings coffre0 | less
+```
+
+**Exercice 8.0 (N1 à N3)**
+
+1. (N1) Avec `strings`, retrouvez les messages (`Coffre ouvert`, `Refuse`, `Usage ...`). Dans quelle fonction sont-ils utilisés ?
+2. (N2) Dans le désassemblage de `main`, retrouvez le tableau `cible` : huit octets `43 6d 67 70 69 73 69 6c`. Comment sont-ils chargés (en données, immédiats, ...) ?
+3. (N2) Repérez la boucle de vérification et la comparaison `(cle[i] + i) == cible[i]`. Où est le `+ i` ?
+4. (N3) Sans utiliser votre mémoire de la clé, **déduisez la clé** à partir des octets `cible` : pour chaque position, calculez `cible[i] - i`. Vous devez retrouver `Clemence`. Vous venez d'écrire votre premier keygen, sur votre propre programme.
+
+Solution : [solutions/partie2.md](../solutions/partie2.md#pont-coffre0)
+
 ## Fil rouge : coffre v1
 
 Compiler `coffre_v1` sans lire le source (voir le [README](../README.md)).

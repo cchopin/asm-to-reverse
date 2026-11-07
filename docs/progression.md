@@ -175,6 +175,17 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre 13 : exercices
 - [ ] Chapitre 13 : fil rouge (coffre v5)
 
+### [CTF maison](partie2-reverse/15-ctf-maison.md)
+
+- [ ] CTF maison : défis 1 à 3
+- [ ] CTF maison : défis 4 à 6
+
+### [Laboratoire malware](partie2-reverse/16-labo-malware.md)
+
+- [ ] Laboratoire malware : cas 1 (balise)
+- [ ] Laboratoire malware : cas 2 (dropper)
+- [ ] Laboratoire malware : rapport rédigé
+
 ### [Chapitre 14 : et après ?](partie2-reverse/14-et-apres.md)
 
 - [ ] Chapitre 14 : lecture

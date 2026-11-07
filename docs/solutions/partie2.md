@@ -219,3 +219,117 @@ rule Coffre_v5_implant
 `F?` signifie "un octet dont le premier chiffre hexa est F" (le second dépend du registre utilisé), et `[2-3]` "entre 2 et 3 octets quelconques". Testée : elle détecte `coffre_v5` mais ni les autres coffres, ni `/bin/ls`. Si le compilateur a produit une routine différente, il faut adapter `$dec` aux octets obtenus (`objdump -d` les affiche).
 
 Nettoyage final : `rm -f /tmp/.coffre_v5*` (ou sortie du conteneur).
+
+## Exercice de pont : votre propre coffre0 {#pont-coffre0}
+
+1. `strings coffre0` montre `Coffre ouvert`, `Refuse`, `Usage : ./coffre0 <cle>`. Ils sont passés à `my_putstr` depuis `main`.
+2. Dans `main`, les huit octets `43 6d 67 70 69 73 69 6c` sont chargés comme valeurs immédiates sur la pile (l'initialisation de `struct coffre c = {{...}}`), ou lues depuis la section de données selon l'optimisation.
+3. La boucle compare, pour chaque `i`, `(cle[i] + i)` à `cible[i]`. Le `+ i` apparaît comme un `add` de l'indice de boucle au caractère chargé (souvent `add %edx,%eax` où `edx` est l'indice), juste avant le `cmp`.
+4. La clé se déduit en calculant `cible[i] - i` :
+
+   ```python
+   cible = [0x43,0x6d,0x67,0x70,0x69,0x73,0x69,0x6c]
+   print("".join(chr(c - i) for i, c in enumerate(cible)))   # Clemence
+   ```
+
+   C'est votre premier keygen : vous avez reconstruit la clé sans la connaître, à partir des seules données du binaire.
+
+## CTF maison {#ctf-maison}
+
+**Défi 1 (crack01).** `strings crack01` laisse apparaître `sesame`. Le programme fait un `strcmp` direct. Mot de passe : `sesame`.
+
+**Défi 2 (crack02).** Chaque caractère saisi est comparé, après un `xor 0x5A`, à un tableau d'octets. On inverse en appliquant le même XOR aux octets stockés :
+
+```python
+stored = [0x37,0x33,0x28,0x35,0x33,0x28]
+print("".join(chr(b ^ 0x5A) for b in stored))   # miroir
+```
+
+**Défi 3 (crack03).** La transformation dépend de la position : `cle[i] ^ (i*7)` est comparé au tableau. On inverse position par position :
+
+```python
+stored = [0x72,0x62,0x78,0x70,0x6e,0x50,0x4f]
+print("".join(chr(b ^ (i * 7)) for i, b in enumerate(stored)))   # reverse
+```
+
+**Défi 4 (crack04).** Le serial vaut `(somme des codes ASCII du nom) * 1337 % 100000`. Keygen :
+
+```python
+def serial(nom):
+    return (sum(ord(c) for c in nom) * 1337) % 100000
+print(serial("clemence"))   # 7036
+```
+
+`./crack04 clemence 7036` affiche `Licence valide`. Le keygen marche pour n'importe quel nom.
+
+**Défi 5 (crack05).** Les contraintes lues dans le code : `d0+d1+d2+d3 == 20`, `d0 == d3+1`, `d1 == d2*2`, `d0 > d1`. Avec z3, ou à la main : de `d1 = 2*d2` et `d0 = d3+1`, la somme donne `2*d3 + 3*d2 = 19` ; seul `d2 = 1, d3 = 8` respecte aussi `d0 > d1`, d'où `d0 = 9, d1 = 2`. Code unique : `9218`.
+
+```python
+from z3 import Int, Solver, sat
+d = [Int(f"d{i}") for i in range(4)]
+s = Solver()
+for x in d: s.add(x >= 0, x <= 9)
+s.add(sum(d) == 20, d[0] == d[3] + 1, d[1] == d[2] * 2, d[0] > d[1])
+if s.check() == sat:
+    m = s.model(); print("".join(str(m[x]) for x in d))   # 9218
+```
+
+**Défi 6 (crack06).** Analyse statique (Ghidra ou `strings`) : le mot de passe comparé est `antidebug`. Le programme appelle `ptrace(PTRACE_TRACEME, ...)` au début ; sous un débogueur, cet appel échoue (renvoie -1) et le programme s'arrête, car un processus déjà tracé ne peut pas se tracer lui-même.
+
+Trois façons de contourner l'anti-debug pour l'observer en dynamique :
+
+- lancer simplement `./crack06 antidebug` (sans débogueur) : affiche `Bravo` ;
+- neutraliser `ptrace` avec un stub chargé par `LD_PRELOAD` :
+
+  ```c
+  /* fakeptrace.c : gcc -shared -fPIC -o fakeptrace.so fakeptrace.c */
+  long ptrace(int r, int p, void *a, void *d) { (void)r;(void)p;(void)a;(void)d; return 0; }
+  ```
+
+  puis `LD_PRELOAD=./fakeptrace.so gdb ./crack06` ;
+- ou patcher le saut conditionnel qui suit le test de la valeur de retour de `ptrace`, pour qu'il ne parte jamais dans la branche « debugger detecte » (voir le patching, chapitre 11).
+
+## Laboratoire malware {#labo-malware}
+
+### Cas 1 : la balise
+
+Désobscurcissement : un simple `xor 0x3C`. Les chaînes cachées se décodent ainsi :
+
+```python
+dom  = [0x4f,0x45,0x52,0x5f,0x12,0x59,0x44,0x5d,0x51,0x4c,0x50,0x59,0x12,0x55,0x52,0x4a,0x5d,0x50,0x55,0x58]
+camp = [0x7f,0x7d,0x71,0x6c,0x11,0x0e,0x0c,0x0e,0x0a,0x11,0x72,0x73,0x6a]
+print("".join(chr(b ^ 0x3C) for b in dom))   # sync.example.invalid
+print("".join(chr(b ^ 0x3C) for b in camp))  # CAMP-2026-NOV
+```
+
+Sous `strace`, on observe l'ouverture et l'écriture de `/tmp/.balise.lock`, puis un `connect` vers `127.0.0.1:9999` (qui échoue, rien n'écoute).
+
+IOC :
+
+| Type | Valeur |
+| --- | --- |
+| Fichier déposé | `/tmp/.balise.lock` (contient l'identifiant de campagne) |
+| Domaine de contact | `sync.example.invalid` |
+| Adresse / port | `127.0.0.1` port `9999` |
+| Identifiant de campagne | `CAMP-2026-NOV` |
+| Clé d'obscurcissement | XOR `0x3C` |
+
+### Cas 2 : le dropper
+
+`strings` ne montre pas la charge car elle est stockée chiffrée (un tableau d'octets) et déchiffrée seulement en mémoire, par un `xor 0x11`. On la retrouve sans exécuter le programme :
+
+```python
+payload = [0x72,0x79,0x70,0x63,0x76,0x74,0x31,0x77,0x70,0x72,0x65,0x78,0x72,0x74,0x31,
+           0x57,0x5d,0x50,0x56,0x6a,0x75,0x63,0x7e,0x61,0x61,0x74,0x63,0x4e,0x75,0x74,0x72,0x7e,0x75,0x74,0x6c]
+print("".join(chr(b ^ 0x11) for b in payload))   # charge factice FLAG{dropper_decode}
+```
+
+### Rapport type (cas 1)
+
+| Rubrique | Contenu |
+| --- | --- |
+| Échantillon | `balise`, binaire ELF 64 bits (`file`), empreinte via `sha256sum balise` |
+| Résumé | Au lancement, l'échantillon dépose un marqueur de persistance, puis tente de contacter un serveur distant en lui transmettant un identifiant de campagne. Adresse et campagne sont obscurcies par XOR. |
+| Comportements | Persistance (fichier `/tmp/.balise.lock`), réseau (`connect` localhost:9999), obscurcissement XOR 0x3C des chaînes sensibles |
+| IOC | voir le tableau ci-dessus |
+| Recommandations | Détecter la présence du fichier marqueur et les connexions vers le domaine ; en environnement réel, bloquer le domaine et analyser le trafic sortant |
