@@ -1,0 +1,68 @@
+{#- Bandeau d'accueil et carte du parcours, générée depuis le menu
+    (nav de mkdocs.yml) : une nouvelle partie y apparaît d'elle-même. -#}
+{% set parties = [] %}
+{% for item in nav %}
+  {% if item.is_section and item.title.startswith("Partie") %}
+    {% set _ = parties.append(item) %}
+  {% endif %}
+{% endfor %}
+{% set premiere = parties[0].children[0] if parties else none %}
+<section class="accueil">
+  <div class="accueil__grille md-grid">
+    <div class="accueil__texte">
+      <p class="accueil__surtitre">Cours en français · x86-64 · Linux</p>
+      <h1 class="accueil__titre">Lire ce que la machine exécute vraiment.</h1>
+      <p class="accueil__intro">
+        De la première instruction assembleur au premier crackme, puis au triage
+        d'un binaire suspect. Une méthode répétable plutôt qu'une collection
+        d'astuces.
+      </p>
+      <div class="accueil__actions">
+        {% if premiere %}
+          <a class="md-button md-button--primary" href="{{ premiere.url | url }}">Commencer le cours</a>
+        {% endif %}
+        <a class="md-button" href="{{ 'progression.md' | url }}">Ma progression</a>
+      </div>
+      <div class="accueil__stat" data-progression-globale></div>
+    </div>
+    <div class="terminal" aria-hidden="true">
+      <div class="terminal__barre"><i></i><i></i><i></i><span>coffre</span></div>
+<pre class="terminal__code"><span class="t-invite">$</span> objdump -d -M intel coffre
+<span class="t-adr">401136:</span>  <span class="t-oct">55</span>                 <span class="t-ins">push</span>   rbp
+<span class="t-adr">401137:</span>  <span class="t-oct">48 89 e5</span>           <span class="t-ins">mov</span>    rbp, rsp
+<span class="t-adr">40113a:</span>  <span class="t-oct">e8 f1 fe ff ff</span>     <span class="t-ins">call</span>   strcmp@plt
+<span class="t-adr">40113f:</span>  <span class="t-oct">85 c0</span>              <span class="t-ins">test</span>   eax, eax
+<span class="t-adr">401141:</span>  <span class="t-oct">75 0c</span>              <span class="t-ins">jne</span>    40114f
+<span class="t-com">; le compilateur a écrit un if.</span>
+<span class="t-com">; à vous de le retrouver.</span><span class="t-curseur"></span></pre>
+    </div>
+  </div>
+
+  <div class="parcours md-grid">
+    <h2 class="parcours__titre">Le parcours</h2>
+    <div class="parcours__parties">
+      {% for partie in parties %}
+        {% set titre = partie.title.split(" : ", 1) %}
+        <div class="partie-carte" data-partie>
+          <div class="partie-carte__tete">
+            <span class="partie-carte__numero">{{ titre[0] }}</span>
+            <span class="partie-carte__compte" data-compte></span>
+          </div>
+          <h3 class="partie-carte__titre">{{ titre[1] if titre | length > 1 else partie.title }}</h3>
+          <ol class="etapes">
+            {% for chap in partie.children if chap.is_page %}
+              {% set t = chap.title.split(" ", 1) %}
+              {% if not (t | length > 1 and t[0].rstrip(".").replace(".", "").isdigit()) %}{% set t = [chap.title] %}{% endif %}
+              <li>
+                <a class="etape" href="{{ chap.url | url }}" data-chapitre>
+                  <span class="etape__noeud">{{ t[0].rstrip(".") if t | length > 1 else "" }}</span>
+                  <span class="etape__nom">{{ t[1] if t | length > 1 else chap.title }}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ol>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

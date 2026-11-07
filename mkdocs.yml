@@ -5,7 +5,11 @@ use_directory_urls: false
 
 theme:
   name: material
+  custom_dir: overrides
   language: fr
+  font:
+    text: Inter
+    code: JetBrains Mono
   features:
     - navigation.instant
     - navigation.instant.progress
@@ -14,21 +18,22 @@ theme:
     - navigation.top
     - navigation.footer
     - toc.follow
+    - toc.integrate
     - search.highlight
     - search.suggest
     - content.code.copy
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: indigo
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Passer en mode sombre
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: indigo
-      accent: indigo
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Passer en mode clair
@@ -40,6 +45,7 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+      toc_depth: 2
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.tasklist:

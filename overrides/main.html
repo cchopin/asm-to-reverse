@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{#- Accueil : pas de menu latéral ni de table des matières, la page
+    d'accueil affiche à la place un bandeau et la carte du parcours. -#}
+{% block extrahead %}
+  {% if page and page.is_homepage %}
+    {% set _ = page.meta.update({"hide": ["navigation", "toc"]}) %}
+  {% endif %}
+{% endblock %}
+
+{% block hero %}
+  {% if page and page.is_homepage %}
+    {% include "partials/accueil.html" %}
+  {% endif %}
+{% endblock %}
+
+{#- Chapitres : surtitre avec la partie et le temps de lecture estimé. -#}
+{% block content %}
+  {% if page and not page.is_homepage %}
+    {% set mots = page.content | striptags | wordcount %}
+    {% set minutes = ((mots / 200) | round(0, "ceil")) | int %}
+    <div class="surtitre">
+      {% if page.parent %}<span class="surtitre__partie">{{ page.parent.title }}</span>{% endif %}
+      {% if minutes > 1 %}<span class="surtitre__duree">{{ minutes }} min de lecture</span>{% endif %}
+    </div>
+  {% endif %}
+  {{ super() }}
+{% endblock %}
