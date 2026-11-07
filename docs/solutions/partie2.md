@@ -440,3 +440,68 @@ Hypothèse en une phrase : un **téléchargeur/injecteur** (downloader) qui réc
 **21.7 (PE, conceptuel)** Correspondances : magic `7f ELF` ↔ signature `MZ` puis `PE\0\0` ; point d'entrée ELF (`Entry point address`) ↔ `ImageBase + AddressOfEntryPoint` ; `.rodata` ↔ `.rdata` ; `readelf -d`/NEEDED et `.plt`/`.got` ↔ table d'import (IAT) et `.idata`. Les chaînes se cherchent dans `.rodata` (ELF) et `.rdata` (PE) ; la liste des fonctions externes se lit via `readelf -d` + `.dynsym` (ELF) et via la table d'import (PE).
 
 **21.8 (PE, conceptuel)** Une table d'import réduite à `LoadLibraryA` et `GetProcAddress` est suspecte précisément parce qu'elle est presque vide : avec ces deux seules fonctions, le programme peut charger **n'importe quelle** DLL et résoudre **n'importe quelle** fonction à l'exécution, sans que cela apparaisse dans l'IAT. C'est de la **résolution dynamique d'API**, une technique d'évasion qui masque les capacités réelles au triage statique. Adaptation de l'analyse : en statique, chercher les chaînes de noms de fonctions et de DLL dans `.rdata` (souvent présentes, parfois obfusquées/chiffrées), repérer les appels à `GetProcAddress` et remonter leurs arguments ; en dynamique (sur une machine d'analyse isolée), observer les appels réels avec un moniteur d'API ou un hook sur `GetProcAddress` pour lister les fonctions effectivement résolues. C'est le pont direct avec le chapitre d'analyse dynamique : ce que le statique cache, l'exécution surveillée le révèle.
+
+## Écrire des règles YARA {#yara}
+
+Toutes ces règles ont été testées avec `yara-python` sur `demo`, `packed` et `specimen`. Les règles complètes sont dans `yara/regles.yar`, rejouables avec `yara/tester.py`.
+
+**22.1**
+```yara
+rule demo_reverse42 { strings: $s = "reverse42" condition: $s }
+```
+`demo` correspond (la chaîne est en clair dans `.rodata`), `packed` non : son code (et donc la chaîne) est compressé dans un blob, invisible en clair. Limite d'une signature par chaîne : elle tombe dès que le binaire est packé, chiffré ou simplement modifié. Il faut alors signer autrement (entropie, imports, bout de code).
+
+**22.2**
+```yara
+rule est_un_elf { condition: uint32(0) == 0x464c457f }
+```
+`demo` correspond, un fichier texte non. `uint32(0)` lit les 4 premiers octets en petit-boutiste : le fichier commence par `7f 45 4c 46`, ce qui se lit `0x464c457f`. Équivalent PE : `uint16(0) == 0x5a4d` (les octets `MZ` = `4d 5a`, lus `0x5a4d`).
+
+**22.3**
+```yara
+import "math"
+rule packe_probable { condition: math.entropy(0, filesize) >= 7.2 }
+```
+Mesures réelles : texte répétitif 2.65 (pas de match), données compressées zlib 7.91 (match), données aléatoires 7.95 (match). Le seuil 7.2 distingue le compressé/chiffré du contenu « normal ». Sur un petit binaire, préférer `math.entropy(offset, taille)` sur une section précise, car le remplissage à zéro fait baisser la moyenne globale.
+
+**22.4** Avec `$a`, `$b`, `$c` et `condition: 2 of them`, la règle ne se déclenche que si au moins deux des trois motifs sont présents. `all of them` exige les trois, `any of them` un seul. `N of (...)` est utile pour tolérer une variante qui aurait perdu un des marqueurs tout en gardant les autres.
+
+**22.5**
+```yara
+rule specimen_campagne_orange {
+    strings:
+        $c2   = "update.sync.example.invalid" xor(0x3c)
+        $camp = "CAMP-2026-ORANGE" xor(0x3c)
+    condition: any of them
+}
+```
+`specimen` correspond, et YARA signale `$c2` et `$camp` comme trouvés. Le modificateur `xor(0x3c)` fait chercher la chaîne après XOR par 0x3C, exactement l'obfuscation du specimen : `strings` ne voyait rien, YARA retrouve l'IOC. Bonus : `xor(0x00-0xff)` fait essayer les 256 clés d'un octet ; pratique quand on ignore la clé, au prix d'un peu plus de faux positifs potentiels.
+
+**22.6**
+```yara
+rule prologue { strings: $p = { 55 48 89 E5 } condition: $p }
+```
+`55 48 89 E5` = `push rbp; mov rbp, rsp`, présent dans tout binaire non optimisé. Un joker `??` devient nécessaire dès qu'une instruction contient une valeur variable : par exemple `48 8B 05 ?? ?? ?? ??` pour `mov rax, [rip+déplacement]`, où le déplacement change d'une compilation à l'autre. Les `??` laissent passer ces octets variables tout en figeant l'opcode.
+
+**22.7**
+```yara
+import "pe"
+rule pe_telechargeur {
+    condition:
+        pe.imports("wininet.dll", "InternetReadFile") and
+        pe.imports("kernel32.dll", "CreateProcessA")
+}
+```
+Signer des imports vise un **comportement** (télécharger puis exécuter), pas un détail : le C2, le nom du fichier ou les chaînes peuvent changer d'une variante à l'autre, mais la façon d'agir (les fonctions appelées) reste stable. C'est le prolongement direct du chapitre 21 : la table d'import révèle les capacités, et YARA permet de signer ces capacités. (Non testable ici faute de PE dans le conteneur ; à vérifier sur votre machine avec un échantillon PE.)
+
+**22.8** Exemple pour un crackme contenant une bannière connue et de taille modeste :
+```yara
+rule crackme_ctf_maison {
+    strings:
+        $banniere = "Entrez le mot de passe"
+        $prompt   = "> "
+    condition:
+        uint32(0) == 0x464c457f and filesize < 50KB and all of them
+}
+```
+On combine format (ELF), taille et motifs pour rester spécifique à ce binaire et éviter de matcher les autres crackmes. C'est la synthèse du cours : une analyse (ce qu'on a lu et compris) devient une détection réutilisable.

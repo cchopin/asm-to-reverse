@@ -109,6 +109,7 @@ nav:
       - "19. Analyse dynamique avancée (approfondissement)": partie2-reverse/19-analyse-dynamique.md
       - "20. Résolution automatique : angr et z3 (approfondissement)": partie2-reverse/20-angr-z3.md
       - "21. Lire les formats : ELF et PE (approfondissement)": partie2-reverse/21-formats-elf-pe.md
+      - "22. Écrire des règles YARA (approfondissement)": partie2-reverse/22-yara.md
       - "14. Et après ?": partie2-reverse/14-et-apres.md
   - "Partie 3 : écrire de l'assembleur":
       - "15. Premiers pas en NASM": partie3-ecriture/15-nasm-syscalls.md

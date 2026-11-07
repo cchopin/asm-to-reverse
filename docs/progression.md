@@ -240,6 +240,12 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 - [ ] Chapitre formats : ELF lu avec readelf (-h, -l, -S, -d, -s)
 - [ ] Chapitre formats : table d'import PE comprise (intérêt malware)
 
+### [Chapitre 22 : écrire des règles YARA](partie2-reverse/22-yara.md)
+
+- [ ] Chapitre YARA : lecture
+- [ ] Chapitre YARA : règles écrites et testées (format, entropie, IOC)
+- [ ] Chapitre YARA : passage analyse -> règle réutilisable compris
+
 ### [Chapitre 14 : et après ?](partie2-reverse/14-et-apres.md)
 
 - [ ] Chapitre 14 : lecture
