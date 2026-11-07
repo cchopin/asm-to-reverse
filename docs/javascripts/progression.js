@@ -26,6 +26,46 @@
       '<div class="progression-fond"><div class="progression-barre" style="width:' + pct + '%"></div></div>';
   }
 
+  // État d'un chapitre : "fait" (toutes les cases cochées), "encours"
+  // (au moins une), ou rien. Mémorisé par chemin de page pour pouvoir
+  // décorer le menu depuis n'importe quelle page.
+  var CLE_PAGE = PREFIXE + "page:";
+
+  function enregistrerEtatPage() {
+    // On ne considère que les cases du contenu, pas celles du menu.
+    var contenu = document.querySelector(".md-content");
+    if (!contenu) return;
+    // La page Progression agrège toutes les cases : ne pas l'enregistrer.
+    if (document.querySelector(".progression-globale")) return;
+    var cases = contenu.querySelectorAll(".task-list-item input[type=checkbox]");
+    if (!cases.length) return;
+    var faits = 0;
+    cases.forEach(function (c) { if (c.checked) faits++; });
+    var etat = faits === cases.length ? "fait" : (faits > 0 ? "encours" : "");
+    try {
+      var k = CLE_PAGE + window.location.pathname;
+      if (etat) window.localStorage.setItem(k, etat);
+      else window.localStorage.removeItem(k);
+    } catch (e) {}
+  }
+
+  function decorerMenu() {
+    var liens = document.querySelectorAll(".md-nav--primary .md-nav__link[href]");
+    liens.forEach(function (a) {
+      var ancien = a.querySelector(".etat-chapitre");
+      if (ancien) ancien.remove();
+      var etat;
+      try { etat = window.localStorage.getItem(CLE_PAGE + a.pathname); } catch (e) { etat = null; }
+      if (!etat) return;
+      var s = document.createElement("span");
+      s.className = "etat-chapitre " + etat;
+      s.setAttribute("aria-hidden", "true");
+      s.textContent = etat === "fait" ? "✓" : "•"; // coche ou puce
+      s.title = etat === "fait" ? "Chapitre terminé" : "Chapitre commencé";
+      a.appendChild(s);
+    });
+  }
+
   function mettreAJour() {
     var cases = document.querySelectorAll(".task-list-item input[type=checkbox]");
     var faits = 0;
@@ -33,6 +73,8 @@
     document.querySelectorAll(".progression-globale").forEach(function (el) {
       barre(el, faits, cases.length);
     });
+    enregistrerEtatPage();
+    decorerMenu();
   }
 
   function initialiser() {

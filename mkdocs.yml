@@ -8,11 +8,14 @@ theme:
   language: fr
   features:
     - navigation.instant
+    - navigation.instant.progress
     - navigation.tracking
-    - navigation.sections
+    - navigation.indexes
     - navigation.top
     - navigation.footer
+    - toc.follow
     - search.highlight
+    - search.suggest
     - content.code.copy
   palette:
     - media: "(prefers-color-scheme: light)"
@@ -58,26 +61,26 @@ nav:
   - Progression: progression.md
   - Installation sur Mac: environnement/INSTALLATION-MAC.md
   - "Partie 1 : l'assembleur":
-      - partie1-assembleur/01-bases.md
-      - partie1-assembleur/02-registres-instructions.md
-      - partie1-assembleur/03-comparaisons-sauts.md
-      - partie1-assembleur/04-boucles.md
-      - partie1-assembleur/05-pile-fonctions.md
-      - partie1-assembleur/06-memoire-donnees.md
-      - partie1-assembleur/07-patterns-compilateur.md
+      - "1. Les bases": partie1-assembleur/01-bases.md
+      - "2. Registres et instructions": partie1-assembleur/02-registres-instructions.md
+      - "3. Comparaisons et sauts": partie1-assembleur/03-comparaisons-sauts.md
+      - "4. Les boucles": partie1-assembleur/04-boucles.md
+      - "5. La pile et les fonctions": partie1-assembleur/05-pile-fonctions.md
+      - "6. Mémoire et données": partie1-assembleur/06-memoire-donnees.md
+      - "7. Du C à l'assembleur": partie1-assembleur/07-patterns-compilateur.md
   - "Partie 2 : le reverse":
-      - partie2-reverse/08-methode-outils.md
-      - partie2-reverse/09-ghidra.md
-      - partie2-reverse/10-gdb.md
-      - partie2-reverse/11-classiques-crackmes.md
-      - partie2-reverse/12-protections.md
-      - partie2-reverse/13-malware-analysis.md
-      - partie2-reverse/14-et-apres.md
+      - "8. Méthode et outils": partie2-reverse/08-methode-outils.md
+      - "9. Ghidra": partie2-reverse/09-ghidra.md
+      - "10. GDB": partie2-reverse/10-gdb.md
+      - "11. Classiques des crackmes": partie2-reverse/11-classiques-crackmes.md
+      - "12. Protections": partie2-reverse/12-protections.md
+      - "13. Analyse de malware": partie2-reverse/13-malware-analysis.md
+      - "14. Et après ?": partie2-reverse/14-et-apres.md
   - "Partie 3 : écrire de l'assembleur":
-      - partie3-ecriture/15-nasm-syscalls.md
-      - partie3-ecriture/16-fonctions-libc.md
-      - partie3-ecriture/17-shellcode.md
+      - "15. Premiers pas en NASM": partie3-ecriture/15-nasm-syscalls.md
+      - "16. Fonctions et libc": partie3-ecriture/16-fonctions-libc.md
+      - "17. Shellcode et loader": partie3-ecriture/17-shellcode.md
   - Solutions:
-      - solutions/partie1.md
-      - solutions/partie2.md
-      - solutions/partie3.md
+      - "Partie 1": solutions/partie1.md
+      - "Partie 2": solutions/partie2.md
+      - "Partie 3": solutions/partie3.md

@@ -4,18 +4,21 @@ Le cours utilise un Linux x86-64. Sur Mac, il tourne dans un conteneur Docker, d
 
 Ghidra, en revanche, s'installe directement sur macOS.
 
-## 1. Identifier le type de Mac
+La grande majorité des Mac récents sont des **Apple Silicon** (puces M1, M2, M3, M4...) : c'est le parcours principal, décrit à la section 2. Les anciens Mac Intel sont traités en note à la section 3.
 
-Dans le Terminal :
+Pour vérifier en cas de doute, dans le Terminal :
 
 ```bash
 uname -m
 ```
 
-- `arm64` : Mac Apple Silicon (M1, M2, M3, M4...). Suivre la section 2.
-- `x86_64` : Mac Intel. Suivre la section 3.
+`arm64` indique un Mac Apple Silicon (section 2) ; `x86_64` un Mac Intel (section 3).
 
-## 2. Mac Apple Silicon
+## 1. Vue d'ensemble
+
+Un Mac ne peut pas déboguer du code x86-64 directement. L'environnement du cours tourne donc dans une machine virtuelle Linux x86-64, lancée avec Colima. Sur Apple Silicon, cette machine est émulée ; sur Intel, elle est native. La suite détaille chaque cas, mais le principe et les commandes du cours (section 4 et au-delà) sont identiques une fois la machine démarrée.
+
+## 2. Mac Apple Silicon (parcours principal : M1, M2, M3, M4...)
 
 ### Le problème de l'émulation
 
@@ -57,9 +60,9 @@ colima start reverse
 
 [UTM](https://mac.getutm.app) permet d'installer une machine virtuelle Ubuntu x86-64 complète en mode émulation, avec une interface graphique. C'est plus lent que Colima et plus long à installer, mais cela peut servir plus tard pour un laboratoire d'analyse de malware entièrement isolé (chapitre 13). Dans ce cas, choisir "Emulate" (et non "Virtualize") et l'architecture x86_64.
 
-## 3. Mac Intel
+## 3. Mac Intel (note)
 
-Installer [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou Colima sans l'option `--arch`). Le processeur est déjà x86-64 : aucune émulation, tout fonctionne directement.
+Ce cas ne concerne que les anciens Mac à processeur Intel. Le processeur étant déjà x86-64, aucune émulation n'est nécessaire : installer [Docker Desktop](https://www.docker.com/products/docker-desktop/), ou Colima sans l'option `--arch` (`colima start reverse --cpu 4 --memory 6 --disk 30`). Tout fonctionne directement, y compris GDB. La suite (section 4) est commune aux deux types de Mac.
 
 ## 4. Construire et lancer l'environnement
 

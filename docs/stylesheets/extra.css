@@ -11,3 +11,45 @@
 .md-typeset .task-list-control { cursor: pointer; }
 .md-typeset .mermaid { text-align: center; }
 .md-typeset .etape-suivie { cursor: pointer; }
+
+/* --- Menu de navigation : lisibilité et hiérarchie --- */
+
+/* Titres de partie (Partie 1, Partie 2...) : plus discrets et espacés */
+.md-nav__item--section > .md-nav__link,
+.md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
+  font-weight: 700;
+}
+.md-nav__item .md-nav__item .md-nav__link {
+  font-size: .72rem;
+  line-height: 1.35;
+  padding-top: .18rem;
+  padding-bottom: .18rem;
+}
+
+/* Chapitre actif : barre d'accent à gauche et fond léger */
+.md-nav__link--active,
+.md-nav__item .md-nav__link--active {
+  font-weight: 700;
+  border-left: 2px solid var(--md-accent-fg-color);
+  padding-left: .5rem;
+  border-radius: 0 .2rem .2rem 0;
+  background: var(--md-accent-fg-color--transparent, rgba(83, 109, 254, .08));
+}
+
+/* Un peu d'air entre les groupes de la navigation */
+.md-nav--primary > .md-nav__list > .md-nav__item {
+  margin-top: .35rem;
+}
+
+/* --- Indicateur de progression par chapitre dans le menu --- */
+.md-nav__link .etat-chapitre {
+  margin-left: .35rem;
+  font-size: .8em;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+.md-nav__link .etat-chapitre.fait { color: var(--md-accent-fg-color); }
+.md-nav__link .etat-chapitre.encours { color: var(--md-default-fg-color--light); }
+
+/* Puce de progression dans la page Progression */
+.progression-texte { display: flex; align-items: center; gap: .5rem; }
