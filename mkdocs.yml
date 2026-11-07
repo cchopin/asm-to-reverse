@@ -61,6 +61,11 @@ nav:
   - Progression: progression.md
   - Installation sur Mac: environnement/INSTALLATION-MAC.md
   - Glossaire: glossaire.md
+  - "Partie 0 : les bases du C":
+      - "0.1 Compiler et afficher": partie0-c/01-compiler-afficher.md
+      - "0.2 Variables, conditions, boucles": partie0-c/02-variables-conditions-boucles.md
+      - "0.3 Pointeurs et chaînes": partie0-c/03-pointeurs-chaines.md
+      - "0.4 Tableaux, arguments, structures": partie0-c/04-tableaux-argv-structures.md
   - "Partie 1 : l'assembleur":
       - "1. Les bases": partie1-assembleur/01-bases.md
       - "2. Registres et instructions": partie1-assembleur/02-registres-instructions.md
@@ -82,6 +87,7 @@ nav:
       - "16. Fonctions et libc": partie3-ecriture/16-fonctions-libc.md
       - "17. Shellcode et loader": partie3-ecriture/17-shellcode.md
   - Solutions:
+      - "Partie 0": solutions/partie0.md
       - "Partie 1": solutions/partie1.md
       - "Partie 2": solutions/partie2.md
       - "Partie 3": solutions/partie3.md

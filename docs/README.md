@@ -6,8 +6,9 @@ Un cours progressif, en français, qui mène de la lecture d'un premier désasse
 
 En CTF, chaque challenge semble différent des précédents. En réalité, les mêmes briques reviennent sans cesse : une comparaison, une boucle qui transforme une chaîne, un appel de fonction, une protection anti-debug. La difficulté n'est pas de connaître toutes les astuces, mais de **reconnaître les briques**.
 
-Le cours est organisé en trois parties :
+Le cours est organisé en trois parties, précédées d'une partie 0 facultative :
 
+0. **Partie 0** (facultative) : les bases du langage C, pour qui en a peu fait. On n'y apprend pas à être développeur C, mais à lire le C et à comprendre les notions qui servent au reverse (pointeurs, chaînes, tableaux, structures, `argv`). Elle peut être sautée par qui connaît déjà le C.
 1. **Partie 1** : lire l'assembleur x86-64 produit par un compilateur C. L'objectif n'est pas d'écrire de gros programmes en assembleur, mais de reconnaître un `if`, une boucle, un appel de fonction, un tableau, une structure.
 2. **Partie 2** : appliquer une **méthode** de reverse identique d'un challenge à l'autre (reconnaître, observer, comprendre, agir), puis l'étendre à l'analyse de malware.
 3. **Partie 3** : écrire soi-même quelques programmes en assembleur, ce qui consolide la lecture et prépare aux shellcodes et aux challenges d'exploitation.
@@ -27,13 +28,24 @@ flowchart LR
 
 Le cours suppose quelques bases, utilisées dès le chapitre 1. Il n'est pas nécessaire d'être expert, mais les notions suivantes doivent être familières :
 
-- **Langage C** : variables, `if`, boucles, fonctions, pointeurs, `char *`, `struct`, `argv`, et quelques fonctions courantes (`strcmp`, `malloc`). Le code à analyser provient de C compilé. Rattrapage : [Learn C (en anglais, interactif)](https://www.learn-c.org/) ou le [C book (en français)](https://zestedesavoir.com/tutoriels/755/le-langage-c-1/).
+- **Langage C** : variables, `if`, boucles, fonctions, pointeurs, `char *`, `struct`, `argv`, et quelques fonctions courantes (`strcmp`, `malloc`). Le code à analyser provient de C compilé. Si le C est nouveau ou lointain, la [partie 0](partie0-c/01-compiler-afficher.md) en donne les bases, orientées reverse, avec des exercices à faire soi-même. Rattrapage complémentaire : [Learn C (en anglais, interactif)](https://www.learn-c.org/) ou le [C book (en français)](https://zestedesavoir.com/tutoriels/755/le-langage-c-1/).
 - **Terminal Unix** : lancer une commande, les redirections (`|`, `<`, `2>`), `echo $?` (code de retour), `chmod +x`. Rattrapage : [la ligne de commande (OpenClassrooms)](https://openclassrooms.com/fr/courses/43538-reprenez-le-controle-a-laide-de-linux).
 - **Python de base** : lancer `python3`, manipuler des chaînes et des octets, une boucle `for`. Les scripts de solution et quelques exercices l'utilisent. Rattrapage : [le tutoriel officiel](https://docs.python.org/fr/3/tutorial/).
 
 Les notions d'assembleur, de reverse et les outils (Docker, GDB, Ghidra) sont, eux, expliqués au fil du cours : aucun prérequis de ce côté. Un [glossaire](glossaire.md) regroupe les définitions courtes des termes employés, avec un renvoi au chapitre où chacun est détaillé.
 
 ## Plan
+
+### Partie 0 : les bases du C (facultative)
+
+Pour qui a peu ou pas fait de C. Exercices courts à écrire soi-même, dans l'esprit des piscines de programmation, orientés vers ce qui sert au reverse. On commence sans la bibliothèque standard, puis on l'introduit.
+
+| Chapitre | Contenu |
+|---|---|
+| [0.1 Compiler et afficher](partie0-c/01-compiler-afficher.md) | `main`, compilation avec gcc, affichage avec `write`, `my_putchar`, `printf` |
+| [0.2 Variables, conditions, boucles](partie0-c/02-variables-conditions-boucles.md) | Types, `if`, `while`, `for`, affichage d'un nombre (`my_putnbr`) |
+| [0.3 Pointeurs et chaînes](partie0-c/03-pointeurs-chaines.md) | Adresses, `&` et `*`, chaînes et `'\0'`, `my_strlen`, `my_revstr` |
+| [0.4 Tableaux, arguments, structures](partie0-c/04-tableaux-argv-structures.md) | Tableaux, `argv`, conversion chaîne vers nombre (`my_getnbr`), `struct` |
 
 ### Partie 1 : l'assembleur pour le reverse
 

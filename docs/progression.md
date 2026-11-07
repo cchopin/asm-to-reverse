@@ -10,6 +10,28 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 
 - [ ] Environnement installé et vérifié
 
+## Partie 0 : les bases du C (facultative)
+
+### [Chapitre 0.1 : compiler et afficher](partie0-c/01-compiler-afficher.md)
+
+- [ ] Chapitre 0.1 : lecture
+- [ ] Chapitre 0.1 : exercices
+
+### [Chapitre 0.2 : variables, conditions et boucles](partie0-c/02-variables-conditions-boucles.md)
+
+- [ ] Chapitre 0.2 : lecture
+- [ ] Chapitre 0.2 : exercices
+
+### [Chapitre 0.3 : pointeurs et chaînes](partie0-c/03-pointeurs-chaines.md)
+
+- [ ] Chapitre 0.3 : lecture
+- [ ] Chapitre 0.3 : exercices
+
+### [Chapitre 0.4 : tableaux, arguments et structures](partie0-c/04-tableaux-argv-structures.md)
+
+- [ ] Chapitre 0.4 : lecture
+- [ ] Chapitre 0.4 : exercices
+
 ## Partie 1 : l'assembleur pour le reverse
 
 ### [Chapitre 1 : les bases](partie1-assembleur/01-bases.md)
