@@ -64,33 +64,103 @@ printf("%d en hexa : %x\n", 255, 255);   // 255 en hexa : ff
 
 ## Exercices
 
-**Exercice 2.1 (N1)** Écrire `void afficher_tailles(void)` qui affiche, avec `sizeof`, les tailles d'un `char`, d'un `int`, d'un `long`, d'un `unsigned int` et d'un pointeur (`void *`). Noter les valeurs sur votre machine.
+Rappel de la méthode : un fichier `.c` par exercice, la fonction demandée testée depuis votre propre `main`, et la compilation avec `gcc -Wall -Wextra`. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-02).
 
-**Exercice 2.2 (N1)** Déclarer trois variables (un `int`, un `char`, un `long`), leur donner une valeur, et les afficher avec `printf` en utilisant les bons formats (`%d`, `%c`, `%ld`).
+### Exercice 2.1 - afficher_tailles (N1)
 
-**Exercice 2.3 (N2)** Écrire `void hms(int total)` qui affiche une durée en secondes sous la forme `Xh Ym Zs`. Exemple : `hms(3661)` affiche `1h 1m 1s`. Utiliser la division entière et le modulo.
+- **Fichier à rendre :** `afficher_tailles.c`
+- **Prototype :** `void afficher_tailles(void);`
+- **Fonctions autorisées :** `printf`, l'opérateur `sizeof`
 
-**Exercice 2.4 (N2)** Écrire `unsigned char apres(unsigned char x)` qui renvoie `x + 1`. Vérifier que `apres(255)` vaut `0`. Expliquer en commentaire pourquoi.
+Afficher, une par ligne, les tailles en octets d'un `char`, d'un `int`, d'un `long`, d'un `unsigned int` et d'un pointeur (`void *`), obtenues avec `sizeof`. Notez les valeurs observées sur votre machine.
 
-**Exercice 2.5 (N3)** Écrire `void interpretations(unsigned char b)` qui affiche la valeur de `b` lue comme non signée (`%u`) puis comme signée (`%d` après conversion en `signed char`). Tester avec `0`, `127`, `128`, `200`, `255`, et expliquer les résultats.
+Exemple d'exécution attendu (machine 64 bits classique) :
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-02)
+```text
+char = 1
+int = 4
+long = 8
+unsigned int = 4
+void * = 8
+```
+
+### Exercice 2.2 - trois variables (N1)
+
+- **Fichier à rendre :** `trois_variables.c`
+- **Prototype :** `void trois_variables(void);`
+- **Fonctions autorisées :** `printf`
+
+Déclarer trois variables (un `int`, un `char`, un `long`), leur donner une valeur, puis les afficher sur une seule ligne avec `printf`, en utilisant le bon format pour chacune (`%d`, `%c`, `%ld`).
+
+Exemple d'exécution attendu (avec les valeurs `-17`, `'Z'`, `1000000000`) :
+
+```text
+-17 Z 1000000000
+```
+
+### Exercice 2.3 - hms (N2)
+
+- **Fichier à rendre :** `hms.c`
+- **Prototype :** `void hms(int total);`
+- **Fonctions autorisées :** `printf`
+
+Afficher une durée donnée en secondes sous la forme `Xh Ym Zs`. Utiliser la division entière et le modulo.
+
+Exemple d'exécution attendu (appel `hms(3661)`) :
+
+```text
+1h 1m 1s
+```
+
+### Exercice 2.4 - apres (N2)
+
+- **Fichier à rendre :** `apres.c`
+- **Prototype :** `unsigned char apres(unsigned char x);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer `x + 1`. Vérifier que `apres(255)` vaut `0`, et expliquer en commentaire pourquoi (le débordement d'un octet non signé qui « fait le tour »).
+
+Exemple d'exécution attendu (affichage de `apres(255)` avec `%u`) :
+
+```text
+0
+```
+
+### Exercice 2.5 - interpretations (N3)
+
+- **Fichier à rendre :** `interpretations.c`
+- **Prototype :** `void interpretations(unsigned char b);`
+- **Fonctions autorisées :** `printf`
+
+Afficher la valeur de `b` lue comme non signée (`%u`), puis la même donnée lue comme signée (`%d` après conversion en `signed char`). Testez avec `0`, `127`, `128`, `200` et `255`, et expliquez les résultats en commentaire.
+
+Exemple d'exécution attendu (appel `interpretations(200)`) :
+
+```text
+200 -> -56
+```
 
 ## Fil rouge : la cible du coffre
 
 Le coffre vérifiera la clé en la comparant à une **cible** : huit octets stockés dans le programme. On les introduit maintenant, sans encore s'en servir.
 
-Ajouter à `coffre0` un tableau et l'afficher en hexadécimal :
+À vous de compléter `coffre0` :
 
-```c
-unsigned char cible[8] = {67, 109, 103, 112, 105, 115, 105, 108};
+- **Fichier à rendre :** `coffre0.c` (celui commencé au chapitre 1)
+- **Fonctions autorisées :** `printf`
 
-for (int i = 0; i < 8; i++)
-    printf("%02x ", cible[i]);
-printf("\n");
+Consignes :
+
+- Déclarer un tableau `unsigned char cible[8]` contenant les huit octets suivants : 67, 109, 103, 112, 105, 115, 105, 108.
+- L'afficher en hexadécimal, chaque octet sur deux chiffres, séparés par une espace, suivi d'un retour à la ligne.
+
+Indice : le format `%02x` affiche un octet sur deux chiffres hexadécimaux (avec un zéro devant si besoin). Ces octets sont ce qu'un reverser verrait dans le binaire : en partie 3, vous retrouverez exactement ce tableau dans votre propre programme désassemblé, et il faudra en déduire la clé.
+
+Exemple d'exécution attendu :
+
+```text
+43 6d 67 70 69 73 69 6c
 ```
-
-`%02x` affiche chaque octet sur deux chiffres hexa. Ces octets sont ce qu'un reverser verrait dans le binaire : en partie 3, vous retrouverez exactement ce tableau dans votre propre programme désassemblé, et il faudra en déduire la clé.
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-02)
 

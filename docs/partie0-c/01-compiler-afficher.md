@@ -122,34 +122,115 @@ int main(void)
 
 ## Exercices
 
-Écrire chaque fonction, la compiler et la tester depuis un `main`. Les niveaux indiquent la difficulté : **N1** découverte, **N2** consolidation, **N3** défi.
+Chaque exercice se présente comme un petit sujet : un **fichier à rendre**, un **prototype** à respecter, les **fonctions autorisées**, des consignes, et l'exécution attendue. Écrivez la fonction demandée, puis testez-la depuis un `main` de votre cru (le fil rouge, lui, est un programme complet). Compilez toujours avec les avertissements activés :
 
-**Exercice 1.1 (N1)** Écrire `void my_putchar(char c)` qui affiche un caractère avec `write`. C'est la brique de base de tous les exercices suivants.
+```bash
+gcc -Wall -Wextra fichier.c -o fichier && ./fichier
+```
 
-**Exercice 1.2 (N1)** Sans utiliser `printf`, afficher la ligne `42` (les deux caractères `'4'` et `'2'`, puis un retour à la ligne) avec `my_putchar` uniquement.
+Les niveaux indiquent la difficulté : **N1** découverte, **N2** consolidation, **N3** défi. Les solutions sont regroupées à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-01) : ne les ouvrez qu'après avoir cherché par vous-même.
 
-**Exercice 1.3 (N1)** Afficher votre prénom suivi d'un retour à la ligne, un caractère à la fois avec `my_putchar`.
+### Exercice 1.1 - my_putchar (N1)
 
-**Exercice 1.4 (N2)** Écrire `void chiffres(void)` qui affiche `0123456789`. Afficher ensuite la valeur numérique du caractère `'0'` avec `printf("%d\n", '0');` et vérifier que c'est bien 48.
+- **Fichier à rendre :** `my_putchar.c`
+- **Prototype :** `void my_putchar(char c);`
+- **Fonctions autorisées :** `write`
 
-**Exercice 1.5 (N2)** Écrire `void alphabet(void)` qui affiche `abcdefghijklmnopqrstuvwxyz` suivi d'un retour à la ligne, avec une boucle et `my_putchar`.
+Afficher le caractère `c` sur la sortie standard à l'aide de l'appel système `write`. C'est la brique de base : toutes les fonctions d'affichage des exercices suivants s'appuieront dessus.
 
-**Exercice 1.6 (N3)** Écrire `void alphabet_inverse(void)` qui affiche `zyxwvutsrqponmlkjihgfedcba`. Puis, en bonus, écrire `void une_lettre_sur_deux(void)` qui affiche `acegikmoqsuwy`.
+Exemple, avec un `main` qui appelle `my_putchar('H')`, `my_putchar('i')`, puis `my_putchar('\n')` :
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-01)
+```text
+Hi
+```
+
+### Exercice 1.2 - afficher 42 (N1)
+
+- **Fichier à rendre :** `afficher_42.c`
+- **Prototype :** `void afficher_42(void);`
+- **Fonctions autorisées :** `my_putchar` (votre fonction du 1.1)
+
+Afficher les deux caractères `4` et `2`, puis un retour à la ligne. L'usage de `printf` est interdit : le but est de n'écrire que des caractères, un par un.
+
+Exemple d'exécution attendu :
+
+```text
+42
+```
+
+### Exercice 1.3 - mon prénom (N1)
+
+- **Fichier à rendre :** `mon_prenom.c`
+- **Prototype :** `void mon_prenom(void);`
+- **Fonctions autorisées :** `my_putchar`
+
+Afficher votre prénom suivi d'un retour à la ligne, un caractère à la fois.
+
+Exemple d'exécution attendu (pour le prénom Ada) :
+
+```text
+Ada
+```
+
+### Exercice 1.4 - les chiffres (N2)
+
+- **Fichier à rendre :** `chiffres.c`
+- **Prototype :** `void chiffres(void);`
+- **Fonctions autorisées :** `my_putchar`, `printf`
+
+Afficher `0123456789` sur une seule ligne. Ensuite, dans votre `main`, afficher la valeur numérique du caractère `'0'` avec `printf("%d\n", '0');` et vérifier qu'elle vaut 48.
+
+Exemple d'exécution attendu :
+
+```text
+0123456789
+48
+```
+
+### Exercice 1.5 - l'alphabet (N2)
+
+- **Fichier à rendre :** `alphabet.c`
+- **Prototype :** `void alphabet(void);`
+- **Fonctions autorisées :** `my_putchar`
+
+Afficher `abcdefghijklmnopqrstuvwxyz` suivi d'un retour à la ligne, à l'aide d'une boucle.
+
+Exemple d'exécution attendu :
+
+```text
+abcdefghijklmnopqrstuvwxyz
+```
+
+### Exercice 1.6 - l'alphabet à l'envers (N3)
+
+- **Fichier à rendre :** `alphabet_inverse.c`
+- **Prototypes :** `void alphabet_inverse(void);` et, en bonus, `void une_lettre_sur_deux(void);`
+- **Fonctions autorisées :** `my_putchar`
+
+Écrire `alphabet_inverse`, qui affiche `zyxwvutsrqponmlkjihgfedcba`. En bonus, écrire `une_lettre_sur_deux`, qui affiche `acegikmoqsuwy` (une lettre sur deux, à partir de `a`).
+
+Exemple d'exécution attendu (les deux fonctions à la suite) :
+
+```text
+zyxwvutsrqponmlkjihgfedcba
+acegikmoqsuwy
+```
 
 ## Fil rouge : le coffre
 
 Le fil rouge de cette partie 1 est un petit programme que l'on construit chapitre après chapitre : **coffre0**, un mini-crackme. Il demandera une clé et répondra si elle ouvre le coffre. À la fin de la partie, il sera complet, et on le réutilisera au début de la partie 3 pour le désassembler : vous analyserez votre propre programme.
 
-Pour ce premier chapitre, on pose seulement le décor. Écrire un programme `coffre0` qui affiche, avec `printf` :
+- **Fichier à rendre :** `coffre0.c` (c'est le fichier que l'on complétera à chaque chapitre ; gardez-le précieusement)
+- **Fonctions autorisées :** `printf`
+
+Pour ce premier chapitre, on pose seulement le décor. Écrire un programme `coffre0` dont le `main` affiche exactement, avec `printf`, ces deux lignes :
 
 ```text
 === Coffre 0 ===
 Usage : ./coffre0 <cle>
 ```
 
-C'est tout pour l'instant. Les chapitres suivants ajouteront la lecture de la clé, la vérification, puis la logique complète.
+C'est tout pour l'instant. Les chapitres suivants ajouteront la lecture de la clé, la vérification, puis la logique complète. À chaque étape, vous écrivez le code vous-même ; la solution n'est là que pour vérifier après coup.
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-01)
 
