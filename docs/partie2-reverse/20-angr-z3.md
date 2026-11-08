@@ -36,21 +36,21 @@ z3 répond `sat` (satisfiable) et donne `9218`, la seule solution. On aurait pu 
 
 ## 12.3 z3 avec des bitvectors
 
-Les opérations de bas niveau (XOR, rotations, débordements sur 8 ou 32 bits) se modélisent avec des **bitvectors**, des entiers de largeur fixe qui se comportent exactement comme des registres. Reprenons la VM du défi `machine` du capstone, où chaque caractère subit `rol8((c ^ 0x2A) + 5, 3)` et doit égaler une cible :
+Les opérations de bas niveau (XOR, rotations, débordements sur 8 ou 32 bits) se modélisent avec des **bitvectors**, des entiers de largeur fixe qui se comportent exactement comme des registres. Prenons le petit crackme `rotor` (source `angr-z3/rotor.c`, à compiler avec `gcc -O1 -o rotor rotor.c` sans lire le source). Son désassemblage montre une boucle sur les 9 caractères de l'argument : chacun subit un `xor` avec `0x5C`, un `add` de 9, une rotation à gauche de 2 bits (`rol`), puis est comparé à un tableau de `.rodata`. Autrement dit, `rol8((c ^ 0x5C) + 9, 2)` doit égaler une cible :
 
 ```python
 from z3 import BitVec, Solver, RotateLeft
-cible = [0xEA,0xA2,0x0B,0xA2,0xEA,0xF2,0xA2,0x19,0xE8]
+cible = [0xE0,0xF0,0xE4,0xCC,0x09,0xC8,0xDC,0xDD,0xCD]
 cs = [BitVec('c%d' % i, 8) for i in range(len(cible))]
 s = Solver()
 for i, c in enumerate(cs):
-    v = RotateLeft((c ^ 0x2A) + 5, 3)
+    v = RotateLeft((c ^ 0x5C) + 9, 2)
     s.add(v == cible[i])
     s.add(c >= 0x20, c <= 0x7e)   # imprimable
-s.check()                          # -> reverse42
+s.check()                          # -> solveur26
 ```
 
-z3 retrouve `reverse42`. L'immense avantage : on n'a pas eu à **inverser** la transformation (ce qui, au chapitre des solutions du capstone, demandait de calculer `ror`, soustraire, re-XOR). On décrit le sens direct, z3 inverse pour nous. Pour des transformations difficiles à inverser à la main, c'est décisif.
+z3 retrouve `solveur26`, que `./rotor solveur26` accepte. L'immense avantage : on n'a pas eu à **inverser** la transformation (ce qui, à la main, demande d'appliquer `ror` de 2 bits, de soustraire 9, puis de refaire le XOR, dans cet ordre précis). On décrit le sens direct, z3 inverse pour nous. Pour des transformations difficiles à inverser à la main, c'est décisif.
 
 ## 12.4 angr : explorer automatiquement
 
@@ -88,7 +88,7 @@ Scripts dans `angr-z3/`. Les exercices z3 comme ceux avec angr sont jouables dir
 
 **Exercice 12.1 (niveau 1)** Lancer `solve_crack05.py` et vérifier qu'il donne `9218`. Modifier une contrainte (par exemple la somme à 21) et observer si z3 répond encore `sat`.
 
-**Exercice 12.2 (niveau 2)** Lancer `solve_vm.py` et retrouver `reverse42`. Expliquer pourquoi on n'a pas eu besoin d'inverser `rol8` et le `+5` à la main, contrairement à la solution « manuelle » du capstone.
+**Exercice 12.2 (niveau 2)** Compiler `rotor.c` et retrouver, dans son désassemblage, les trois opérations appliquées à chaque caractère et l'adresse du tableau cible. Lancer ensuite `solve_rotor.py` et vérifier que le mot trouvé est accepté. Expliquer pourquoi on n'a pas eu besoin d'inverser `rol8` et le `+9` à la main. Bonus : écrire aussi l'inversion manuelle en Python et comparer.
 
 **Exercice 12.3 (niveau 2)** Modéliser avec z3 le fil rouge `coffre0` de la partie 1 : trouver une clé telle que `cle[i] + i == cible[i]` pour la cible `43 6d 67 70 69 73 69 6c`. Vérifier qu'on retrouve `Clemence`.
 
@@ -96,12 +96,12 @@ Scripts dans `angr-z3/`. Les exercices z3 comme ceux avec angr sont jouables dir
 
 **Exercice 12.5 (niveau 3)** Installer angr et résoudre un petit crackme avec `solve_angr.py` : relever les adresses `find` (succès) et `avoid` (échec) dans le désassemblage, lancer l'exploration, récupérer l'entrée gagnante. Comparer le temps et l'effort avec la résolution manuelle.
 
-**Exercice 12.6 (niveau 2)** Pour trois crackmes du cours (par exemple `crack01` comparaison directe, `crack05` contraintes, `machine` VM), dire pour chacun si z3, angr ou l'analyse manuelle est le plus adapté, et pourquoi.
+**Exercice 12.6 (niveau 2)** Pour trois crackmes du cours (par exemple `crack01` comparaison directe, `crack05` contraintes, `rotor` transformation par caractère), dire pour chacun si z3, angr ou l'analyse manuelle est le plus adapté, et pourquoi.
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#angr-z3)
 
 ## Suivi
 
 - [ ] Partie 3, chapitre angr/z3 : lecture
-- [ ] Partie 3, chapitre angr/z3 : z3 pratiqué (crack05, VM)
+- [ ] Partie 3, chapitre angr/z3 : z3 pratiqué (crack05, rotor)
 - [ ] Partie 3, chapitre angr/z3 : angr essayé (dans le laboratoire)

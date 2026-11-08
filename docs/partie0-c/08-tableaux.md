@@ -1,6 +1,6 @@
 # Chapitre 8 : Tableaux
 
-Un tableau est une suite de cases du même type, rangées côte à côte en mémoire. Les chaînes du chapitre précédent en sont un cas particulier. En reverse, un tableau se repère à un accès régulier à des adresses qui avancent d'un pas fixe (chapitre 6) ; les algorithmes de ce chapitre (parcours, tri, recherche) sont parmi les plus fréquents à reconnaître.
+Un tableau est une suite de cases du même type, rangées côte à côte en mémoire. Les chaînes du chapitre précédent en sont un cas particulier. En reverse, un tableau se repère à un accès régulier à des adresses qui avancent d'un pas fixe (chapitre 6 de la partie 2) ; les algorithmes de ce chapitre (parcours, tri, recherche) sont parmi les plus fréquents à reconnaître.
 
 ## Déclarer et accéder
 

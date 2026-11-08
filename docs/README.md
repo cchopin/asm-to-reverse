@@ -73,7 +73,7 @@ Pour qui a peu ou pas fait de C. Une vraie piscine : beaucoup de petites fonctio
 | [6. Mémoire, tableaux, chaînes, structures](partie1-assembleur/06-memoire-donnees.md) | Adressage, `movzx`, `movsx`, tableaux, pointeurs, structures | Accès à `s[i]` |
 | [7. Du C à l'assembleur, et retour](partie1-assembleur/07-patterns-compilateur.md) | `switch`, optimisations, idiomes du compilateur, x86 32 bits | Réécriture complète en C |
 | [8. Challenge de synthèse](partie1-assembleur/08-challenge.md) | Reconstruire trois fonctions à partir du seul désassemblage | |
-| [9. Convention d'appel](partie1-assembleur/09-convention-appel.md) | System V, registres, pile, red zone, variadiques (approfondissement) | |
+| [9. Convention d'appel](partie1-assembleur/09-convention-appel.md) | Écrire une fonction NASM, System V, registres, pile, red zone, variadiques (approfondissement) | |
 | [10. Structures et tableaux](partie1-assembleur/10-structures-tableaux.md) | Agencement mémoire, `lea`, indexation (approfondissement) | |
 | [11. Lire du code optimisé](partie1-assembleur/11-optimisations.md) | `cmov`, division par constante, vectorisation (approfondissement) | |
 | [12. C++ et fonctions virtuelles](partie1-assembleur/12-cpp-vtables.md) | Name mangling, `this`, vtables (approfondissement) | |
@@ -138,7 +138,7 @@ Les sources des coffres sont fournies pour pouvoir les compiler. Les lire avant 
 
 ## Environnement de travail
 
-Le cours nécessite un Linux x86-64. Sur Mac, il fonctionne dans un conteneur Docker fourni avec le cours : voir le guide [Installation sur Mac](environnement/INSTALLATION-MAC.md). Le point important concerne les Mac Apple Silicon : pour que GDB fonctionne, Docker doit tourner dans une machine virtuelle x86-64 émulée (Colima), le guide détaille la procédure.
+Le cours nécessite un Linux x86-64. Sur Mac, il fonctionne dans un conteneur Docker fourni avec le cours : voir le guide [Installation sur Mac](environnement/INSTALLATION-MAC.md). Sous Linux, voir le guide [Installation sous Linux](environnement/INSTALLATION-LINUX.md). Le point important concerne les Mac Apple Silicon : pour que GDB fonctionne, Docker doit tourner dans une machine virtuelle x86-64 émulée (Colima), le guide détaille la procédure.
 
 Résumé :
 
@@ -150,7 +150,7 @@ colima start reverse --arch x86_64 --cpu 4 --memory 6 --disk 30   # Apple Silico
 
 Ghidra (chapitre 2 de la partie 3) s'installe directement sur macOS.
 
-Sous Linux x86-64 natif, il suffit d'installer les paquets listés dans le [Dockerfile](environnement/Dockerfile) (`build-essential gdb strace ltrace binutils python3...`), ou d'utiliser le même conteneur.
+Sous Linux x86-64, le guide [Installation sous Linux](environnement/INSTALLATION-LINUX.md) décrit deux voies, pour Debian, Ubuntu, Fedora et Arch : utiliser le même conteneur (recommandé, pour retrouver exactement les listings du cours), ou installer directement les outils avec le gestionnaire de paquets.
 
 Aucune machine Windows n'est nécessaire. Le chapitre 6 de la partie 3 explique comment étudier des malwares Windows sans Windows.
 
@@ -178,6 +178,10 @@ Le conteneur utilise gcc 13, le compilateur ayant servi à produire les listings
 2. Saisir les exemples, les compiler, les désassembler. Une lecture passive ne suffit pas.
 3. Faire les exercices du chapitre, puis l'étape du fil rouge.
 4. Consulter la solution ensuite seulement.
+
+Les exercices sont gradués : **N1** (ou niveau 1) applique directement la notion du chapitre, **N2** demande de la combiner avec une notion précédente ou de chercher un peu, **N3** est un défi qui peut prendre plusieurs heures. Il est normal de laisser un N3 de côté et d'y revenir plus tard.
+
+Les chapitres marqués « approfondissement » (chapitres 9 à 13 de la partie 2, 9 à 14 de la partie 3) peuvent se lire juste après le cœur de leur partie, ou être gardés pour un second passage. Ceux de la partie 2 font écrire de courtes fonctions en assembleur : le minimum nécessaire est expliqué au début du chapitre 9.
 
 Comptez environ 2 à 4 heures par chapitre. Un chapitre bien assimilé vaut mieux que trois chapitres survolés.
 

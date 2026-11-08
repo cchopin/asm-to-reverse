@@ -125,7 +125,7 @@ Valeur de retour : `rax`. L'appelant réserve en outre 32 octets sur la pile (le
 
 ### x86 32 bits (cdecl, stdcall)
 
-En 32 bits, tous les arguments passent par la **pile**, empilés **de droite à gauche**, et le retour se fait dans `eax`. Le chapitre 7 y revient en détail, car de nombreux crackmes anciens et malwares sont en 32 bits.
+En 32 bits, tous les arguments passent par la **pile**, empilés **de droite à gauche**, et le retour se fait dans `eax`. Le chapitre 7 y revient, puis le chapitre 13 en détail, car de nombreux crackmes anciens et malwares sont en 32 bits.
 
 ### Les registres conservés
 

@@ -8,7 +8,7 @@ Rappel pour les Mac Apple Silicon : GDB ne fonctionne que si le conteneur tourne
 
 GDB seul est austère. Le conteneur du cours inclut **GEF** : à chaque arrêt, il affiche automatiquement un grand écran récapitulatif. Toutes les commandes de ce chapitre sont des commandes GDB standard, utilisables avec ou sans GEF (et avec pwndbg, son équivalent).
 
-Cet écran, le **contexte**, déroute à la première rencontre. Il est en réalité toujours découpé en zones, délimitées par des lignes `[ ... ]`. Voici ce que GEF affiche en s'arrêtant à l'entrée de la fonction `carre` de l'exercice 5.5 (les couleurs sont retirées ici) :
+Cet écran, le **contexte**, déroute à la première rencontre. Il est en réalité toujours découpé en zones, délimitées par des lignes `[ ... ]`. Voici ce que GEF affiche en s'arrêtant à l'entrée de la fonction `carre` de l'exercice 5.5 de la partie 2 (les couleurs sont retirées ici) :
 
 ```
 [ Legend: Modified register | Code | Heap | Stack | String ]
@@ -46,7 +46,7 @@ $eflags: [ carry PARITY adjust ZERO sign trap INTERRUPT direction overflow ]
 Les cinq zones :
 
 - **registers** : la valeur de chaque registre. GEF suit la flèche `->` quand une valeur est une adresse, et affiche ce qu'elle pointe (code, pile, chaîne). Ligne `$eflags` : les drapeaux, en majuscules quand ils sont à 1.
-- **stack** : les premiers mots de la pile à partir de `rsp`, avec leur décalage. Ici, le sommet contient `0x40112e`, l'**adresse de retour** dans `main` (voir l'exercice 5.5).
+- **stack** : les premiers mots de la pile à partir de `rsp`, avec leur décalage. Ici, le sommet contient `0x40112e`, l'**adresse de retour** dans `main` (voir l'exercice 5.5 de la partie 2).
 - **code:x86:64** : les instructions autour de `rip` ; la flèche `->` marque la prochaine à exécuter.
 - **threads** : les fils d'exécution et la raison de l'arrêt (ici un point d'arrêt).
 - **trace** : la pile des appels (ici `carre` appelé par `main`), utile pour savoir « comment on est arrivé là ».
@@ -207,11 +207,17 @@ Combiner cette observation avec une lecture rapide du code dans Ghidra est la ma
 
 ## Exercices
 
-**Exercice 3.1** Lancer `mystere` dans GDB avec l'argument `12345678`. Placer un point d'arrêt sur `verifier`, puis avancer avec `ni` jusqu'à la première comparaison. Que vaut `[rbp-0x4]` à ce moment ? (`x/dw $rbp-4`)
+**Exercice 3.1 (N1)** Lancer `mystere` dans GDB avec l'argument `12345678`. Placer un point d'arrêt sur `verifier`, puis avancer avec `ni` jusqu'à la première comparaison. Que vaut `[rbp-0x4]` à ce moment ? (`x/dw $rbp-4`)
 
-**Exercice 3.2** Toujours sur `mystere`, avec un code invalide, faire afficher "Code accepte" en modifiant uniquement la valeur de retour de `verifier` (indice : `finish`, puis `set`).
+**Exercice 3.2 (N2)** Toujours sur `mystere`, avec un code invalide, faire afficher "Code accepte" en modifiant uniquement la valeur de retour de `verifier` (indice : `finish`, puis `set`).
 
-**Exercice 3.3** Écrire un script GDB qui, pour `mystere` lancé avec `12345678`, affiche à chaque tour de la deuxième boucle la valeur de `i` et de `somme`.
+**Exercice 3.3 (N1)** Lancer `mystere` sous GDB avec l'argument `12345678` et s'arrêter sur `main`. Afficher `argc` (premier argument de `main`, donc dans `edi`) et la chaîne `argv[1]`. Indice : `rsi` contient `argv`, l'adresse d'un tableau de pointeurs de 8 octets ; `argv[1]` est donc en `$rsi+8`.
+
+**Exercice 3.4 (N2)** Recompiler `mystere` **sans** `-no-pie` (`gcc -O0 -fno-stack-protector mystere.c -o mystere_pie`). Relever avec `objdump -d` l'adresse de `verifier` dans le fichier, calculer son adresse sous GDB (section 3.3), poser le point d'arrêt sur cette adresse calculée (et non sur le symbole), puis vérifier avec `x/3i $pc` qu'on est bien au début de `verifier`. Confirmer la base avec `info proc mappings`.
+
+**Exercice 3.5 (N3)** Écrire un script GDB qui, pour `mystere` lancé avec `12345678`, affiche à chaque tour de la deuxième boucle la valeur de `i` et de `somme`.
+
+**Exercice 3.6 (N3)** Résoudre la même question sans repérer d'adresse dans la boucle, avec un **point d'observation** (*watchpoint*) : s'arrêter sur `verifier`, puis `watch -l *(int *)($rbp-0x8)` (la variable `somme`, d'après le chapitre 7 de la partie 2). Chaque `continue` s'arrête alors au moment précis où la variable change, en affichant l'ancienne et la nouvelle valeur. Quelle est la valeur finale de `somme` pour `12345678`, et pourquoi le code est-il refusé ?
 
 ## Fil rouge : coffre v2, en dynamique
 

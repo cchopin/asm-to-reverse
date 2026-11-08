@@ -47,7 +47,7 @@ unsigned char x = 255;
 x = x + 1;            // x vaut 0, pas 256
 ```
 
-Le même octet peut aussi être lu de deux façons. Un `unsigned char` de valeur 200 vaut, lu comme un `signed char`, `-56` (c'est le complément à deux, détaillé au chapitre 1). C'est exactement ce genre de double lecture qui piège en reverse quand on confond un octet signé et non signé.
+Le même octet peut aussi être lu de deux façons. Un `unsigned char` de valeur 200 vaut, lu comme un `signed char`, `-56` (c'est le complément à deux, détaillé au chapitre 1 de la partie 2). C'est exactement ce genre de double lecture qui piège en reverse quand on confond un octet signé et non signé.
 
 ```c
 unsigned char b = 200;
@@ -56,7 +56,7 @@ printf("%u ou %d\n", b, (signed char)b);   // 200 ou -56
 
 ## Afficher en hexadécimal
 
-Le format `%x` affiche un entier en hexadécimal, la base naturelle du reverse (un octet tient sur deux chiffres hexa). On y reviendra au chapitre 1, mais retenez-le dès maintenant :
+Le format `%x` affiche un entier en hexadécimal, la base naturelle du reverse (un octet tient sur deux chiffres hexa). On y reviendra au chapitre 1 de la partie 2, mais retenez-le dès maintenant :
 
 ```c
 printf("%d en hexa : %x\n", 255, 255);   // 255 en hexa : ff

@@ -33,7 +33,7 @@ lire_y:
     ret
 ```
 
-Pour un champ plus petit que 8 octets, on complète comme toujours avec `movzx` (non signé) ou `movsx` / `movsxd` (signé), vus au chapitre 2.
+Pour un champ plus petit que 8 octets, on complète comme toujours avec `movzx` (non signé) ou `movsx` / `movsxd` (signé), vus au chapitre 6.
 
 ## 10.3 Un tableau de structures
 

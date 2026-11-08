@@ -148,11 +148,15 @@ Face à l'obfuscation, l'analyse dynamique est le meilleur allié : **le program
 
 ## Exercices
 
-**Exercice 5.1** Écrire un petit programme qui appelle `ptrace(PTRACE_TRACEME, ...)` et affiche "OK" ou "Débogueur". Le compiler, le stripper, puis contourner la protection avec les quatre techniques de la section 5.2.
+**Exercice 5.1 (N2)** Écrire un petit programme qui appelle `ptrace(PTRACE_TRACEME, ...)` et affiche "OK" ou "Débogueur". Le compiler, le stripper, puis contourner la protection avec les quatre techniques de la section 5.2.
 
-**Exercice 5.2** Compiler un "hello world", puis le packer avec UPX (`upx -o hello_packe hello`). Comparer `strings`, `nm -D` et la taille des deux fichiers. Le dépacker.
+**Exercice 5.2 (N1)** Compiler un "hello world", puis le packer avec UPX (`upx -o hello_packe hello`). Comparer `strings`, `nm -D` et la taille des deux fichiers. Le dépacker.
 
-**Exercice 5.3** Écrire un programme qui lit `/proc/self/status` et cherche une ligne `TracerPid:` non nulle. Le lancer normalement, puis sous GDB, et observer la différence. Comment le contourner ?
+**Exercice 5.3 (N1)** Compiler `mystere` puis le stripper (`strip mystere -o mystere_s`). Comparer `file` et `nm` sur les deux versions. Sur la version strippée, retrouver l'adresse de `main` à partir du point d'entrée (`readelf -h`, puis `objdump -d` à cette adresse), comme à la section 5.1, et vérifier en posant un point d'arrêt dessus dans GDB.
+
+**Exercice 5.4 (N2)** Écrire un programme qui lit `/proc/self/status` et cherche une ligne `TracerPid:` non nulle. Le lancer normalement, puis sous GDB, et observer la différence. Comment le contourner ?
+
+**Exercice 5.5 (N3)** Écrire un programme qui mesure, avec `clock_gettime`, la durée d'une petite boucle de calcul, et affiche `Trop lent : débogueur ?` si elle dépasse 100 millisecondes. Le lancer normalement, puis dans GDB en avançant pas à pas dans la boucle. Proposer deux façons de neutraliser ce test dans GDB, sans recompiler.
 
 ## Fil rouge : coffre v4
 
@@ -164,8 +168,8 @@ Compiler `coffre_v4` (il est strippé).
 4. **Comprendre** : le programme comporte deux protections. Les identifier et, pour chacune, trouver la condition qui déclenche le message d'échec. La deuxième protection est-elle gênante en l'absence de pas à pas ?
 5. Le message final indique que le flag est passé en mémoire. Trouver la fonction qui le déchiffre (indice : une boucle avec un XOR et une clé qui change à chaque tour) et décrire l'algorithme.
 6. **Agir, méthode dynamique** : contourner l'anti-debug dans GDB, placer un point d'arrêt juste après le déchiffrement (avant l'effacement du flag) et lire le flag en mémoire.
-7. **Agir, méthode statique** : récupérer les octets chiffrés dans Ghidra (attention, ils sont copiés sur la pile avec des `movabs` : voir le chapitre 6) et réimplémenter le déchiffrement en Python.
-8. Bonus : patcher le binaire pour qu'il affiche le flag au lieu de l'effacer. Indices : en `-O1`, le `memset` n'est plus un appel mais une instruction `rep stos` (chapitre 7), neutralisable avec des `nop` ; et le `puts` qui suit pourrait recevoir l'adresse du flag au lieu de celle du message.
+7. **Agir, méthode statique** : récupérer les octets chiffrés dans Ghidra (attention, ils sont copiés sur la pile avec des `movabs` : voir le chapitre 6 de la partie 2) et réimplémenter le déchiffrement en Python.
+8. Bonus : patcher le binaire pour qu'il affiche le flag au lieu de l'effacer. Indices : en `-O1`, le `memset` n'est plus un appel mais une instruction `rep stos` (chapitre 7 de la partie 2), neutralisable avec des `nop` ; et le `puts` qui suit pourrait recevoir l'adresse du flag au lieu de celle du message.
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#coffre-v4)
 

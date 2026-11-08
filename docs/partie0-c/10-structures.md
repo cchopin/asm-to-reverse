@@ -1,6 +1,6 @@
 # Chapitre 10 : Structures
 
-Une structure regroupe plusieurs valeurs, de types éventuellement différents, sous un seul nom. C'est ainsi qu'un programme range un objet : un point, un étudiant, un joueur. En reverse, une structure se repère aux accès réguliers à des décalages fixes depuis une même adresse de base (`[rdi]`, `[rdi+4]`, chapitre 6) ; savoir les reconnaître aide à reconstruire les données manipulées.
+Une structure regroupe plusieurs valeurs, de types éventuellement différents, sous un seul nom. C'est ainsi qu'un programme range un objet : un point, un étudiant, un joueur. En reverse, une structure se repère aux accès réguliers à des décalages fixes depuis une même adresse de base (`[rdi]`, `[rdi+4]`, chapitre 6 de la partie 2) ; savoir les reconnaître aide à reconstruire les données manipulées.
 
 ## Déclarer et utiliser
 

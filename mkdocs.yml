@@ -66,6 +66,7 @@ nav:
   - Accueil: README.md
   - Progression: progression.md
   - Installation sur Mac: environnement/INSTALLATION-MAC.md
+  - Installation sous Linux: environnement/INSTALLATION-LINUX.md
   - Glossaire: glossaire.md
   - "Partie 1 : les bases du C":
       - "1. Compiler et afficher": partie0-c/01-compiler-afficher.md

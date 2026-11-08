@@ -1,4 +1,4 @@
-/* Coffre v4 : le coffre se defend (chapitre 12).
+/* Coffre v4 : le coffre se defend (partie 3, chapitre 5).
  * Compilation : gcc -O1 -o coffre_v4 coffre_v4.c && strip coffre_v4
  * Objectif : lire le flag, qui n'existe en clair qu'en memoire,
  * pendant une fraction de seconde. Il faut d'abord contourner

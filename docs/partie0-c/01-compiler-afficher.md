@@ -7,8 +7,8 @@ Elle peut être sautée par ceux qui connaissent déjà bien le C, mais la séri
 !!! note "De quoi a-t-on besoin pour cette partie 1 ?"
     Juste d'un compilateur C. Deux possibilités :
 
-    - **Le compilateur du Mac**, suffisant ici et plus simple à ce stade. S'il n'est pas déjà là, l'installer une fois avec `xcode-select --install`, puis utiliser la commande `cc` (ou `gcc`) dans le Terminal. Les exemples (`write`, `unistd.h`) fonctionnent aussi sous macOS.
-    - **Le conteneur Docker du cours**, si vous l'avez déjà installé (voir le guide [Installation sur Mac](../environnement/INSTALLATION-MAC.md)). Il est de toute façon nécessaire à partir du chapitre 1, mais pas indispensable pour cette partie 1.
+    - **Le compilateur de votre machine**, suffisant ici et plus simple à ce stade. Sous Linux, `gcc` est fourni par le paquet `build-essential` (Debian, Ubuntu), `gcc` (Fedora) ou `base-devel` (Arch) ; sur Mac, voici la marche à suivre. S'il n'est pas déjà là, l'installer une fois avec `xcode-select --install`, puis utiliser la commande `cc` (ou `gcc`) dans le Terminal. Les exemples (`write`, `unistd.h`) fonctionnent aussi sous macOS.
+    - **Le conteneur Docker du cours**, si vous l'avez déjà installé (voir le guide [Installation sur Mac](../environnement/INSTALLATION-MAC.md) ou [Installation sous Linux](../environnement/INSTALLATION-LINUX.md)). Il est de toute façon nécessaire à partir de la partie 2, mais pas indispensable pour cette partie 1.
 
     Dans la suite, `gcc` et `cc` sont interchangeables ; utilisez celui dont vous disposez.
 
@@ -35,7 +35,7 @@ gcc programme.c -o programme   # ou : cc programme.c -o programme
 echo $?        # affiche 0
 ```
 
-`gcc` traduit le C en exécutable. L'option `-o programme` donne le nom du résultat. Les options de compilation utiles seront vues plus tard (le chapitre 2 en dresse la liste).
+`gcc` traduit le C en exécutable. L'option `-o programme` donne le nom du résultat. Les options de compilation utiles seront vues plus tard (le chapitre 2 de la partie 2 en dresse la liste).
 
 ## Afficher un caractère sans la libc
 

@@ -18,7 +18,7 @@ int main(void)
 }
 ```
 
-`%p` affiche une adresse (un grand nombre en hexadécimal, par exemple `0x7ffd...`). Le `(void *)` devant `&n` est une conversion : `%p` attend une adresse « sans type précis ». Cette adresse d'une variable locale est exactement ce qu'on manipulera en assembleur, où elle s'écrit `[rbp-0x4]` (chapitre 6).
+`%p` affiche une adresse (un grand nombre en hexadécimal, par exemple `0x7ffd...`). Le `(void *)` devant `&n` est une conversion : `%p` attend une adresse « sans type précis ». Cette adresse d'une variable locale est exactement ce qu'on manipulera en assembleur, où elle s'écrit `[rbp-0x4]` (chapitre 6 de la partie 2).
 
 ## Un pointeur contient une adresse
 
@@ -111,7 +111,7 @@ int verifier(const char *cle)
 }
 ```
 
-C'est exactement ce calcul d'adresse (base plus décalage) que l'on retrouvera en assembleur au chapitre 6.
+C'est exactement ce calcul d'adresse (base plus décalage) que l'on retrouvera en assembleur au chapitre 6 de la partie 2.
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-06)
 

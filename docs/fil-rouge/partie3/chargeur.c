@@ -1,4 +1,4 @@
-/* chargeur.c : fil rouge de la partie 3 (chapitre 17)
+/* chargeur.c : fil rouge de la partie 4 (chapitre 3)
  * Compilation : gcc -O1 -s chargeur.c -o chargeur
  * Ne pas lire ce fichier avant d'avoir fait l'exercice.
  */

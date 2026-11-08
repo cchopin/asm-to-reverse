@@ -5,6 +5,77 @@
 
 Au chapitre 5, on a vu l'essentiel : les premiers arguments arrivent dans `rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9`, le résultat repart dans `rax`, et la pile doit être alignée. Ce chapitre comble tous les trous de cette règle, qui porte un nom : la **System V AMD64 ABI**, la convention utilisée par Linux et macOS (Windows a la sienne, différente).
 
+## Avant de commencer : écrire une petite fonction en NASM
+
+Les exercices des chapitres 9 à 13 demandent d'**écrire** de courtes fonctions en assembleur et de les appeler depuis un programme C, pour vérifier une règle en machine. L'écriture d'assembleur est l'objet de la partie 4, mais ces exercices n'en demandent qu'une toute petite partie, résumée ici. Comme à la section 2.6, on utilise l'assembleur NASM (syntaxe Intel), installé dans le conteneur.
+
+Une fonction NASM appelable depuis C tient en quelques lignes :
+
+```nasm
+; double.asm : long double_de(long x), appelable depuis C
+section .text
+    global double_de        ; rend le nom visible pour l'édition de liens
+double_de:
+    lea rax, [rdi+rdi]      ; argument 1 dans rdi, résultat dans rax
+    ret
+
+section .note.GNU-stack noalloc noexec nowrite progbits
+```
+
+- `section .text` ouvre la zone du code ; `section .data` ou `.rodata` servent aux données, si besoin.
+- `global double_de` exporte le nom : sans cette ligne, le C ne trouve pas la fonction.
+- l'étiquette `double_de:` marque le début de la fonction, `ret` sa fin. On applique la convention d'appel du chapitre 5 : arguments dans `rdi`, `rsi`..., résultat dans `rax`.
+- la dernière ligne évite un avertissement de l'éditeur de liens (elle déclare que la pile n'a pas besoin d'être exécutable). On la recopie telle quelle à la fin de chaque fichier.
+
+Le programme C de test déclare le prototype, puis appelle la fonction :
+
+```c
+#include <stdio.h>
+
+long double_de(long x);     /* définie dans double.asm */
+
+int main(void)
+{
+    printf("%ld\n", double_de(21));
+    return 0;
+}
+```
+
+On assemble le `.asm` en fichier objet, puis `gcc` compile le C et lie les deux :
+
+```bash
+nasm -f elf64 double.asm -o double.o
+gcc -no-pie test.c double.o -o test
+./test                      # affiche 42
+```
+
+En cas d'erreur, GDB (section 2.6) permet de suivre la fonction instruction par instruction : `break double_de`, `run`, puis `si` et `p $rax`.
+
+Un seul exercice (9.4) écrit un `main` complet en assembleur qui appelle `printf`. Trois lignes de plus suffisent : `extern printf` déclare la fonction de la libc, `call printf wrt ..plt` l'appelle en passant par la PLT (chapitre 5), et un `push rbp` en début de `main` (avec le `pop rbp` correspondant avant `ret`) remet la pile alignée sur 16 octets, comme l'exige la convention avant tout `call`. La raison de cet alignement est détaillée au chapitre 2 de la partie 4 ; ici, il suffit de suivre le modèle :
+
+```nasm
+; aff.asm : un main en assembleur qui appelle printf
+default rel                 ; les accès aux données sont relatifs à rip (chapitre 6)
+extern printf
+section .rodata
+    fmt db "valeur : %d", 10, 0
+section .text
+    global main
+main:
+    push rbp                ; réaligne rsp sur 16 avant le call
+    lea rdi, [fmt]
+    mov esi, 42
+    xor eax, eax            ; aucun registre xmm utilisé (voir 9.5)
+    call printf wrt ..plt
+    xor eax, eax            ; return 0
+    pop rbp
+    ret
+
+section .note.GNU-stack noalloc noexec nowrite progbits
+```
+
+Assemblage et édition de liens : `nasm -f elf64 aff.asm -o aff.o && gcc -no-pie aff.o -o aff`. Le programme affiche `valeur : 42`.
+
 ## 9.1 Les arguments entiers et pointeurs
 
 Les six premiers arguments entiers ou pointeurs passent, dans l'ordre, par :

@@ -17,6 +17,6 @@ _start:
     mov al, 0x41        ; seul l'octet bas change : rax = 0xffffffffffffff41
     mov eax, 1          ; écrire eax met à zéro le haut de rax : rax = 1
 
-    mov eax, 60         ; exit(0) : appel système, voir chapitre 15
+    mov eax, 60         ; exit(0) : appel système, voir partie 4, chapitre 1
     xor edi, edi
     syscall

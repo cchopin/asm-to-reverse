@@ -1,10 +1,10 @@
 # Chapitre 2 : fonctions, appel de la libc et alignement de la pile
 
-Le chapitre 1 a produit des programmes autonomes, qui ne parlent qu'au noyau. Ce chapitre ajoute ce qui manque pour écrire de vrais programmes : des fonctions, et l'accès aux fonctions de la libc comme `printf`. C'est aussi l'occasion de revoir, du côté de l'auteur, les règles de la convention d'appel lues au chapitre 5.
+Le chapitre 1 a produit des programmes autonomes, qui ne parlent qu'au noyau. Ce chapitre ajoute ce qui manque pour écrire de vrais programmes : des fonctions, et l'accès aux fonctions de la libc comme `printf`. C'est aussi l'occasion de revoir, du côté de l'auteur, les règles de la convention d'appel lues au chapitre 5 de la partie 2.
 
 ## 2.1 Écrire une fonction
 
-Une fonction n'est qu'une étiquette suivie d'instructions terminées par `ret`. L'appelant utilise `call`, qui empile l'adresse de retour (chapitre 5). [exemples/longueur.asm](../exemples/longueur.asm) :
+Une fonction n'est qu'une étiquette suivie d'instructions terminées par `ret`. L'appelant utilise `call`, qui empile l'adresse de retour (chapitre 5 de la partie 2). [exemples/longueur.asm](../exemples/longueur.asm) :
 
 ```nasm
 ; size_t longueur(const char *s)   s dans rdi, résultat dans rax
@@ -72,7 +72,7 @@ nasm -f elf64 programme.asm -o programme.o
 gcc programme.o -o programme
 ```
 
-Le suffixe `wrt ..plt` demande de passer par la PLT, la table qui mène aux fonctions des bibliothèques partagées : ce sont les `call ...@plt` vus depuis le chapitre 5. Sans lui, gcc refuse de produire un exécutable PIE (position indépendante, chapitre 6) avec un message `relocation R_X86_64_PC32 against symbol printf ... recompile with -fPIE`. Pour la même raison, les données sont désignées par `[rel ...]`.
+Le suffixe `wrt ..plt` demande de passer par la PLT, la table qui mène aux fonctions des bibliothèques partagées : ce sont les `call ...@plt` vus depuis le chapitre 5 de la partie 2. Sans lui, gcc refuse de produire un exécutable PIE (position indépendante, chapitre 6 de la partie 2) avec un message `relocation R_X86_64_PC32 against symbol printf ... recompile with -fPIE`. Pour la même raison, les données sont désignées par `[rel ...]`.
 
 Deux détails propres à `printf` et aux fonctions à nombre variable d'arguments :
 
@@ -167,7 +167,7 @@ F6E88EDC
 
 Pour finir, désassembler le keygen (`objdump -d -M intel keygen`) et comparer la fonction `hacher` avec celle du coffre v3 compilée par gcc. Quelles différences de style permettraient de deviner lequel des deux a été écrit à la main ?
 
-Solutions : [solutions/partie3.md](../solutions/partie3.md#chapitre-16)
+Solutions : [solutions/partie3.md](../solutions/partie3.md#chapitre-2)
 
 ## Suivi
 

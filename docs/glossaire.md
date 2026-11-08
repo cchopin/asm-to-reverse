@@ -19,7 +19,7 @@ Définitions courtes des termes employés dans le cours. Le numéro de chapitre 
 
 - **Registre** : petite zone mémoire interne au processeur (`rax`, `rsp`...). (partie 2, chapitre 2)
 - **Offset** (déplacement) : écart constant par rapport à une adresse de base, par exemple `[rbp-0x8]`. (partie 2, chapitre 6)
-- **Registres vectoriels** : registres `xmm0` à `xmm15`, de 128 bits, réservés aux nombres à virgule et aux traitements en parallèle. (partie 4, chapitre 2)
+- **Registres vectoriels** : registres `xmm0` à `xmm15`, de 128 bits, réservés aux nombres à virgule et aux traitements en parallèle. (partie 2, chapitres 9 et 11)
 - **Opcode** : le ou les octets qui codent une instruction en langage machine. (partie 2, chapitre 2 ; partie 3, chapitre 4)
 - **Bytecode** : suite d'instructions d'une machine virtuelle (et non du processeur réel), par exemple dans un crackme à base de machine virtuelle. (partie 3, chapitre 4)
 - **Appel système** (*syscall*) : demande de service au noyau du système (lire, écrire, quitter). (partie 3, chapitre 1 ; partie 4, chapitre 1)

@@ -203,7 +203,7 @@ Méthode. Vers l'hexadécimal, on divise par 16 en notant les restes de bas en h
 
 ## Fil rouge : préparation du terrain
 
-1. Installer l'environnement comme indiqué dans le [guide d'installation](../environnement/INSTALLATION-MAC.md), puis ouvrir un shell avec `./environnement/lab.sh`.
+1. Installer l'environnement comme indiqué dans le guide d'installation ([Mac](../environnement/INSTALLATION-MAC.md) ou [Linux](../environnement/INSTALLATION-LINUX.md)), puis ouvrir un shell avec `./environnement/lab.sh`.
 2. Compiler `mystere` (sans lire le `.c`) et le lancer : `./mystere 1234`.
 3. Ouvrir [mystere_O0.txt](../fil-rouge/partie1/mystere_O0.txt). Il ne s'agit pas encore de le comprendre, mais de compter : combien d'instructions compte la fonction `verifier` ? Combien de fois apparaît `cmp` ? Et `jmp` ? Relever toutes les constantes (les nombres en `0x` qui ne sont pas des adresses ; dans ce listing, les adresses sont celles de la colonne de gauche et celles citées par les sauts, et commencent par `0x40`, alors que les constantes apparaissent à droite comme opérandes), les convertir en décimal et, lorsque cela a un sens, en caractère ASCII. Consigner le tout dans un fichier `notes_mystere.md`, qui sera complété à chaque chapitre.
 

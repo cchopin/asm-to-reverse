@@ -12,7 +12,7 @@ Un shellcode n'est pas un programme complet : c'est un fragment de code copié �
 | Aucune section `.data` | seuls les octets du code sont copiés | chaînes poussées sur la pile avec `push` |
 | Souvent, aucun octet nul (`0x00`) | une injection par `strcpy` ou `gets` s'arrête au premier 0 | instructions choisies pour leur encodage |
 
-La troisième contrainte demande de regarder les octets produits par l'assembleur (la colonne du milieu d'`objdump`, chapitre 11) :
+La troisième contrainte demande de regarder les octets produits par l'assembleur (la colonne du milieu d'`objdump`, chapitre 2 de la partie 2 ; encodage des sauts, chapitre 4 de la partie 3) :
 
 | Instruction | Octets | Octet nul ? | Alternative sans nul | Octets |
 |---|---|---|---|---|
@@ -54,7 +54,7 @@ _start:
     syscall
 ```
 
-Les constantes s'écrivent "à l'envers" à cause du little endian (chapitre 1) : `0x6568737b47414c46` est rangé en mémoire sous la forme `46 4c 41 47 7b 73 68 65`, c'est-à-dire `FLAG{she`. Python les calcule sans erreur : `hex(int.from_bytes(b"FLAG{she", "little"))`.
+Les constantes s'écrivent "à l'envers" à cause du little endian (chapitre 1 de la partie 2) : `0x6568737b47414c46` est rangé en mémoire sous la forme `46 4c 41 47 7b 73 68 65`, c'est-à-dire `FLAG{she`. Python les calcule sans erreur : `hex(int.from_bytes(b"FLAG{she", "little"))`.
 
 Un second exemple classique, [exemples/shell.asm](../exemples/shell.asm), prépare l'appel système `execve("/bin//sh", NULL, NULL)` en 24 octets. C'est le squelette le plus courant des challenges *pwn* ; il est reproduit ici pour que sa structure soit reconnue à la lecture.
 
@@ -133,7 +133,7 @@ C'est le travail de l'analyste : retrouver le shellcode caché **sans faire conf
 (gdb) dump binary memory charge.bin $rbx $rbx+0x41
 ```
 
-**Approche statique (Python).** Rejouer le déchiffrement à la main, sans jamais lancer le programme, ce qui est la seule méthode sûre face à un échantillon réellement malveillant. Il faut lire trois valeurs dans le désassemblage : l'adresse du tableau (`lea rcx, [rip+...]`), sa taille (la borne du `cmp` de la boucle) et la clé (la constante du `xor`). Attention, le script lit le fichier sur le disque : l'adresse du tableau doit être convertie en position dans le fichier (section 11.6) ; pour ce binaire, les deux coïncident (`0x2020`). La bibliothèque pwntools, installée dans le conteneur, désassemble ensuite les octets obtenus :
+**Approche statique (Python).** Rejouer le déchiffrement à la main, sans jamais lancer le programme, ce qui est la seule méthode sûre face à un échantillon réellement malveillant. Il faut lire trois valeurs dans le désassemblage : l'adresse du tableau (`lea rcx, [rip+...]`), sa taille (la borne du `cmp` de la boucle) et la clé (la constante du `xor`). Attention, le script lit le fichier sur le disque : l'adresse du tableau doit être convertie en position dans le fichier (section 4.6 de la partie 3) ; pour ce binaire, les deux coïncident (`0x2020`). La bibliothèque pwntools, installée dans le conteneur, désassemble ensuite les octets obtenus :
 
 ```python
 from pwn import context, disasm
@@ -195,7 +195,7 @@ gcc -O1 -s chargeur.c -o chargeur     # -s retire les symboles, comme un vrai é
 
 Ce fil rouge réunit toute la progression : écriture d'assembleur (parties 2 et 4), reconnaissance d'un schéma de malware (chapitre 6 de la partie 3), déchiffrement XOR et lecture des octets d'une instruction (chapitre 4 de la partie 3), et manipulation de la mémoire dans GDB (chapitre 3 de la partie 3).
 
-Solutions : [solutions/partie3.md](../solutions/partie3.md#chapitre-17)
+Solutions : [solutions/partie3.md](../solutions/partie3.md#chapitre-3)
 
 ## Suivi
 

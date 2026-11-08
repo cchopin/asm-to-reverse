@@ -279,8 +279,8 @@ Les commandes de ce cours emploient quelques options de `gcc`. Les voici regroup
 | `-no-pie` | exécutable chargé à une adresse fixe (pas de PIE) : adresses stables, plus simples à lire | pour obtenir des listings aux adresses constantes |
 | `-fno-stack-protector` | retire le canari de pile (chapitre 5) | pour des listings épurés |
 | `-s` | retire les symboles : le binaire devient *strippé* (chapitre 1 de la partie 3) | pour simuler un vrai échantillon |
-| `-m32` | compiler en x86 32 bits | chapitre 7 |
-| `-g` | ajouter les informations de débogage | pour confort dans GDB (chapitres 10, 15) |
+| `-m32` | compiler en x86 32 bits | chapitres 7 et 13 |
+| `-g` | ajouter les informations de débogage | pour confort dans GDB (partie 3, chapitre 3 ; partie 4, chapitre 1) |
 
 Un exemple typique de compilation « propre » pour la lecture : `gcc -O0 -no-pie -fno-stack-protector prog.c -o prog`.
 

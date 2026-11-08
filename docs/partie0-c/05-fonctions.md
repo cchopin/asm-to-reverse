@@ -1,6 +1,6 @@
 # Chapitre 5 : Fonctions
 
-Une fonction est un morceau de programme nommé, qui prend des arguments et renvoie éventuellement une valeur. Découper en fonctions rend le code lisible et réutilisable. En reverse, chaque fonction du source devient un bloc avec un prologue et un épilogue reconnaissables (chapitre 5) : savoir où commence et finit une fonction est une compétence de base.
+Une fonction est un morceau de programme nommé, qui prend des arguments et renvoie éventuellement une valeur. Découper en fonctions rend le code lisible et réutilisable. En reverse, chaque fonction du source devient un bloc avec un prologue et un épilogue reconnaissables (chapitre 5 de la partie 2) : savoir où commence et finit une fonction est une compétence de base.
 
 ## Définir et appeler
 
@@ -41,7 +41,7 @@ Les prototypes sont au cœur des fichiers d'en-tête `.h` (chapitre 12).
 
 ## Portée des variables
 
-Une variable déclarée dans une fonction (ou un bloc) n'existe que là : c'est sa **portée**. Deux fonctions peuvent utiliser le même nom `i` sans se gêner. Une variable locale naît à l'entrée de la fonction et disparaît à sa sortie ; en mémoire, elle vit sur la pile (chapitre 5).
+Une variable déclarée dans une fonction (ou un bloc) n'existe que là : c'est sa **portée**. Deux fonctions peuvent utiliser le même nom `i` sans se gêner. Une variable locale naît à l'entrée de la fonction et disparaît à sa sortie ; en mémoire, elle vit sur la pile (chapitre 5 de la partie 2).
 
 ## Passage par valeur
 

@@ -1,4 +1,4 @@
-/* Coffre v5 : un faux malware pour s'entrainer (chapitre 13).
+/* Coffre v5 : un faux malware pour s'entrainer (partie 3, chapitre 6).
  *
  * CE PROGRAMME EST INOFFENSIF. Il imite le comportement d'un petit
  * implant (chaines chiffrees, verification anti-sandbox, verrou

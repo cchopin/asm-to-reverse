@@ -4,7 +4,7 @@
     Dernier chapitre d'approfondissement de la partie 3. Jusqu'ici, chaque analyse restait dans votre tête ou dans un rapport. **YARA** permet de figer ce que vous avez compris en une **règle réutilisable** : une signature qui reconnaît un échantillon, une famille de malware, ou une caractéristique (packing, IOC, format) sur des milliers de fichiers d'un coup. C'est l'outil qui transforme une analyse ponctuelle en détection durable.
 
 !!! note "Note sur l'environnement"
-    `yara-python` (version 4.5) **est** installé dans le conteneur du cours : toutes les règles ci-dessous sont **réelles et testées** sur les binaires du cours (`demo`, `packed`, et le `specimen` du capstone). Vous pouvez les rejouer avec `python3` et le module `yara`. En ligne de commande sur votre machine, c'est l'outil `yara` (`yara regle.yar fichier`) ou `yara -r regle.yar dossier/` pour balayer un dossier entier. Les sources sont dans `yara/`.
+    `yara-python` (version 4.5) **est** installé dans le conteneur du cours : toutes les règles ci-dessous sont **réelles et testées** sur les binaires du cours (`demo` et `packed` du chapitre 13, et `coffre_v5`, le faux malware du chapitre 6). Vous pouvez les rejouer avec `python3` et le module `yara`. En ligne de commande sur votre machine, c'est l'outil `yara` (`yara regle.yar fichier`) ou `yara -r regle.yar dossier/` pour balayer un dossier entier. Les sources sont dans `yara/`.
 
 ## 14.1 À quoi sert YARA
 
@@ -113,7 +113,7 @@ rule est_un_elf {
 }
 ```
 
-Testée : `demo`, `packed`, `specimen` correspondent tous ; un fichier texte, non. Même principe pour un PE avec `uint16(0) == 0x5a4d`. On trie ainsi un dossier par format avant toute autre analyse.
+Testée : `demo`, `packed`, `coffre_v5` correspondent tous ; un fichier texte, non. Même principe pour un PE avec `uint16(0) == 0x5a4d`. On trie ainsi un dossier par format avant toute autre analyse.
 
 ## 14.6 Exemple 3 : détecter le packing par l'entropie
 
@@ -139,22 +139,22 @@ Le seuil 7.2 attrape le compressé et le chiffré sans lever de faux positif sur
 
 ## 14.7 Exemple 4 : attraper une famille par ses IOC (cas malware)
 
-C'est l'usage phare de YARA. Le `specimen` du capstone cache ses indicateurs (le C2 `update.sync.example.invalid`, la campagne `CAMP-2026-ORANGE`) **chiffrés par XOR 0x3C**. En clair, `strings` ne les voit pas. Mais YARA sait chercher une chaîne **à travers un XOR** grâce au modificateur `xor` :
+C'est l'usage phare de YARA. Le `coffre_v5` du chapitre 6 cache sa configuration (le C2 `http://c2.coffre.invalid:8443/gate.php`, la campagne `CAMPAGNE-ROUGE-07`) dans des tableaux globaux **chiffrés par XOR 0x37**. En clair, `strings` ne les voit pas. Mais YARA sait chercher une chaîne **à travers un XOR** grâce au modificateur `xor` :
 
 ```yara
-rule specimen_campagne_orange {
+rule coffre_v5_campagne_rouge {
     meta:
-        description = "famille 'orange' : C2 et campagne, chaines XORees"
-        reference   = "capstone, chapitre cas de malware"
+        description = "famille 'coffre' : C2 et campagne, chaines XORees"
+        reference   = "partie 3, chapitre 6 (fil rouge coffre v5)"
     strings:
-        $c2   = "update.sync.example.invalid" xor(0x3c)
-        $camp = "CAMP-2026-ORANGE" xor(0x3c)
+        $c2   = "c2.coffre.invalid" xor(0x37)
+        $camp = "CAMPAGNE-ROUGE-07" xor(0x37)
     condition:
         any of them
 }
 ```
 
-Testée : `specimen` correspond, et YARA indique quels motifs (`$c2`, `$camp`) ont été trouvés. C'est la bascule décisive : ce que l'on a **déchiffré à la main** au capstone devient une règle qui retrouvera **toute** la famille, y compris des variantes qu'on n'a jamais vues, tant qu'elles réutilisent ces IOC et ce XOR. Avec `xor(0x00-0xff)`, YARA essaie même toutes les clés d'un octet.
+Testée : `coffre_v5` (même strippé) correspond, et YARA indique quels motifs (`$c2`, `$camp`) ont été trouvés. C'est la bascule décisive : ce que l'on a **déchiffré à la main** au chapitre 6 devient une règle qui retrouvera **toute** la famille, y compris des variantes qu'on n'a jamais vues, tant qu'elles réutilisent ces IOC et ce XOR. Avec `xor(0x00-0xff)`, YARA essaie même toutes les clés d'un octet.
 
 !!! danger "Rester défensif"
     On écrit ces règles pour **détecter et classer**, jamais pour aider à échapper à la détection. Une bonne règle est spécifique (peu de faux positifs) et documentée (`meta`), pour qu'une autre personne puisse la relire et la faire confiance.
@@ -180,17 +180,17 @@ La démarche de tout ce cours se referme ici. Chaque technique de reverse produi
 
 | Ce qu'on a trouvé | Ce qu'on signe dans YARA |
 |---|---|
-| Une chaîne en clair (ch. 8, 21) | `strings: $s = "..."` |
-| Un bout de code stable (ch. 7, 9) | motif hex avec jokers `{ 48 8B ?? }` |
-| Un IOC chiffré (capstone) | chaîne avec `xor(...)` |
-| Un binaire packé (ch. 17) | `math.entropy(...) >= 7.2` |
-| Des capacités (imports, ch. 21) | module `pe` / `elf` |
+| Une chaîne en clair (chapitres 1 et 13) | `strings: $s = "..."` |
+| Un bout de code stable (partie 2, chapitre 7 ; chapitre 2) | motif hex avec jokers `{ 48 8B ?? }` |
+| Un IOC chiffré (chapitres 6 et 8) | chaîne avec `xor(...)` |
+| Un binaire packé (chapitre 9) | `math.entropy(...) >= 7.2` |
+| Des capacités (imports, chapitre 13) | module `pe` / `elf` |
 
 On passe ainsi d'une analyse qui ne vaut que pour un fichier à une règle qui protège contre toute une famille. C'est la compétence qui fait le pont entre le reverse et la détection en production.
 
 ## Exercices gradués
 
-Sources dans `yara/`. Tout est testable ici via `python3` + module `yara` (ou `yara` en ligne de commande sur votre machine). Les binaires de test se construisent comme au chapitre 13 (`demo`, `packed`) et au capstone (`specimen`).
+Sources dans `yara/`. Tout est testable ici via `python3` + module `yara` (ou `yara` en ligne de commande sur votre machine). Les binaires de test se construisent comme au chapitre 13 (`demo`, `packed`) et au chapitre 6 (`coffre_v5`).
 
 **Exercice 14.1 (niveau 1)** Écrire et tester une règle qui correspond à `demo` (via la chaîne `reverse42`) mais pas à `packed`. Expliquer pourquoi `packed` échappe à la règle, et ce que cela dit des limites d'une signature par chaîne.
 
@@ -200,7 +200,7 @@ Sources dans `yara/`. Tout est testable ici via `python3` + module `yara` (ou `y
 
 **Exercice 14.4 (niveau 2)** Écrire une règle à **plusieurs motifs** avec une condition `2 of them` (par exemple deux chaînes présentes dans un même binaire). Vérifier qu'elle ne se déclenche que si au moins deux motifs sont présents. Comparer avec `all of them` et `any of them`.
 
-**Exercice 14.5 (niveau 3)** Écrire une règle qui attrape les IOC du `specimen` (le C2 et la campagne), sachant qu'ils sont chiffrés par XOR 0x3C. Utiliser le modificateur `xor(0x3c)` sur les chaînes en clair. Vérifier le match, et lister les motifs trouvés. Bonus : remplacer par `xor(0x00-0xff)` et expliquer ce que YARA fait alors.
+**Exercice 14.5 (niveau 3)** Écrire une règle qui attrape les IOC de `coffre_v5` (le C2 et la campagne, retrouvés au chapitre 6), sachant qu'ils sont chiffrés par XOR 0x37. Utiliser le modificateur `xor(0x37)` sur les chaînes en clair. Vérifier le match, et lister les motifs trouvés. Bonus : remplacer par `xor(0x00-0xff)` et expliquer ce que YARA fait alors.
 
 **Exercice 14.6 (niveau 2)** Écrire un motif **hex avec jokers** qui signe le prologue de fonction `push rbp; mov rbp, rsp` (`{ 55 48 89 E5 }`) et le tester sur un binaire non optimisé du cours. Expliquer pourquoi un joker (`??`) serait nécessaire pour signer une instruction contenant une adresse.
 

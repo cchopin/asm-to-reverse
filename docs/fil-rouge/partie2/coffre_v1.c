@@ -1,4 +1,4 @@
-/* Coffre v1 : premier contact (chapitre 8).
+/* Coffre v1 : premier contact (partie 3, chapitre 1).
  * Compilation : gcc -O0 -o coffre_v1 coffre_v1.c
  * Regle du jeu : ne pas lire ce source avant d'avoir trouve le mot de passe
  * avec les outils du chapitre. Le compiler sans l'ouvrir (voir le README).

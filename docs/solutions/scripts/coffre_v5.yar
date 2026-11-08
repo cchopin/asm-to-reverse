@@ -2,7 +2,7 @@ rule Coffre_v5_implant
 {
     meta:
         description = "Faux implant pedagogique Coffre v5 (et variantes)"
-        reference = "Cours de reverse, chapitre 13"
+        reference = "Cours de reverse, partie 3, chapitre 6"
 
     strings:
         // Chaine de format de la balise : en clair dans le binaire, stable d'une version a l'autre

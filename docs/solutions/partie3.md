@@ -72,7 +72,7 @@ maximum:
     ret
 ```
 
-Appelée depuis C comme `somme3`. Avec des valeurs négatives, `cmovl` (signé) donne le bon résultat : `maximum(-5, -2)` renvoie `-2`. Un `cmovb` (non signé) se tromperait, car `-2` vaut `0xffff...fe`, considéré comme très grand en non signé. C'est le même piège que `jl` contre `jb` (chapitre 3).
+Appelée depuis C comme `somme3`. Avec des valeurs négatives, `cmovl` (signé) donne le bon résultat : `maximum(-5, -2)` renvoie `-2`. Un `cmovb` (non signé) se tromperait, car `-2` vaut `0xffff...fe`, considéré comme très grand en non signé. C'est le même piège que `jl` contre `jb` (chapitre 3 de la partie 2).
 
 **2.2** Le `main` reçoit `argc` dans `edi` :
 

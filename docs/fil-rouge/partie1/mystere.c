@@ -1,5 +1,5 @@
 /* Fil rouge partie 1.
- * NE PAS LIRE CE FICHIER avant le chapitre 7 : le but est de retrouver
+ * NE PAS LIRE CE FICHIER avant le chapitre 7 de la partie 2 : le but est de retrouver
  * ce code uniquement a partir du desassemblage (mystere_O0.txt).
  *
  * Compilation : gcc -O0 -fno-stack-protector -no-pie -o mystere mystere.c

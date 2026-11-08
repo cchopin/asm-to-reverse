@@ -14,11 +14,44 @@ Les adresses citées viennent de binaires compilés avec gcc 13 (Ubuntu 24.04). 
 
 **2.1 et 2.2** Exercices d'observation, pas de réponse unique. En général, Ghidra retrouve bien la structure et les types simples, mais choisit de mauvais noms et parfois des types trop larges (`ulong` au lieu de `int`). En `-O2`, il affiche souvent le test des chiffres sous la forme `(byte)(c - 0x30) < 10`, qui est la traduction directe du `sub` / `cmp` / `ja`.
 
+**2.3** `Code accepte` a une seule référence croisée, dans `main`. Juste avant l'appel à `puts` qui l'affiche, on trouve `call verifier`, puis `test eax, eax` et `je` vers la branche `Code refuse` : le dernier test porte sur la **valeur de retour de `verifier`**. Partir de la chaîne de succès mène donc directement à la fonction de décision, sans avoir à lire `main` en entier.
+
+**2.4** Exercice ouvert. Le point à vérifier : les décalages des champs dans le Data Type Manager doivent correspondre aux accès `[reg+N]` du désassemblage, padding compris (partie 2, chapitre 10). Une fois le type appliqué au paramètre, le décompilé remplace les `*(int *)(param + 4)` par des `p->champ` lisibles.
+
+**2.5** Sans symboles, `main` se retrouve à partir de `entry` (premier argument de `__libc_start_main`, section 5.1 de cette partie) ou, plus vite, à partir de la chaîne de succès (section 2.4). La fonction de vérification contient une boucle avec `movzx`, un `xor` par `0x55` et une comparaison à l'octet du tableau. Le tableau se trouve dans `.data` (ou `.rodata` s'il est déclaré `const`) : clic droit `Copy Special > Python List`, puis `''.join(chr(b ^ 0x55) for b in tableau)` donne le mot attendu. Le programme doit l'accepter.
+
 **3.1** À la première comparaison (`cmp DWORD PTR [rbp-0x4],0x8`), `[rbp-0x4]` vaut 8 : la boucle de longueur a compté les 8 caractères de `12345678`.
 
 **3.2** `break verifier`, `run 11111111`, `finish` (GDB s'arrête juste après le `call verifier` dans `main`, avec la valeur de retour dans `eax`), `set $eax = 1`, `continue` : "Code accepte".
 
 **3.3**
+
+```
+(gdb) break main
+(gdb) run 12345678
+(gdb) p $edi
+$1 = 2
+(gdb) x/s *(char **)($rsi+8)
+0x7fffffffe145:	"12345678"
+```
+
+`argc` vaut 2 (le nom du programme et l'argument). `$rsi+8` est l'adresse de la case `argv[1]` ; `*(char **)` lit le pointeur qu'elle contient, et `x/s` affiche la chaîne pointée. L'adresse exacte de la chaîne varie d'une machine à l'autre.
+
+**3.4** `objdump -d mystere_pie | grep '<verifier>:'` donne `0000000000001169 <verifier>:` : c'est l'offset de `verifier` dans le fichier. Sous GDB, la base vaut `0x555555554000`, donc :
+
+```
+(gdb) break *(0x555555554000 + 0x1169)
+Breakpoint 1 at 0x555555555169
+(gdb) run 12345678
+(gdb) x/3i $pc
+=> 0x555555555169 <verifier>:	endbr64
+   0x55555555516d <verifier+4>:	push   rbp
+   0x55555555516e <verifier+5>:	mov    rbp,rsp
+```
+
+`info proc mappings` montre la première zone du programme à `0x555555554000` (offset `0x0`), ce qui confirme la base. Les adresses dépendent du compilateur : avec gcc 13, on obtient exactement celles-ci.
+
+**3.5**
 
 ```
 set pagination off
@@ -33,6 +66,26 @@ run 12345678
 
 (`0x4011ef` est le test de la deuxième boucle, atteint à chaque tour. Le binaire est compilé avec `-no-pie`, donc les adresses du listing sont les vraies.)
 
+**3.6**
+
+```
+(gdb) break verifier
+(gdb) run 12345678
+(gdb) watch -l *(int *)($rbp-0x8)
+(gdb) continue
+Old value = <valeur quelconque>
+New value = 0
+(gdb) continue
+Old value = 0
+New value = 1
+(gdb) continue
+Old value = 1
+New value = 3
+...
+```
+
+Le premier arrêt correspond à l'initialisation `somme = 0` (l'ancienne valeur est ce qui traînait sur la pile), puis chaque arrêt suit un `add DWORD PTR [rbp-0x8], eax` : `somme` vaut successivement 1, 3, 6, 10, 15, 21, 28, 36. La valeur finale est **36**, alors que `verifier` exige 40 (`cmp DWORD PTR [rbp-0x8], 0x28`) : le code est refusé. L'option `-l` surveille l'adresse elle-même ; une fois `verifier` terminée, cette case de pile est réutilisée par d'autres fonctions, d'où des arrêts sans intérêt : supprimer alors le point d'observation (`delete`). Comparé au script de 3.5, le watchpoint n'exige de connaître aucune adresse de code, seulement l'emplacement de la variable.
+
 ### Chapitre 4
 
 **4.1** a) transformation puis comparaison (attention, chaque octet dépend du suivant : il faut résoudre en chaîne, ou avec z3) ; b) comparaison d'empreinte (force brute si l'espace est petit, sinon chercher une faiblesse) ; c) contraintes, z3 ; d) machine virtuelle, écrire un désassembleur du bytecode.
@@ -41,9 +94,29 @@ run 12345678
 
 **4.3** Dans `main`, le `je` qui suit `test eax, eax` après `call verifier` peut devenir deux `nop` (on tombe toujours sur "Code accepte"). Dans `verifier`, on peut remplacer les premières instructions par `mov eax, 1` / `ret` (`B8 01 00 00 00 C3`).
 
+**4.4** Le déplacement se compte à partir de l'instruction **suivante**. Le `je` fait 2 octets à `0x401279`, l'instruction suivante est donc à `0x40127b`, et `0x40127b + 0x11 = 0x40128c`. Pour le `jmp` à `0x40128a` : `0x40128c + 0x0f = 0x40129b`. Avec `74 f0`, le déplacement est négatif (`0xf0` vaut -16 en signé) : `0x40127b - 0x10 = 0x40126b`, un saut vers l'arrière, comme ceux des boucles.
+
+**4.5** `readelf -S mystere` donne, pour `.text`, `Address 0x401070` et `Offset 0x1070`. Donc `offset = 0x401279 - 0x401070 + 0x1070 = 0x1279` (dans ce binaire, l'offset vaut l'adresse moins `0x400000`). Puis :
+
+```bash
+cp mystere mystere_patche
+printf '\x90\x90' | dd of=mystere_patche bs=1 seek=$((0x1279)) conv=notrunc
+./mystere_patche 11111111      # Code accepte
+```
+
+`conv=notrunc` est indispensable : sans lui, `dd` tronquerait le fichier après les deux octets écrits. Avant d'écrire, vérifier avec `xxd -s 0x1279 -l 2 mystere` que les octets lus sont bien `74 11`.
+
+**4.6** Exercice ouvert (crackmes.one).
+
 ### Chapitre 5
 
-**5.1** à **5.3** : voir la solution du coffre v4, les techniques sont les mêmes. Pour `/proc/self/status`, mettre un point d'arrêt après la lecture et modifier la valeur lue, ou patcher la comparaison.
+**5.1** et **5.4** : voir la solution du coffre v4, les techniques sont les mêmes. Pour `/proc/self/status`, mettre un point d'arrêt après la lecture et modifier la valeur lue, ou patcher la comparaison.
+
+**5.2** Le binaire packé est nettement plus petit, `strings` n'y trouve presque plus rien de lisible (hormis des chaînes `UPX!`), et `nm -D` ne montre plus les fonctions de la libc du programme d'origine. `upx -d hello_packe` restitue un binaire équivalent à l'original.
+
+**5.3** `file` passe de `not stripped` à `stripped`, et `nm mystere_s` répond `no symbols`. `readelf -h mystere_s` donne le point d'entrée `0x401070` (`_start`). À cette adresse, `objdump -d` montre, juste avant l'appel indirect à `__libc_start_main` (`call QWORD PTR [rip+...]`), l'instruction `mov rdi, 0x401226` : le premier argument de `__libc_start_main` est l'adresse de `main`. Sous GDB, `break *0x401226` puis `run 12345678` s'arrête bien au début de `main`.
+
+**5.5** Pas à pas, la boucle dure des secondes au lieu de quelques microsecondes, et le programme refuse. Deux contournements : ne pas avancer pas à pas dans la zone mesurée (poser un point d'arrêt **après** le second `clock_gettime`, puis `continue`), ou s'arrêter sur la comparaison de la durée et forcer le résultat (`set $rax = 0`, ou inverser le flag avec `set $eflags ^= 0x40` avant le saut conditionnel). On peut aussi patcher le saut, comme à la section 5.2.
 
 ### Chapitre 6
 
@@ -78,7 +151,7 @@ rule Coffre_v1_v2
 
 ## Coffre v2
 
-**En statique (chapitre 9)**
+**En statique (chapitre 2)**
 
 1. `strings` ne montre pas le mot de passe. `nm -D` : `strlen` mais **pas** de `strcmp` ni `memcmp` : la comparaison est faite à la main.
 2. `ltrace` montre `strlen`, rien d'autre d'utile.
@@ -86,7 +159,7 @@ rule Coffre_v1_v2
 4. Le tableau `cle` (19 octets) : `78 19 5c 19 58 59 19 75 47 19 75 1b 4c 75 5f 75 49 1e 44`.
 5. Comme `(s ^ 0x2a) == cle` équivaut à `s == cle ^ 0x2a` : voir [solve_v2.py](scripts/solve_v2.py). Mot de passe : `R3v3rs3_m3_1f_u_c4n`. Flag : `FLAG{R3v3rs3_m3_1f_u_c4n}`.
 
-**En dynamique (chapitre 10)**
+**En dynamique (chapitre 3)**
 
 1. `disassemble verifier` : `cmp dl,al` en `verifier+87` (offset `0x1240`).
 2. Fichier d'entrée : 19 caractères, `AAAAAAAAAAAAAAAAAAA`.
@@ -133,7 +206,7 @@ rule Coffre_v1_v2
    1338: cmp    ebx,eax               ; comparaison
    ```
 
-   `shl` puis `sub` = multiplication par 31 (chapitre 7). `rol eax, 3` = rotation à gauche de 3 bits sur 32 bits.
+   `shl` puis `sub` = multiplication par 31 (chapitre 7 de la partie 2). `rol eax, 3` = rotation à gauche de 3 bits sur 32 bits.
 3. Valeur initiale `0x1337`. Après la boucle : XOR avec `0xC0FFEE`.
 4. Voir [keygen_v3.py](scripts/keygen_v3.py). Les `& 0xFFFFFFFF` sont indispensables.
 5. `python3 keygen_v3.py Clemence` donne `F6E88EDC`, et le coffre affiche `FLAG{keygen_f6e88edc}`.
@@ -287,7 +360,7 @@ Trois façons de contourner l'anti-debug pour l'observer en dynamique :
   ```
 
   puis `LD_PRELOAD=./fakeptrace.so gdb ./crack06` ;
-- ou patcher le saut conditionnel qui suit le test de la valeur de retour de `ptrace`, pour qu'il ne parte jamais dans la branche « debugger detecte » (voir le patching, chapitre 11).
+- ou patcher le saut conditionnel qui suit le test de la valeur de retour de `ptrace`, pour qu'il ne parte jamais dans la branche « debugger detecte » (voir le patching, chapitre 4).
 
 ## Laboratoire malware {#labo-malware}
 
@@ -380,7 +453,7 @@ Puis `objdump -D -b binary -m i386:x86-64 -M intel depaque.bin` montre le shellc
 !!! tip "Astuce GDB"
     Passer les arguments de l'inféreur avec `gdb --args ./motdepasse essai`, sinon le programme s'exécute sans argument. Et pour éviter les `strcmp` internes de la résolution de symboles, poser le point d'arrêt sur l'adresse du `call` dans `main`, pas sur le symbole `strcmp`.
 
-**11.3** Sous `strace`, le `specimen` s'arrête tôt car son premier geste est `ptrace(PTRACE_TRACEME, ...)` : `strace` trace déjà le processus, donc cet appel échoue, et le code `if (ptrace(...) < 0) return 0;` fait quitter le programme avant toute action. C'est une protection anti-debug (chapitre 10). Pour voir le vrai comportement, la neutraliser : précharger un faux `ptrace` renvoyant 0 (`LD_PRELOAD`), patcher le test, ou forcer le retour dans GDB. La trace montre alors la reconnaissance, le marqueur, la balise et la charge.
+**11.3** Sous `strace`, `coffre_v4` s'arrête tôt : la trace montre `ptrace(PTRACE_TRACEME) = -1 EPERM`, puis l'écriture de `Je te vois. Le coffre reste ferme.` et `exit_group(1)`. `strace` trace déjà le processus, donc l'appel échoue, et le programme quitte avant toute action. C'est la protection anti-debug du chapitre 5, approfondie au chapitre 10. Pour voir le vrai comportement, la neutraliser : précharger un faux `ptrace` renvoyant 0 (`faux.c` contenant `long ptrace(int r, int p, void *a, void *d) { return 0; }`, compilé avec `gcc -shared -fPIC -o faux.so faux.c`), puis `strace -E LD_PRELOAD=./faux.so ./coffre_v4`. Il n'y a plus d'appel `ptrace` dans la trace (le faux l'a remplacé), et le programme va jusqu'au bout : `Le coffre s'est ouvert puis referme.` et `exit_group(0)`. On peut aussi patcher le test ou forcer le retour dans GDB.
 
 **11.4** `strace -f ./prog` n'affiche aucun `clone`/`fork` suivi d'activité enfant : le programme est monoprocessus. `strace -e trace=openat ./prog` liste tous les fichiers ouverts, y compris, au démarrage, les bibliothèques partagées (`/lib/x86_64-linux-gnu/libc.so.6`, le chargeur `ld-linux`...) avant même le `main`. Cela rappelle le coût du démarrage de la libc vu en partie 4.
 
@@ -392,7 +465,7 @@ Puis `objdump -D -b binary -m i386:x86-64 -M intel depaque.bin` montre le shellc
 
 **12.1** `solve_crack05.py` affiche `9218`. En passant la somme à 21, z3 répond `unsat` : aucune combinaison de quatre chiffres ne satisfait alors toutes les contraintes. C'est l'intérêt du solveur : il prouve aussi l'**absence** de solution.
 
-**12.2** `solve_vm.py` retrouve `reverse42`. On a décrit la transformation dans le **sens direct** (`rol8((c ^ 0x2A) + 5, 3) == cible`) et z3 l'a inversée tout seul. La solution manuelle du capstone devait, elle, calculer l'inverse pas à pas (`ror8`, puis `- 5`, puis `^ 0x2A`). Avec z3, inverser devient inutile : on énonce la contrainte, le solveur trouve l'antécédent.
+**12.2** Dans la boucle de `main`, chaque caractère passe par `xor` avec `0x5C`, `add` de 9 et `rol` de 2, puis est comparé à un octet d'un tableau de `.rodata` (adressé par un `lea reg, [rip+...]`). `solve_rotor.py` retrouve `solveur26`, et `./rotor solveur26` affiche `Acces autorise`. On a décrit la transformation dans le **sens direct** (`rol8((c ^ 0x5C) + 9, 2) == cible`) et z3 l'a inversée tout seul. L'inversion manuelle doit, elle, défaire les opérations dans l'ordre inverse : `ror8(v, 2)`, puis `- 9` (modulo 256), puis `^ 0x5C`, soit en Python `bytes((((v >> 2) | (v << 6)) & 0xff) - 9 & 0xff ^ 0x5C for v in cible)`. Avec z3, inverser devient inutile : on énonce la contrainte, le solveur trouve l'antécédent.
 
 **12.3** Modélisation du `coffre0` :
 
@@ -415,7 +488,7 @@ z3 retrouve `Clemence`, puisque `cle[i] = cible[i] - i`.
 
 **12.5** Avec angr : relever `find` (adresse du bloc affichant le succès) et `avoid` (bloc d'échec) dans `objdump`, lancer `simgr.explore(find=..., avoid=...)`, puis `simgr.found[0].posix.dumps(0)` donne l'entrée gagnante lue sur stdin. Sur un petit crackme, angr trouve la solution sans qu'on ait rien modélisé ; sur un binaire avec de longues boucles ou beaucoup de chemins, il peut devenir très lent (explosion des chemins), là où une modélisation z3 ciblée resterait instantanée.
 
-**12.6** Pour `crack01` (comparaison directe à une chaîne), l'analyse manuelle suffit : la chaîne est lisible, nul besoin d'outil. Pour `crack05` (contraintes arithmétiques claires), z3 est idéal : on lit les conditions et on les transcrit. Pour `machine` (VM), z3 convient aussi (modéliser la transformation par caractère), et angr serait une alternative si l'on ne voulait pas comprendre la VM. La règle : plus on comprend la vérification, plus z3 est direct ; moins on veut lire le code, plus angr est tentant, à condition que le binaire reste petit.
+**12.6** Pour `crack01` (comparaison directe à une chaîne), l'analyse manuelle suffit : la chaîne est lisible, nul besoin d'outil. Pour `crack05` (contraintes arithmétiques claires), z3 est idéal : on lit les conditions et on les transcrit. Pour `rotor` (transformation par caractère), z3 convient aussi (modéliser la transformation), et angr serait une alternative si l'on ne voulait pas comprendre la boucle. La règle : plus on comprend la vérification, plus z3 est direct ; moins on veut lire le code, plus angr est tentant, à condition que le binaire reste petit.
 
 ## Lire les formats : ELF puis PE {#formats-elf-pe}
 
@@ -443,7 +516,7 @@ Hypothèse en une phrase : un **téléchargeur/injecteur** (downloader) qui réc
 
 ## Écrire des règles YARA {#yara}
 
-Toutes ces règles ont été testées avec `yara-python` sur `demo`, `packed` et `specimen`. Les règles complètes sont dans `yara/regles.yar`, rejouables avec `yara/tester.py`.
+Toutes ces règles ont été testées avec `yara-python` sur `demo`, `packed` et `coffre_v5`. Les règles complètes sont dans `yara/regles.yar`, rejouables avec `yara/tester.py`.
 
 **14.1**
 ```yara
@@ -468,14 +541,14 @@ Mesures réelles : texte répétitif 2.65 (pas de match), données compressées 
 
 **14.5**
 ```yara
-rule specimen_campagne_orange {
+rule coffre_v5_campagne_rouge {
     strings:
-        $c2   = "update.sync.example.invalid" xor(0x3c)
-        $camp = "CAMP-2026-ORANGE" xor(0x3c)
+        $c2   = "c2.coffre.invalid" xor(0x37)
+        $camp = "CAMPAGNE-ROUGE-07" xor(0x37)
     condition: any of them
 }
 ```
-`specimen` correspond, et YARA signale `$c2` et `$camp` comme trouvés. Le modificateur `xor(0x3c)` fait chercher la chaîne après XOR par 0x3C, exactement l'obfuscation du specimen : `strings` ne voyait rien, YARA retrouve l'IOC. Bonus : `xor(0x00-0xff)` fait essayer les 256 clés d'un octet ; pratique quand on ignore la clé, au prix d'un peu plus de faux positifs potentiels.
+`coffre_v5` correspond, et YARA signale `$c2` et `$camp` comme trouvés. Le modificateur `xor(0x37)` fait chercher la chaîne après XOR par 0x37, exactement l'obfuscation de `coffre_v5` : `strings` ne voyait rien, YARA retrouve l'IOC. Bonus : `xor(0x00-0xff)` fait essayer les 256 clés d'un octet ; pratique quand on ignore la clé, au prix d'un peu plus de faux positifs potentiels.
 
 **14.6**
 ```yara

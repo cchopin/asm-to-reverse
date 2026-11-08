@@ -67,7 +67,7 @@ interpreter /lib64/ld-linux-x86-64.so.2, ..., for GNU/Linux 3.2.0, not stripped
 
 À lire :
 
-- **ELF 64-bit x86-64** : Linux, 64 bits, conventions du chapitre 5 ;
+- **ELF 64-bit x86-64** : Linux, 64 bits, conventions du chapitre 5 de la partie 2 ;
 - **pie** : les adresses changent à chaque exécution (le chapitre 3 explique comment le gérer dans GDB) ;
 - **dynamically linked** : le programme utilise la libc, les appels à `strcmp`, `printf`... seront donc visibles ;
 - **not stripped** : les noms des fonctions sont encore présents. Un binaire `stripped` n'en a plus (chapitre 5).
@@ -160,11 +160,11 @@ objdump -s -j .rodata coffre_v1
 
 ## Exercices
 
-**Exercice 1.1** Lancer `file`, `strings` et `nm -D` sur `/bin/ls`. Que peut-on dire de ce programme sans l'exécuter ? Est-il strippé ?
+**Exercice 1.1 (N1)** Lancer `file`, `strings` et `nm -D` sur `/bin/ls`. Que peut-on dire de ce programme sans l'exécuter ? Est-il strippé ?
 
-**Exercice 1.2** Écrire un petit programme C qui demande un nombre avec `scanf("%d", &n)` et affiche "Gagne" si `n == 1337`. Le compiler. La réponse est-elle trouvable avec `strings` ? Avec `ltrace` ? Avec `objdump` ? Pourquoi ?
+**Exercice 1.2 (N1)** Écrire un petit programme C qui demande un nombre avec `scanf("%d", &n)` et affiche "Gagne" si `n == 1337`. Le compiler. La réponse est-elle trouvable avec `strings` ? Avec `ltrace` ? Avec `objdump` ? Pourquoi ?
 
-**Exercice 1.3** Sur https://crackmes.one, filtrer par difficulté 1.0 et plateforme Unix/Linux, puis télécharger deux crackmes. N'appliquer que les étapes 1 et 2 de la méthode. Combien sont résolus sans ouvrir de désassembleur ?
+**Exercice 1.3 (N2)** Sur https://crackmes.one, filtrer par difficulté 1.0 et plateforme Unix/Linux, puis télécharger deux crackmes. N'appliquer que les étapes 1 et 2 de la méthode. Combien sont résolus sans ouvrir de désassembleur ?
 
 Pratique : les archives sont souvent des `.zip` protégés par le mot de passe `crackmes.one`. Pour transférer le fichier téléchargé sur le Mac vers le conteneur, le déposer dans le dossier du cours (partagé dans `/cours`, voir le guide d'installation), puis le décompresser côté conteneur. La difficulté affichée sur le site est donnée par l'auteur et reste approximative : un "1.0" peut bloquer, ce n'est pas anormal. Les crackmes de ce site sont censés être sûrs, mais par principe ils s'analysent dans le conteneur.
 

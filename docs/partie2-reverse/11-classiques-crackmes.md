@@ -125,7 +125,7 @@ if solveur.check() == sat:
     print(''.join(chr(m[c].as_long()) for c in s))
 ```
 
-Attention : sur des `BitVec`, les opérateurs `<`, `<=`, `>`, `>=` de z3 sont **signés**. Pour une comparaison non signée (l'équivalent de `jb`, `ja`), il faut utiliser `ULT`, `ULE`, `UGT`, `UGE`. C'est exactement la distinction signé / non signé du chapitre 3.
+Attention : sur des `BitVec`, les opérateurs `<`, `<=`, `>`, `>=` de z3 sont **signés**. Pour une comparaison non signée (l'équivalent de `jb`, `ja`), il faut utiliser `ULT`, `ULE`, `UGT`, `UGE`. C'est exactement la distinction signé / non signé du chapitre 3 de la partie 2.
 
 Le travail du reverseur consiste à **traduire fidèlement** les conditions du programme ; z3 fait le reste. Ce cas est très fréquent dans les CTF de niveau intermédiaire.
 
@@ -137,7 +137,7 @@ L'objectif est parfois de **modifier** le programme : supprimer une vérificatio
 
 ### Comment un saut est encodé
 
-Pour patcher un saut, il faut savoir le reconnaître dans les octets du listing (section 2.2). Un saut conditionnel court tient sur **2 octets** : un code d'opération, puis un déplacement relatif.
+Pour patcher un saut, il faut savoir le reconnaître dans les octets du listing (partie 2, section 2.2). Un saut conditionnel court tient sur **2 octets** : un code d'opération, puis un déplacement relatif.
 
 ```
 1180:   74 06       je     1188
@@ -189,25 +189,29 @@ Le patching a peu d'intérêt lorsque le flag dépend de la saisie (le programme
 
 ## Exercices
 
-**Exercice 4.1** Pour chaque description, indiquer le schéma du tableau 4.1 correspondant et l'approche à adopter :
+**Exercice 4.1 (N1)** Pour chaque description, indiquer le schéma du tableau 4.1 correspondant et l'approche à adopter :
 
 - a) Ghidra montre une boucle de 32 tours sur la saisie qui calcule `out[i] = in[i] ^ in[(i+1) % 32]`, puis un `memcmp` avec un tableau global.
 - b) Le programme importe `MD5_Init`, `MD5_Update`, `MD5_Final` et compare le résultat à une chaîne de 32 caractères hexadécimaux.
 - c) `main` contient 40 `if` du type `if (s[7] * 3 - s[12] != 0x95) fail();`.
 - d) Le programme lit un fichier `prog.bin`, puis entre dans une boucle contenant un `switch` de 16 cas.
 
-**Exercice 4.2** Résoudre l'exemple z3 de la section 4.5, puis le modifier pour déterminer s'il existe une autre solution (indice : ajouter une contrainte qui exclut la première et relancer `check()`).
+**Exercice 4.2 (N2)** Résoudre l'exemple z3 de la section 4.5, puis le modifier pour déterminer s'il existe une autre solution (indice : ajouter une contrainte qui exclut la première et relancer `check()`).
 
-**Exercice 4.3** Patcher `mystere` (partie 2) pour qu'il accepte n'importe quel code, de deux façons : en modifiant un saut dans `main`, puis en modifiant `verifier` pour qu'elle renvoie toujours 1.
+**Exercice 4.3 (N2)** Patcher `mystere` (partie 2) pour qu'il accepte n'importe quel code, de deux façons : en modifiant un saut dans `main`, puis en modifiant `verifier` pour qu'elle renvoie toujours 1.
 
-**Exercice 4.4** Sur crackmes.one, chercher des crackmes Linux de difficulté 1.0 à 2.0 dont le titre ou la description mentionne "keygen", et en résoudre un.
+**Exercice 4.4 (N1)** Dans `objdump -d mystere`, on lit dans `main` : `401279: 74 11  je 40128c`. Retrouver l'adresse cible **à partir des seuls octets** (section 4.6), puis faire de même pour le `jmp` codé `eb 0f` à l'adresse `40128a`. Que deviendrait la cible si le deuxième octet du `je` valait `f0` ?
+
+**Exercice 4.5 (N2)** Appliquer le patch de l'exercice 4.3 **à la main**, sans Ghidra : trouver avec `readelf -S mystere` l'adresse et l'offset de la section `.text`, en déduire la position dans le fichier du `je` situé à `0x401279`, et le remplacer par deux `nop` (`90 90`) avec `printf` et `dd`. Vérifier que `./mystere 11111111` affiche alors `Code accepte`.
+
+**Exercice 4.6 (N3)** Sur crackmes.one, chercher des crackmes Linux de difficulté 1.0 à 2.0 dont le titre ou la description mentionne "keygen", et en résoudre un.
 
 ## Fil rouge : coffre v3, le keygen
 
 Compiler `coffre_v3` (en `-O1`, donc légèrement optimisé, comme indiqué dans le README).
 
 1. **Reconnaître et observer** : que demande le programme ? Le nom est-il soumis à une condition ? Avec `nm -D`, quelle fonction convertit le serial en nombre ? Dans quelle base (examiner l'argument dans le désassemblage) ?
-2. **Comprendre** : ouvrir le programme dans Ghidra. La fonction de calcul a été **inlinée** dans `main` (chapitre 7). Trouver la boucle sur le nom et décrire le calcul. On y rencontre l'idiome `shl ecx, 5` / `sub ecx, eax` et une instruction `rol` : que font-ils ?
+2. **Comprendre** : ouvrir le programme dans Ghidra. La fonction de calcul a été **inlinée** dans `main` (chapitre 7 de la partie 2). Trouver la boucle sur le nom et décrire le calcul. On y rencontre l'idiome `shl ecx, 5` / `sub ecx, eax` et une instruction `rol` : que font-ils ?
 3. Quelle est la valeur initiale du calcul ? Quelle opération est effectuée à la fin, après la boucle ?
 4. **Agir** : écrire `keygen.py`, qui prend un nom en argument et affiche le serial. Attention au format attendu par le programme (hexadécimal).
 5. **Vérifier** : tester le keygen avec trois noms différents. En cas d'échec, placer un point d'arrêt sur le `cmp` qui suit l'appel à `strtoul` et comparer les deux valeurs avec celle du script.

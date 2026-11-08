@@ -1,6 +1,6 @@
 # Chapitre 3 : Conditions
 
-Un programme prend des décisions : faire une chose ou une autre selon une condition. En reverse, chaque condition du code source devient une comparaison suivie d'un saut (chapitre 3) ; les reconnaître dans le C aide à les reconnaître une fois compilées.
+Un programme prend des décisions : faire une chose ou une autre selon une condition. En reverse, chaque condition du code source devient une comparaison suivie d'un saut (chapitre 3 de la partie 2) ; les reconnaître dans le C aide à les reconnaître une fois compilées.
 
 ## if, else if, else
 
@@ -57,7 +57,7 @@ switch (op)
 }
 ```
 
-Le `break` est indispensable : sans lui, l'exécution « tombe » dans le cas suivant. On retrouvera exactement ce `switch` sous forme de table de sauts en assembleur (chapitre 7).
+Le `break` est indispensable : sans lui, l'exécution « tombe » dans le cas suivant. On retrouvera exactement ce `switch` sous forme de table de sauts en assembleur (chapitre 7 de la partie 2).
 
 ## Exercices
 

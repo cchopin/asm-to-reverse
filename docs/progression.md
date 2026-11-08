@@ -10,6 +10,10 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 
 - [ ] Environnement installé et vérifié
 
+### [Installation sous Linux](environnement/INSTALLATION-LINUX.md)
+
+- [ ] Environnement Linux installé et vérifié
+
 
 ## Partie 1 : les bases du C (facultative)
 
@@ -234,7 +238,7 @@ Cette page regroupe toutes les étapes du cours. Sur le site, les cases cochées
 ### [12. Résolution automatique : angr et z3](partie2-reverse/20-angr-z3.md)
 
 - [ ] Partie 3, chapitre angr/z3 : lecture
-- [ ] Partie 3, chapitre angr/z3 : z3 pratiqué (crack05, VM)
+- [ ] Partie 3, chapitre angr/z3 : z3 pratiqué (crack05, rotor)
 - [ ] Partie 3, chapitre angr/z3 : angr essayé (dans le laboratoire)
 
 ### [13. Lire les formats : ELF et PE](partie2-reverse/21-formats-elf-pe.md)

@@ -1,6 +1,6 @@
 # Chapitre 4 : Boucles
 
-Une boucle répète un bloc d'instructions. C'est la construction la plus fréquente dans les programmes à analyser : une boucle qui transforme une chaîne, qui parcourt un tableau, qui calcule. En reverse, une boucle se repère à un saut qui revient en arrière (chapitre 4). Ce chapitre approfondit ce que le chapitre 1 n'a fait qu'effleurer.
+Une boucle répète un bloc d'instructions. C'est la construction la plus fréquente dans les programmes à analyser : une boucle qui transforme une chaîne, qui parcourt un tableau, qui calcule. En reverse, une boucle se repère à un saut qui revient en arrière (chapitre 4 de la partie 2). Ce chapitre approfondit ce que le chapitre 1 n'a fait qu'effleurer.
 
 ## while
 

@@ -443,7 +443,7 @@ void rate_echange(int a, int b)
 }
 ```
 
-Après `rate_echange(x, y)`, `x` et `y` sont inchangés : la fonction a reçu des copies. Il faut passer les adresses (chapitre 6).
+Après `rate_echange(x, y)`, `x` et `y` sont inchangés : la fonction a reçu des copies. Il faut passer les adresses (chapitre 6 de cette partie).
 
 ### Fil rouge 5 {#fil-rouge-05}
 

@@ -3,7 +3,7 @@
 #
 # Construction (depuis ce dossier) :
 #   docker build --platform linux/amd64 -t reverse-lab .
-# Voir INSTALLATION-MAC.md pour le lancement.
+# Voir INSTALLATION-MAC.md ou INSTALLATION-LINUX.md pour le lancement.
 
 FROM ubuntu:24.04
 
@@ -14,20 +14,20 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential gcc-multilib nasm \
         gdb strace ltrace \
-        binutils file xxd bsdextrautils tcpdump \
+        binutils file xxd bsdextrautils tcpdump zlib1g-dev \
         python3 python3-pip python3-venv \
         python3-z3 python3-pefile yara python3-yara \
         upx-ucl \
         git curl wget unzip ca-certificates less nano vim procps \
     && rm -rf /var/lib/apt/lists/*
 
-# pwntools : ecriture de shellcode et analyse (partie 3)
+# pwntools : ecriture de shellcode et analyse (partie 4)
 RUN pip3 install --no-cache-dir --break-system-packages pwntools
 
-# Frida : instrumentation dynamique (chapitre 19). frida-tools fournit la CLI frida.
+# Frida : instrumentation dynamique (partie 3, chapitre 11). frida-tools fournit la CLI frida.
 RUN pip3 install --no-cache-dir --break-system-packages frida-tools
 
-# angr : execution symbolique (chapitre 20). Paquet volumineux, d'ou une etape dediee.
+# angr : execution symbolique (partie 3, chapitre 12). Paquet volumineux, d'ou une etape dediee.
 RUN pip3 install --no-cache-dir --break-system-packages angr
 
 # GEF : extension de GDB (installation manuelle documentee par le projet)
@@ -35,7 +35,7 @@ RUN wget -q -O /root/.gef.py https://raw.githubusercontent.com/hugsy/gef/main/ge
     && echo "source /root/.gef.py" > /root/.gdbinit \
     && echo "set disassembly-flavor intel" >> /root/.gdbinit
 
-# capa et FLOSS (Mandiant) : capacites d'un binaire et extraction de chaines (chapitre 13)
+# capa et FLOSS (Mandiant) : capacites d'un binaire et extraction de chaines (partie 3, chapitre 6)
 RUN cd /tmp \
     && wget -q https://github.com/mandiant/capa/releases/download/v7.0.1/capa-v7.0.1-linux.zip \
     && wget -q https://github.com/mandiant/flare-floss/releases/download/v3.1.0/floss-v3.1.0-linux.zip \

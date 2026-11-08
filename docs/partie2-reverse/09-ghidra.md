@@ -1,6 +1,6 @@
 # Chapitre 2 : analyse statique avec Ghidra
 
-Objectif : utiliser un désassembleur et décompilateur pour comprendre un programme sans l'exécuter. Ghidra est gratuit, développé par la NSA et largement suffisant pour les CTF comme pour l'analyse de malware. Il s'installe directement sur macOS (voir le [guide d'installation](../environnement/INSTALLATION-MAC.md#6-ghidra-sur-macos)).
+Objectif : utiliser un désassembleur et décompilateur pour comprendre un programme sans l'exécuter. Ghidra est gratuit, développé par la NSA et largement suffisant pour les CTF comme pour l'analyse de malware. Il s'installe directement sur la machine, hors du conteneur (voir le guide d'installation [sur Mac](../environnement/INSTALLATION-MAC.md#6-ghidra-sur-macos) ou [sous Linux](../environnement/INSTALLATION-LINUX.md#6-ghidra)).
 
 **Analyse statique** : lire le programme sans l'exécuter. **Analyse dynamique** : l'exécuter et l'observer (chapitre 3). Les deux se complètent et s'alternent en permanence.
 
@@ -140,7 +140,7 @@ C'est le schéma le plus courant des crackmes "easy" : **lire l'algorithme dans 
 
 ## 2.7 Structures et types
 
-Si une fonction accède à `param_1 + 0x10`, `param_1 + 0x14`, etc., il s'agit d'une structure (chapitre 6). Dans Ghidra :
+Si une fonction accède à `param_1 + 0x10`, `param_1 + 0x14`, etc., il s'agit d'une structure (chapitre 6 de la partie 2). Dans Ghidra :
 
 1. `Window > Data Type Manager`, clic droit sur le nom du programme, `New > Structure` ;
 2. ajouter les champs avec leurs tailles et offsets ;
@@ -150,11 +150,15 @@ Le code affiche alors `param_1->pv` au lieu de `*(int *)(param_1 + 0x10)`. C'est
 
 ## Exercices
 
-**Exercice 2.1** Ouvrir `mystere` (partie 2) dans Ghidra. Comparer le décompilé de `verifier` avec la version écrite au chapitre 7. Qu'est-ce que Ghidra a mieux restitué ? Moins bien ?
+**Exercice 2.1 (N1)** Ouvrir `mystere` (partie 2) dans Ghidra. Comparer le décompilé de `verifier` avec la version écrite au chapitre 7 de la partie 2. Qu'est-ce que Ghidra a mieux restitué ? Moins bien ?
 
-**Exercice 2.2** Compiler `mystere` en `-O2` (`gcc -O2 -no-pie -fno-stack-protector mystere.c -o mystere_O2`), l'ouvrir dans Ghidra. Le décompilateur s'en sort-il ? Comment a-t-il traduit la séquence `sub eax, 0x30` / `cmp sil, 0x9` / `ja` ?
+**Exercice 2.2 (N2)** Compiler `mystere` en `-O2` (`gcc -O2 -no-pie -fno-stack-protector mystere.c -o mystere_O2`), l'ouvrir dans Ghidra. Le décompilateur s'en sort-il ? Comment a-t-il traduit la séquence `sub eax, 0x30` / `cmp sil, 0x9` / `ja` ?
 
-**Exercice 2.3** Compiler un programme C de son choix contenant une structure, la retrouver dans Ghidra et la recréer avec le Data Type Manager.
+**Exercice 2.3 (N1)** Toujours sur `mystere`, sans partir de `main` : ouvrir `Window > Defined Strings`, trouver la chaîne `Code accepte`, puis remonter par ses références croisées (`XREF`) jusqu'à la fonction qui l'affiche. Quel est le dernier test effectué avant d'arriver à cet affichage ? C'est la technique de la section 2.4, à rendre automatique.
+
+**Exercice 2.4 (N2)** Compiler un programme C de son choix contenant une structure, la retrouver dans Ghidra et la recréer avec le Data Type Manager.
+
+**Exercice 2.5 (N3)** Écrire un petit programme C qui contient un tableau global de 8 octets, et une fonction qui compare chaque caractère de `argv[1]` à `tableau[i] ^ 0x55`. Le compiler avec `-O1 -s` (le `-s` retire les noms de fonctions), puis, **sans regarder le source**, retrouver dans Ghidra la fonction de vérification, extraire le tableau (section 2.6) et calculer le mot attendu avec un court script Python. Vérifier sur le programme.
 
 ## Fil rouge : coffre v2, en statique
 

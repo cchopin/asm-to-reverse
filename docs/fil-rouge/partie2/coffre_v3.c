@@ -1,4 +1,4 @@
-/* Coffre v3 : un nom, un numero de serie, un algorithme (chapitre 11).
+/* Coffre v3 : un nom, un numero de serie, un algorithme (partie 3, chapitre 4).
  * Compilation : gcc -O1 -o coffre_v3 coffre_v3.c
  * Objectif : ecrire un keygen, c'est a dire un programme qui calcule
  * le bon serial pour n'importe quel nom.

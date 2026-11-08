@@ -23,7 +23,7 @@ flowchart TD
     D --> E["Saut vers l'OEP : le vrai programme tourne"]
 ```
 
-C'est exactement la structure du loader vu au capstone, appliquée à un programme entier.
+C'est exactement la structure d'un *loader* (chargeur), appliquée à un programme entier : on en écrira et analysera un au chapitre 3 de la partie 4.
 
 ## 9.2 Les signes d'un binaire packé
 

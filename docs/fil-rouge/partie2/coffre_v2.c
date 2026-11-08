@@ -1,4 +1,4 @@
-/* Coffre v2 : le mot de passe n'est plus en clair (chapitres 9 et 10).
+/* Coffre v2 : le mot de passe n'est plus en clair (partie 3, chapitres 2 et 3).
  * Compilation : gcc -O0 -o coffre_v2 coffre_v2.c
  */
 #include <stdio.h>

@@ -1,5 +1,5 @@
-// Regles YARA du chapitre 22 (toutes testees avec yara-python 4.5).
-// Binaires de test : demo et packed (chapitre 21), specimen (capstone).
+// Regles YARA de la partie 3, chapitre 14 (toutes testees avec yara-python 4.5).
+// Binaires de test : demo et packed (chapitre 13), coffre_v5 (chapitre 6).
 
 rule demo_reverse42 {
     meta:
@@ -32,13 +32,13 @@ rule packe_probable {
         math.entropy(0, filesize) >= 7.2
 }
 
-rule specimen_campagne_orange {
+rule coffre_v5_campagne_rouge {
     meta:
-        description = "famille 'orange' : C2 et campagne, chaines XOR 0x3C"
-        reference   = "capstone, chapitre cas de malware"
+        description = "famille 'coffre' : C2 et campagne, chaines XOR 0x37"
+        reference   = "partie 3, chapitre 6 (fil rouge coffre v5)"
     strings:
-        $c2   = "update.sync.example.invalid" xor(0x3c)
-        $camp = "CAMP-2026-ORANGE" xor(0x3c)
+        $c2   = "c2.coffre.invalid" xor(0x37)
+        $camp = "CAMPAGNE-ROUGE-07" xor(0x37)
     condition:
         any of them
 }

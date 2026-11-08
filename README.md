@@ -15,7 +15,7 @@ Cours progressif en français, destiné aux débutants : lecture de l'assembleur
 
 ## Environnement
 
-Un Linux x86-64 est nécessaire. Le dossier [docs/environnement](docs/environnement) fournit un Dockerfile (Ubuntu 24.04, gcc 13, GDB et GEF, strace, ltrace, Python, z3, pwntools, YARA, capa, FLOSS) et un script de lancement. Le guide [Installation sur Mac](docs/environnement/INSTALLATION-MAC.md) couvre les Mac Intel et Apple Silicon.
+Un Linux x86-64 est nécessaire. Le dossier [docs/environnement](docs/environnement) fournit un Dockerfile (Ubuntu 24.04, gcc 13, GDB et GEF, strace, ltrace, Python, z3, pwntools, YARA, capa, FLOSS) et un script de lancement. Le guide [Installation sur Mac](docs/environnement/INSTALLATION-MAC.md) couvre les Mac Intel et Apple Silicon, et le guide [Installation sous Linux](docs/environnement/INSTALLATION-LINUX.md) couvre Debian, Ubuntu, Fedora et Arch (avec le même conteneur, ou par installation directe des outils).
 
 ```bash
 ./docs/environnement/lab.sh

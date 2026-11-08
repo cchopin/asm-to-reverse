@@ -68,7 +68,7 @@ Tous les dix challenges, relire les fiches "Ce qui a été appris" : les schéma
 
 - Hack The Box, challenges "Reversing" de difficulté "Very Easy" puis "Easy".
 - crackmes.one, difficulté 2.0 à 3.0, y compris quelques crackmes **Windows** analysés en statique dans Ghidra (sans exécution, faute de Windows : c'est un excellent entraînement à la lecture pure).
-- Approfondir z3 (section 11.5) : de nombreux challenges de niveau intermédiaire en dépendent.
+- Approfondir z3 (section 4.5) : de nombreux challenges de niveau intermédiaire en dépendent.
 - Commencer Practical Malware Analysis, chapitres 1 à 3 (analyse de base) et leurs laboratoires.
 
 ### Ensuite

@@ -10,7 +10,7 @@ Quand lire cette partie ? Les chapitres 1 et 2 (hors fil rouge) se lisent dès l
 
 ## 1.1 Structure d'un fichier NASM
 
-Un fichier NASM (extension `.asm`) est découpé en **sections**, qui correspondent à celles de l'exécutable final (chapitre 6) :
+Un fichier NASM (extension `.asm`) est découpé en **sections**, qui correspondent à celles de l'exécutable final (chapitre 6 de la partie 2) :
 
 | Section | Contenu |
 |---|---|
@@ -31,7 +31,7 @@ Les principales directives :
 | `global _start` | rend le symbole visible pour l'éditeur de liens |
 | `; texte` | un commentaire |
 
-La syntaxe des instructions est la syntaxe Intel utilisée depuis le début du cours, avec deux différences de détail : la taille s'écrit `byte`, `word`, `dword`, `qword` sans `PTR` (par exemple `cmp byte [rsi], 0`), et `[rel message]` demande une adresse relative à `rip` (chapitre 6), équivalente au `[rip+0x...]` des listings.
+La syntaxe des instructions est la syntaxe Intel utilisée depuis le début du cours, avec deux différences de détail : la taille s'écrit `byte`, `word`, `dword`, `qword` sans `PTR` (par exemple `cmp byte [rsi], 0`), et `[rel message]` demande une adresse relative à `rip` (chapitre 6 de la partie 2), équivalente au `[rip+0x...]` des listings.
 
 Un programme passe par deux étapes avant de pouvoir être lancé :
 
@@ -61,7 +61,7 @@ Il faut bien distinguer deux notions jusqu'ici confondues :
 | `rdi`, `rsi`, `rdx`, `r10`, `r8`, `r9` | arguments 1 à 6 |
 | `rax` (après) | valeur de retour ; une valeur négative entre -1 et -4095 signale une erreur (`-errno`) |
 
-Deux différences avec la convention d'appel des fonctions (chapitre 5) sont à retenir : le quatrième argument est dans **`r10`** et non dans `rcx`, et l'instruction `syscall` **écrase `rcx` et `r11`**. Les autres registres sont conservés.
+Deux différences avec la convention d'appel des fonctions (chapitre 5 de la partie 2) sont à retenir : le quatrième argument est dans **`r10`** et non dans `rcx`, et l'instruction `syscall` **écrase `rcx` et `r11`**. Les autres registres sont conservés.
 
 Les numéros les plus fréquents en x86-64 :
 
@@ -184,10 +184,10 @@ Bonjour Clemence
 Trois remarques :
 
 - le résultat de `read` (nombre d'octets lus, retour à la ligne compris) est mis de côté dans `r12`, car `rax` sera réutilisé pour le numéro de l'appel suivant ;
-- `mov edi, 1` suffit pour mettre `rdi` à 1, puisque l'écriture dans un registre 32 bits efface la moitié haute (section 2.6) ; c'est plus court à encoder, et c'est ce que fait gcc ;
+- `mov edi, 1` suffit pour mettre `rdi` à 1, puisque l'écriture dans un registre 32 bits efface la moitié haute (partie 2, section 2.6) ; c'est plus court à encoder, et c'est ce que fait gcc ;
 - `read` ne termine pas la chaîne par un 0 : c'est pour cela que la longueur doit être conservée.
 
-Dernière remarque sur l'adressage : `bonjour.asm` écrivait `mov rsi, message` (adresse absolue), alors que `saluer.asm` écrit `lea rsi, [rel nom]` (adresse relative à `rip`). Les deux donnent l'adresse d'une donnée. La forme `[rel ...]` est préférable car elle fonctionne quel que soit l'endroit où le programme est chargé en mémoire (code indépendant de la position, chapitre 6) ; c'est aussi celle qu'exige la libc au chapitre 16.
+Dernière remarque sur l'adressage : `bonjour.asm` écrivait `mov rsi, message` (adresse absolue), alors que `saluer.asm` écrit `lea rsi, [rel nom]` (adresse relative à `rip`). Les deux donnent l'adresse d'une donnée. La forme `[rel ...]` est préférable car elle fonctionne quel que soit l'endroit où le programme est chargé en mémoire (code indépendant de la position, chapitre 6 de la partie 2) ; c'est aussi celle qu'exige la libc au chapitre 2.
 
 ## 1.5 Les arguments de la ligne de commande
 
@@ -246,7 +246,7 @@ $1 = -1
 Aucun debogueur
 ```
 
-C'est la technique 2 de la section 12.2, appliquée pas à pas. Dans Ghidra, un appel système apparaît sous la forme `syscall()` ; il faut alors retrouver le numéro dans `rax` (ou `eax`) juste avant, et le chercher dans la table.
+C'est la technique 2 de la section 5.2 de la partie 3, appliquée pas à pas. Dans Ghidra, un appel système apparaît sous la forme `syscall()` ; il faut alors retrouver le numéro dans `rax` (ou `eax`) juste avant, et le chercher dans la table.
 
 ## Exercices
 
@@ -285,12 +285,12 @@ Ces trois exercices construisent une mini-bibliothèque d'affichage sans libc, q
 
 ## Fil rouge partie 4 : réécrire le keygen du coffre v3
 
-Au chapitre 11, le coffre v3 a été vaincu par un keygen écrit en Python ([keygen_v3.py](../solutions/scripts/keygen_v3.py)). Le fil rouge de la partie 4 consiste à écrire ce même keygen **en assembleur**, en deux temps.
+Au chapitre 4 de la partie 3, le coffre v3 a été vaincu par un keygen écrit en Python ([keygen_v3.py](../solutions/scripts/keygen_v3.py)). Le fil rouge de la partie 4 consiste à écrire ce même keygen **en assembleur**, en deux temps.
 
 Étape 1 (ce chapitre) : écrire `fr15.asm`, sans libc, qui :
 
 1. vérifie que `argc` vaut 2, et sinon affiche `usage : fr15 <nom>` sur la sortie d'erreur et quitte avec le code 1 ;
-2. calcule la longueur de `argv[1]` avec une boucle (chapitre 4) ;
+2. calcule la longueur de `argv[1]` avec une boucle (chapitre 4 de la partie 2) ;
 3. affiche `argv[1]` suivi d'un retour à la ligne, puis quitte avec le code 0.
 
 ```
@@ -302,7 +302,7 @@ usage : fr15 <nom>
 
 La boucle de longueur sera réutilisée au chapitre 2, où elle deviendra la boucle de hachage.
 
-Solutions : [solutions/partie3.md](../solutions/partie3.md#chapitre-15)
+Solutions : [solutions/partie3.md](../solutions/partie3.md#chapitre-1)
 
 ## Suivi
 

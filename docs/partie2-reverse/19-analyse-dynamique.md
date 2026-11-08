@@ -27,7 +27,7 @@ connect(3, {sa_family=AF_INET, sin_port=htons(8080),
 En deux lignes, on sait que le programme lit le nom de la machine puis essaie de joindre `127.0.0.1:8080`. C'est exactement la méthode pour cartographier un échantillon inconnu avant même de le désassembler.
 
 !!! tip "L'anti-debug change la trace"
-    Le `specimen` du capstone appelle `ptrace(PTRACE_TRACEME)` : lancé sous `strace`, l'appel échoue (le processus est déjà tracé), et le programme s'arrête avant d'agir. La trace s'interrompt alors tôt. C'est le lien direct avec le chapitre précédent : une protection anti-debug fausse l'analyse dynamique, et il faut la neutraliser (par exemple avec un faux `ptrace`) pour que `strace` montre le vrai comportement.
+    Le `coffre_v4` du chapitre 5 appelle `ptrace(PTRACE_TRACEME)` : lancé sous `strace`, l'appel échoue (`ptrace(PTRACE_TRACEME) = -1 EPERM`, le processus est déjà tracé), et le programme affiche son message de refus puis quitte avant d'agir. La trace s'interrompt alors tôt. C'est le lien direct avec le chapitre précédent : une protection anti-debug fausse l'analyse dynamique, et il faut la neutraliser (par exemple avec un faux `ptrace`) pour que `strace` montre le vrai comportement.
 
 ## 11.2 ltrace : les appels de bibliothèque
 
@@ -95,7 +95,7 @@ Sources dans `dynamique/` (`motdepasse.c`, `activite.c`, `hook_strcmp.js`). `str
 
 **Exercice 11.2 (niveau 2)** Compiler `motdepasse.c`. Retrouver le mot de passe attendu **sans lire la source** : avec `ltrace ./motdepasse essai` si disponible, sinon avec GDB en lisant les deux arguments de `strcmp`. Vérifier que le mot de passe trouvé donne le flag.
 
-**Exercice 11.3 (niveau 2)** Lancer le `specimen` du capstone sous `strace`. Pourquoi la trace s'arrête-t-elle tôt ? Quel appel système en est la cause, et comment le neutraliser pour voir le vrai comportement ?
+**Exercice 11.3 (niveau 2)** Lancer `coffre_v4` (chapitre 5) sous `strace`. Pourquoi la trace s'arrête-t-elle tôt ? Quel appel système en est la cause, et comment le neutraliser pour voir le vrai comportement (indice : l'option `-E` de `strace` transmet une variable d'environnement au programme tracé) ?
 
 **Exercice 11.4 (niveau 2)** Sur un programme qui lit un fichier, utiliser `strace -f` pour confirmer qu'aucun processus fils n'est créé, puis `strace -e trace=openat` pour lister tous les fichiers ouverts, y compris les bibliothèques chargées au démarrage.
 
