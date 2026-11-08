@@ -189,22 +189,44 @@ Le patching a peu d'intérêt lorsque le flag dépend de la saisie (le programme
 
 ## Exercices
 
-**Exercice 4.1 (N1)** Pour chaque description, indiquer le schéma du tableau 4.1 correspondant et l'approche à adopter :
+Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#chapitre-4).
+
+### Exercice 4.1 - reconnaître le schéma (N1)
+
+- **À produire :** pour chaque description, le schéma du tableau 4.1 correspondant et l'approche à adopter
 
 - a) Ghidra montre une boucle de 32 tours sur la saisie qui calcule `out[i] = in[i] ^ in[(i+1) % 32]`, puis un `memcmp` avec un tableau global.
 - b) Le programme importe `MD5_Init`, `MD5_Update`, `MD5_Final` et compare le résultat à une chaîne de 32 caractères hexadécimaux.
 - c) `main` contient 40 `if` du type `if (s[7] * 3 - s[12] != 0x95) fail();`.
 - d) Le programme lit un fichier `prog.bin`, puis entre dans une boucle contenant un `switch` de 16 cas.
 
-**Exercice 4.2 (N2)** Résoudre l'exemple z3 de la section 4.5, puis le modifier pour déterminer s'il existe une autre solution (indice : ajouter une contrainte qui exclut la première et relancer `check()`).
+### Exercice 4.2 - une autre solution avec z3 (N2)
 
-**Exercice 4.3 (N2)** Patcher `mystere` (partie 2) pour qu'il accepte n'importe quel code, de deux façons : en modifiant un saut dans `main`, puis en modifiant `verifier` pour qu'elle renvoie toujours 1.
+- **Fichier à rendre :** un script z3
+- **À faire :** résoudre l'exemple z3 de la section 4.5, puis le modifier pour déterminer s'il existe une autre solution
 
-**Exercice 4.4 (N1)** Dans `objdump -d mystere`, on lit dans `main` : `401279: 74 11  je 40128c`. Retrouver l'adresse cible **à partir des seuls octets** (section 4.6), puis faire de même pour le `jmp` codé `eb 0f` à l'adresse `40128a`. Que deviendrait la cible si le deuxième octet du `je` valait `f0` ?
+Indice : ajouter une contrainte qui exclut la première et relancer `check()`.
 
-**Exercice 4.5 (N2)** Appliquer le patch de l'exercice 4.3 **à la main**, sans Ghidra : trouver avec `readelf -S mystere` l'adresse et l'offset de la section `.text`, en déduire la position dans le fichier du `je` situé à `0x401279`, et le remplacer par deux `nop` (`90 90`) avec `printf` et `dd`. Vérifier que `./mystere 11111111` affiche alors `Code accepte`.
+### Exercice 4.3 - deux patchs (N2)
 
-**Exercice 4.6 (N3)** Sur crackmes.one, chercher des crackmes Linux de difficulté 1.0 à 2.0 dont le titre ou la description mentionne "keygen", et en résoudre un.
+- **À faire :** patcher `mystere` (partie 2) pour qu'il accepte n'importe quel code, de deux façons : en modifiant un saut dans `main`, puis en modifiant `verifier` pour qu'elle renvoie toujours 1
+
+### Exercice 4.4 - calculer une cible de saut (N1)
+
+- **À produire :** l'adresse cible du `je` et du `jmp`, calculées à partir des seuls octets
+
+Dans `objdump -d mystere`, on lit dans `main` : `401279: 74 11  je 40128c`. Retrouver l'adresse cible (section 4.6), puis faire de même pour le `jmp` codé `eb 0f` à l'adresse `40128a`. Que deviendrait la cible si le deuxième octet du `je` valait `f0` ?
+
+### Exercice 4.5 - patcher à la main (N2)
+
+- **À faire :** appliquer le patch du 4.3 sans Ghidra, en éditant les octets du fichier
+- **À produire :** la vérification que `./mystere 11111111` affiche `Code accepte`
+
+Trouver avec `readelf -S mystere` l'adresse et l'offset de la section `.text`, en déduire la position dans le fichier du `je` situé à `0x401279`, et le remplacer par deux `nop` (`90 90`) avec `printf` et `dd`.
+
+### Exercice 4.6 - un keygen réel (N3)
+
+- **À faire :** sur crackmes.one, chercher des crackmes Linux de difficulté 1.0 à 2.0 mentionnant "keygen", et en résoudre un
 
 ## Fil rouge : coffre v3, le keygen
 

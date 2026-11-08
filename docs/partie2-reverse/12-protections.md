@@ -148,15 +148,33 @@ Face à l'obfuscation, l'analyse dynamique est le meilleur allié : **le program
 
 ## Exercices
 
-**Exercice 5.1 (N2)** Écrire un petit programme qui appelle `ptrace(PTRACE_TRACEME, ...)` et affiche "OK" ou "Débogueur". Le compiler, le stripper, puis contourner la protection avec les quatre techniques de la section 5.2.
+Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#chapitre-5).
 
-**Exercice 5.2 (N1)** Compiler un "hello world", puis le packer avec UPX (`upx -o hello_packe hello`). Comparer `strings`, `nm -D` et la taille des deux fichiers. Le dépacker.
+### Exercice 5.1 - contourner ptrace (N2)
 
-**Exercice 5.3 (N1)** Compiler `mystere` puis le stripper (`strip mystere -o mystere_s`). Comparer `file` et `nm` sur les deux versions. Sur la version strippée, retrouver l'adresse de `main` à partir du point d'entrée (`readelf -h`, puis `objdump -d` à cette adresse), comme à la section 5.1, et vérifier en posant un point d'arrêt dessus dans GDB.
+- **Fichier à rendre :** un programme C avec `ptrace(PTRACE_TRACEME, ...)`
+- **À faire :** afficher "OK" ou "Débogueur", le compiler, le stripper, puis contourner la protection avec les quatre techniques de la section 5.2
 
-**Exercice 5.4 (N2)** Écrire un programme qui lit `/proc/self/status` et cherche une ligne `TracerPid:` non nulle. Le lancer normalement, puis sous GDB, et observer la différence. Comment le contourner ?
+### Exercice 5.2 - packer avec UPX (N1)
 
-**Exercice 5.5 (N3)** Écrire un programme qui mesure, avec `clock_gettime`, la durée d'une petite boucle de calcul, et affiche `Trop lent : débogueur ?` si elle dépasse 100 millisecondes. Le lancer normalement, puis dans GDB en avançant pas à pas dans la boucle. Proposer deux façons de neutraliser ce test dans GDB, sans recompiler.
+- **À faire :** compiler un "hello world", le packer (`upx -o hello_packe hello`), puis le dépacker
+- **À produire :** la comparaison de `strings`, `nm -D` et la taille des deux fichiers
+
+### Exercice 5.3 - retrouver main sur un binaire strippé (N1)
+
+- **À faire :** compiler `mystere` puis le stripper (`strip mystere -o mystere_s`), retrouver l'adresse de `main` à partir du point d'entrée (`readelf -h`, puis `objdump -d`), et poser un point d'arrêt dessus dans GDB
+- **À produire :** la comparaison de `file` et `nm` sur les deux versions
+
+### Exercice 5.4 - détecter via /proc (N2)
+
+- **Fichier à rendre :** un programme C qui lit `/proc/self/status`
+- **À faire :** chercher une ligne `TracerPid:` non nulle, lancer le programme normalement puis sous GDB, observer la différence, et proposer un contournement
+
+### Exercice 5.5 - détection par le temps (N3)
+
+- **Fichier à rendre :** un programme C qui chronomètre une boucle avec `clock_gettime`
+- **À faire :** afficher `Trop lent : débogueur ?` si la durée dépasse 100 ms, le lancer normalement puis pas à pas sous GDB
+- **À produire :** deux façons de neutraliser ce test dans GDB, sans recompiler
 
 ## Fil rouge : coffre v4
 

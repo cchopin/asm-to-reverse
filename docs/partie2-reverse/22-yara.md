@@ -192,21 +192,56 @@ On passe ainsi d'une analyse qui ne vaut que pour un fichier à une règle qui p
 
 Sources dans `yara/`. Tout est testable ici via `python3` + module `yara` (ou `yara` en ligne de commande sur votre machine). Les binaires de test se construisent comme au chapitre 13 (`demo`, `packed`) et au chapitre 6 (`coffre_v5`).
 
-**Exercice 14.1 (niveau 1)** Écrire et tester une règle qui correspond à `demo` (via la chaîne `reverse42`) mais pas à `packed`. Expliquer pourquoi `packed` échappe à la règle, et ce que cela dit des limites d'une signature par chaîne.
+Chaque exercice produit une règle YARA à tester. Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#yara).
 
-**Exercice 14.2 (niveau 1)** Écrire une règle qui reconnaît **tout** fichier ELF par son magic (`uint32(0) == 0x464c457f`). La tester sur `demo` (match) et sur un fichier texte (pas de match). Écrire la condition équivalente pour un PE.
+### Exercice 14.1 - une signature par chaîne (niveau 1)
 
-**Exercice 14.3 (niveau 2)** Avec le module `math`, écrire une règle « packé probable » (`math.entropy(0, filesize) >= 7.2`). La tester sur trois fichiers que vous fabriquez : du texte répétitif, des données compressées (`zlib`), des données aléatoires. Donner l'entropie de chacun et dire lesquels déclenchent la règle.
+- **Fichier à rendre :** une règle YARA
+- **À faire :** correspondre à `demo` (via la chaîne `reverse42`) mais pas à `packed`
+- **À produire :** pourquoi `packed` échappe à la règle, et ce que cela dit des limites d'une signature par chaîne
 
-**Exercice 14.4 (niveau 2)** Écrire une règle à **plusieurs motifs** avec une condition `2 of them` (par exemple deux chaînes présentes dans un même binaire). Vérifier qu'elle ne se déclenche que si au moins deux motifs sont présents. Comparer avec `all of them` et `any of them`.
+### Exercice 14.2 - reconnaître un ELF (niveau 1)
 
-**Exercice 14.5 (niveau 3)** Écrire une règle qui attrape les IOC de `coffre_v5` (le C2 et la campagne, retrouvés au chapitre 6), sachant qu'ils sont chiffrés par XOR 0x37. Utiliser le modificateur `xor(0x37)` sur les chaînes en clair. Vérifier le match, et lister les motifs trouvés. Bonus : remplacer par `xor(0x00-0xff)` et expliquer ce que YARA fait alors.
+- **Fichier à rendre :** une règle YARA
+- **À faire :** reconnaître **tout** fichier ELF par son magic (`uint32(0) == 0x464c457f`), la tester sur `demo` (match) et un fichier texte (pas de match)
+- **À produire :** la condition équivalente pour un PE
 
-**Exercice 14.6 (niveau 2)** Écrire un motif **hex avec jokers** qui signe le prologue de fonction `push rbp; mov rbp, rsp` (`{ 55 48 89 E5 }`) et le tester sur un binaire non optimisé du cours. Expliquer pourquoi un joker (`??`) serait nécessaire pour signer une instruction contenant une adresse.
+### Exercice 14.3 - détecter par l'entropie (niveau 2)
 
-**Exercice 14.7 (niveau 3, conceptuel PE)** Écrire une règle utilisant le module `pe` qui signe un téléchargeur : imports de `wininet.dll!InternetReadFile` et de `kernel32.dll!CreateProcessA`. Expliquer pourquoi signer des imports est plus robuste que signer une chaîne, et faire le lien avec la table d'import vue au chapitre 13.
+- **Fichier à rendre :** une règle YARA utilisant `math.entropy(0, filesize) >= 7.2`
+- **À faire :** la tester sur trois fichiers fabriqués (texte répétitif, données compressées via `zlib`, données aléatoires)
+- **À produire :** l'entropie de chacun et lesquels déclenchent la règle
 
-**Exercice 14.8 (niveau 3)** Prendre un crackme du CTF maison que vous avez résolu, et en écrire une règle YARA qui le reconnaît de façon spécifique (combinaison de chaîne, de taille et éventuellement d'un bout de code). Vérifier qu'elle matche ce crackme et pas les autres. C'est l'exercice de synthèse : transformer votre analyse en détection.
+### Exercice 14.4 - plusieurs motifs (niveau 2)
+
+- **Fichier à rendre :** une règle YARA avec une condition `2 of them`
+- **À faire :** vérifier qu'elle ne se déclenche qu'avec au moins deux motifs présents
+- **À produire :** la comparaison avec `all of them` et `any of them`
+
+### Exercice 14.5 - des IOC chiffrés par XOR (niveau 3)
+
+- **Fichier à rendre :** une règle YARA
+- **À faire :** attraper les IOC de `coffre_v5` (le C2 et la campagne, chapitre 6), chiffrés par XOR 0x37, avec le modificateur `xor(0x37)`
+- **À produire :** les motifs trouvés. Bonus : remplacer par `xor(0x00-0xff)` et expliquer ce que YARA fait alors
+
+### Exercice 14.6 - un motif hex (niveau 2)
+
+- **Fichier à rendre :** une règle YARA
+- **À faire :** signer le prologue `push rbp; mov rbp, rsp` (`{ 55 48 89 E5 }`) et la tester sur un binaire non optimisé du cours
+- **À produire :** pourquoi un joker (`??`) serait nécessaire pour signer une instruction contenant une adresse
+
+### Exercice 14.7 - signer des imports PE (niveau 3, conceptuel PE)
+
+- **Fichier à rendre :** une règle YARA utilisant le module `pe`
+- **À faire :** signer un téléchargeur (imports de `wininet.dll!InternetReadFile` et `kernel32.dll!CreateProcessA`)
+- **À produire :** pourquoi signer des imports est plus robuste que signer une chaîne, en lien avec le chapitre 13
+
+### Exercice 14.8 - de l'analyse à la détection (niveau 3)
+
+- **Fichier à rendre :** une règle YARA
+- **À faire :** prendre un crackme du CTF maison déjà résolu et en écrire une règle spécifique (chaîne, taille, éventuellement un bout de code), qui matche ce crackme et pas les autres
+
+C'est l'exercice de synthèse : transformer votre analyse en détection.
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#yara)
 

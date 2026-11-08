@@ -19,17 +19,48 @@ Pour corser le défi, vous pouvez les stripper (`strip crackNN`) afin de perdre 
 
 ## Les défis
 
-**Défi 1 (N1) - crack01.** Le programme attend un mot de passe en argument et répond `Acces autorise` ou `Refuse`. Trouvez le mot de passe. Indice : parfois, `strings` suffit.
+### Défi 1 - crack01 (N1)
 
-**Défi 2 (N1) - crack02.** Même principe, mais le mot de passe n'apparaît plus en clair. Observez comment chaque caractère saisi est transformé avant d'être comparé, et inversez la transformation.
+- **Binaire :** `crack01`
+- **À produire :** le mot de passe accepté
 
-**Défi 3 (N2) - crack03.** La transformation dépend cette fois de la position du caractère. Retrouvez la règle, puis fabriquez la clé position par position.
+Le programme attend un mot de passe en argument et répond `Acces autorise` ou `Refuse`. Indice : parfois, `strings` suffit.
 
-**Défi 4 (N2) - crack04.** Un vérificateur de licence : `./crack04 <nom> <serial>`. Le serial est calculé à partir du nom. Comprenez le calcul, puis écrivez un **keygen** qui donne un serial valide pour n'importe quel nom.
+### Défi 2 - crack02 (N1)
 
-**Défi 5 (N3) - crack05.** Un code à quatre chiffres soumis à plusieurs contraintes. Récupérez les contraintes dans le code, puis résolvez-les (à la main ou avec z3, voir chapitre 4). Une seule combinaison fonctionne.
+- **Binaire :** `crack02`
+- **À produire :** le mot de passe accepté
 
-**Défi 6 (N3) - crack06.** Un crackme protégé contre le débogage : sous GDB, il refuse de coopérer. Trouvez d'abord le mot de passe par analyse statique, puis trouvez comment neutraliser l'anti-debug pour l'observer en dynamique (voir chapitre 5).
+Même principe, mais le mot de passe n'apparaît plus en clair. Observez comment chaque caractère saisi est transformé avant d'être comparé, et inversez la transformation.
+
+### Défi 3 - crack03 (N2)
+
+- **Binaire :** `crack03`
+- **À produire :** la clé acceptée
+
+La transformation dépend cette fois de la position du caractère. Retrouvez la règle, puis fabriquez la clé position par position.
+
+### Défi 4 - crack04 (N2)
+
+- **Binaire :** `crack04` (usage `./crack04 <nom> <serial>`)
+- **Fichier à rendre :** un keygen
+- **À produire :** un serial valide pour n'importe quel nom
+
+Le serial est calculé à partir du nom. Comprenez le calcul, puis écrivez un keygen.
+
+### Défi 5 - crack05 (N3)
+
+- **Binaire :** `crack05`
+- **À produire :** le code à quatre chiffres accepté
+
+Un code soumis à plusieurs contraintes. Récupérez-les dans le code, puis résolvez-les (à la main ou avec z3, voir chapitre 4). Une seule combinaison fonctionne.
+
+### Défi 6 - crack06 (N3)
+
+- **Binaire :** `crack06`
+- **À produire :** le mot de passe, et la façon de neutraliser l'anti-debug
+
+Un crackme protégé contre le débogage : sous GDB, il refuse de coopérer. Trouvez d'abord le mot de passe par analyse statique, puis neutralisez l'anti-debug pour l'observer en dynamique (voir chapitre 5).
 
 ## Vérifier
 

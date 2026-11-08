@@ -81,17 +81,37 @@ La parade est le **désassemblage par flot de contrôle** (suivre réellement le
 
 Sources dans `anti-reverse/` (`protege.c`, `faux.c`, `antidis.asm`, `patch_tracerpid.py`).
 
-**Exercice 10.1 (niveau 1)** Compiler `protege` (`gcc -O1 -no-pie protege.c -o protege`), le lancer normalement (flag), puis sous `strace` et sous GDB. Quel test se déclenche dans chaque cas, et pourquoi ?
+Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#anti-reverse).
 
-**Exercice 10.2 (niveau 2)** Écrire et compiler `faux.so`, puis contourner `protege` avec `LD_PRELOAD=./faux.so`. Expliquer précisément quelles deux protections sont neutralisées, et par quel mécanisme chacune.
+### Exercice 10.1 - repérer les protections (niveau 1)
 
-**Exercice 10.3 (niveau 2)** Repérer dans le désassemblage le saut conditionnel du test TracerPid, le neutraliser (patch en `NOP`), et vérifier. Pourquoi le binaire patché est-il quand même détecté sous `strace` ?
+- **À faire :** compiler `protege` (`gcc -O1 -no-pie protege.c -o protege`), le lancer normalement, puis sous `strace` et sous GDB
+- **À produire :** le test qui se déclenche dans chaque cas, et pourquoi
 
-**Exercice 10.4 (niveau 3)** Combiner deux contournements pour faire passer `protege` sous un traceur (par exemple patch TracerPid + `faux.so` pour `ptrace`). Vérifier que le flag s'affiche malgré la présence du traceur.
+### Exercice 10.2 - contourner par LD_PRELOAD (niveau 2)
 
-**Exercice 10.5 (niveau 2)** Écrire un faux `getppid` (ou `ptrace`) en `LD_PRELOAD` et vérifier avec un petit programme témoin que c'est bien votre version qui est appelée. En quoi est-ce plus souple qu'un patch du binaire ?
+- **Fichier à rendre :** `faux.so`
+- **À faire :** contourner `protege` avec `LD_PRELOAD=./faux.so`
+- **À produire :** les deux protections neutralisées et le mécanisme de chacune
 
-**Exercice 10.6 (niveau 3)** Assembler `antidis.asm`, l'exécuter (code de retour attendu 7), puis comparer `objdump -d` (balayage linéaire) et une lecture pas à pas dans GDB. Montrer que l'octet `0xE8` n'est jamais exécuté et explique la désynchronisation.
+### Exercice 10.3 - patcher le test TracerPid (niveau 2)
+
+- **À faire :** repérer dans le désassemblage le saut conditionnel du test TracerPid, le neutraliser (patch en `NOP`), vérifier
+- **À produire :** pourquoi le binaire patché est quand même détecté sous `strace`
+
+### Exercice 10.4 - combiner deux contournements (niveau 3)
+
+- **À faire :** faire passer `protege` sous un traceur en combinant deux contournements (par exemple patch TracerPid + `faux.so` pour `ptrace`), et vérifier que le flag s'affiche
+
+### Exercice 10.5 - un faux appel en LD_PRELOAD (niveau 2)
+
+- **Fichier à rendre :** une bibliothèque `LD_PRELOAD` (faux `getppid` ou `ptrace`), plus un programme témoin
+- **À produire :** la vérification que c'est bien votre version qui est appelée, et en quoi c'est plus souple qu'un patch du binaire
+
+### Exercice 10.6 - désassemblage désynchronisé (niveau 3)
+
+- **À faire :** assembler `antidis.asm`, l'exécuter (code de retour attendu 7), puis comparer `objdump -d` (balayage linéaire) et une lecture pas à pas dans GDB
+- **À produire :** la preuve que l'octet `0xE8` n'est jamais exécuté, et l'explication de la désynchronisation
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#anti-reverse)
 

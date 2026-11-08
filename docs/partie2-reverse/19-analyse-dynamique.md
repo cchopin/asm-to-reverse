@@ -91,17 +91,36 @@ La démarche type : `strace`/`ltrace` pour comprendre vite ce que fait le progra
 
 Sources dans `dynamique/` (`motdepasse.c`, `activite.c`, `hook_strcmp.js`). `strace`, `ltrace` et `Frida` sont tous disponibles dans l'image du laboratoire (`reverse-lab`) ; GDB peut aussi remplacer `ltrace` au besoin.
 
-**Exercice 11.1 (niveau 1)** Compiler `activite.c` et lancer `strace -e trace=openat,connect ./activite`. Décrire en une phrase ce que fait le programme, d'après la seule trace.
+Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#analyse-dynamique).
 
-**Exercice 11.2 (niveau 2)** Compiler `motdepasse.c`. Retrouver le mot de passe attendu **sans lire la source** : avec `ltrace ./motdepasse essai` si disponible, sinon avec GDB en lisant les deux arguments de `strcmp`. Vérifier que le mot de passe trouvé donne le flag.
+### Exercice 11.1 - lire une trace (niveau 1)
 
-**Exercice 11.3 (niveau 2)** Lancer `coffre_v4` (chapitre 5) sous `strace`. Pourquoi la trace s'arrête-t-elle tôt ? Quel appel système en est la cause, et comment le neutraliser pour voir le vrai comportement (indice : l'option `-E` de `strace` transmet une variable d'environnement au programme tracé) ?
+- **À faire :** compiler `activite.c` et lancer `strace -e trace=openat,connect ./activite`
+- **À produire :** en une phrase, ce que fait le programme d'après la seule trace
 
-**Exercice 11.4 (niveau 2)** Sur un programme qui lit un fichier, utiliser `strace -f` pour confirmer qu'aucun processus fils n'est créé, puis `strace -e trace=openat` pour lister tous les fichiers ouverts, y compris les bibliothèques chargées au démarrage.
+### Exercice 11.2 - retrouver un mot de passe (niveau 2)
 
-**Exercice 11.5 (niveau 3)** Avec Frida et `hook_strcmp.js`, journaliser l'appel à `strcmp` de `motdepasse` (observer le mot de passe), puis activer le `retval.replace(0)` et vérifier que n'importe quelle entrée est désormais acceptée. Expliquer la différence entre observer et modifier.
+- **À faire :** compiler `motdepasse.c`, puis retrouver le mot de passe **sans lire la source** (avec `ltrace ./motdepasse essai`, sinon GDB en lisant les deux arguments de `strcmp`)
+- **À produire :** le mot de passe qui donne le flag
 
-**Exercice 11.6 (niveau 3)** Comparer ce que montrent `strace` et `ltrace` (ou GDB) sur `motdepasse` : lequel révèle le mot de passe, et pourquoi l'autre ne le voit pas ?
+### Exercice 11.3 - une trace qui s'arrête tôt (niveau 2)
+
+- **À faire :** lancer `coffre_v4` (chapitre 5) sous `strace`
+- **À produire :** pourquoi la trace s'arrête tôt, l'appel système en cause, et comment le neutraliser (indice : l'option `-E` de `strace`)
+
+### Exercice 11.4 - lister les fichiers ouverts (niveau 2)
+
+- **À faire :** sur un programme qui lit un fichier, confirmer avec `strace -f` qu'aucun processus fils n'est créé, puis lister avec `strace -e trace=openat` tous les fichiers ouverts, y compris les bibliothèques chargées au démarrage
+
+### Exercice 11.5 - observer puis modifier avec Frida (niveau 3)
+
+- **Fichier à rendre :** `hook_strcmp.js`
+- **À faire :** journaliser l'appel à `strcmp` de `motdepasse`, puis activer `retval.replace(0)` et vérifier que n'importe quelle entrée est acceptée
+- **À produire :** la différence entre observer et modifier
+
+### Exercice 11.6 - strace contre ltrace (niveau 3)
+
+- **À produire :** entre `strace` et `ltrace` (ou GDB) sur `motdepasse`, lequel révèle le mot de passe et pourquoi l'autre ne le voit pas
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#analyse-dynamique)
 

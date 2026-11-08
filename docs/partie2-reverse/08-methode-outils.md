@@ -160,11 +160,24 @@ objdump -s -j .rodata coffre_v1
 
 ## Exercices
 
-**Exercice 1.1 (N1)** Lancer `file`, `strings` et `nm -D` sur `/bin/ls`. Que peut-on dire de ce programme sans l'exécuter ? Est-il strippé ?
+Ces exercices sont pratiques : on manipule de vrais outils et de vrais binaires. Consignez vos réponses dans vos notes. Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#chapitre-1).
 
-**Exercice 1.2 (N1)** Écrire un petit programme C qui demande un nombre avec `scanf("%d", &n)` et affiche "Gagne" si `n == 1337`. Le compiler. La réponse est-elle trouvable avec `strings` ? Avec `ltrace` ? Avec `objdump` ? Pourquoi ?
+### Exercice 1.1 - premier contact (N1)
 
-**Exercice 1.3 (N2)** Sur https://crackmes.one, filtrer par difficulté 1.0 et plateforme Unix/Linux, puis télécharger deux crackmes. N'appliquer que les étapes 1 et 2 de la méthode. Combien sont résolus sans ouvrir de désassembleur ?
+- **À faire :** lancer `file`, `strings` et `nm -D` sur `/bin/ls`
+- **À produire :** ce que l'on peut dire du programme sans l'exécuter, et s'il est strippé
+
+### Exercice 1.2 - ce que chaque outil voit (N1)
+
+- **Fichier à rendre :** `gagne.c`
+- **Outils autorisés :** `gcc`, `strings`, `ltrace`, `objdump`
+
+Écrire un programme qui demande un nombre avec `scanf("%d", &n)` et affiche "Gagne" si `n == 1337`. La réponse est-elle trouvable avec `strings` ? Avec `ltrace` ? Avec `objdump` ? Pourquoi ?
+
+### Exercice 1.3 - deux crackmes réels (N2)
+
+- **À faire :** sur https://crackmes.one, filtrer par difficulté 1.0 et plateforme Unix/Linux, télécharger deux crackmes, et n'appliquer que les étapes 1 et 2 de la méthode
+- **À produire :** combien sont résolus sans ouvrir de désassembleur
 
 Pratique : les archives sont souvent des `.zip` protégés par le mot de passe `crackmes.one`. Pour transférer le fichier téléchargé sur le Mac vers le conteneur, le déposer dans le dossier du cours (partagé dans `/cours`, voir le guide d'installation), puis le décompresser côté conteneur. La difficulté affichée sur le site est donnée par l'auteur et reste approximative : un "1.0" peut bloquer, ce n'est pas anormal. Les crackmes de ce site sont censés être sûrs, mais par principe ils s'analysent dans le conteneur.
 
@@ -180,7 +193,9 @@ objdump -d coffre0 | less        # ou dans Ghidra
 strings coffre0 | less
 ```
 
-**Exercice 1.0 (N1 à N3)**
+### Exercice 1.0 - lire son propre coffre0 (N1 à N3)
+
+- **À faire :** analyser `coffre0` sans rouvrir le source, en répondant aux quatre points
 
 1. (N1) Avec `strings`, retrouvez les messages (`Coffre ouvert`, `Refuse`, `Usage ...`). Dans quelle fonction sont-ils utilisés ?
 2. (N2) Dans le désassemblage de `main`, retrouvez le tableau `cible` : huit octets `43 6d 67 70 69 73 69 6c`. Comment sont-ils chargés (en données, immédiats, ...) ?

@@ -150,15 +150,36 @@ Le code affiche alors `param_1->pv` au lieu de `*(int *)(param_1 + 0x10)`. C'est
 
 ## Exercices
 
-**Exercice 2.1 (N1)** Ouvrir `mystere` (partie 2) dans Ghidra. Comparer le décompilé de `verifier` avec la version écrite au chapitre 7 de la partie 2. Qu'est-ce que Ghidra a mieux restitué ? Moins bien ?
+Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#chapitres-2-et-3).
 
-**Exercice 2.2 (N2)** Compiler `mystere` en `-O2` (`gcc -O2 -no-pie -fno-stack-protector mystere.c -o mystere_O2`), l'ouvrir dans Ghidra. Le décompilateur s'en sort-il ? Comment a-t-il traduit la séquence `sub eax, 0x30` / `cmp sil, 0x9` / `ja` ?
+### Exercice 2.1 - décompilé contre source (N1)
 
-**Exercice 2.3 (N1)** Toujours sur `mystere`, sans partir de `main` : ouvrir `Window > Defined Strings`, trouver la chaîne `Code accepte`, puis remonter par ses références croisées (`XREF`) jusqu'à la fonction qui l'affiche. Quel est le dernier test effectué avant d'arriver à cet affichage ? C'est la technique de la section 2.4, à rendre automatique.
+- **À faire :** ouvrir `mystere` (partie 2) dans Ghidra
+- **À produire :** ce que Ghidra a mieux restitué, et moins bien, par rapport à votre version du chapitre 7 de la partie 2
 
-**Exercice 2.4 (N2)** Compiler un programme C de son choix contenant une structure, la retrouver dans Ghidra et la recréer avec le Data Type Manager.
+### Exercice 2.2 - décompiler du -O2 (N2)
 
-**Exercice 2.5 (N3)** Écrire un petit programme C qui contient un tableau global de 8 octets, et une fonction qui compare chaque caractère de `argv[1]` à `tableau[i] ^ 0x55`. Le compiler avec `-O1 -s` (le `-s` retire les noms de fonctions), puis, **sans regarder le source**, retrouver dans Ghidra la fonction de vérification, extraire le tableau (section 2.6) et calculer le mot attendu avec un court script Python. Vérifier sur le programme.
+- **À faire :** compiler `mystere` en `-O2` (`gcc -O2 -no-pie -fno-stack-protector mystere.c -o mystere_O2`) et l'ouvrir dans Ghidra
+- **À produire :** si le décompilateur s'en sort, et comment il a traduit la séquence `sub eax, 0x30` / `cmp sil, 0x9` / `ja`
+
+### Exercice 2.3 - remonter depuis une chaîne (N1)
+
+- **À faire :** sur `mystere`, ouvrir `Window > Defined Strings`, trouver `Code accepte`, et remonter par ses références croisées (`XREF`) jusqu'à la fonction qui l'affiche
+- **À produire :** le dernier test effectué avant cet affichage
+
+C'est la technique de la section 2.4, à rendre automatique.
+
+### Exercice 2.4 - recréer une structure (N2)
+
+- **Fichier à rendre :** un programme C de votre choix contenant une structure
+- **À faire :** la retrouver dans Ghidra et la recréer avec le Data Type Manager
+
+### Exercice 2.5 - un keygen sans la source (N3)
+
+- **Fichier à rendre :** un programme C avec un tableau global de 8 octets, plus un script Python
+- **Outils autorisés :** `gcc`, Ghidra, `python3`
+
+Écrire un programme dont une fonction compare chaque caractère de `argv[1]` à `tableau[i] ^ 0x55`. Le compiler avec `-O1 -s` (le `-s` retire les noms de fonctions), puis, **sans regarder le source**, retrouver dans Ghidra la fonction de vérification, extraire le tableau (section 2.6) et calculer le mot attendu avec un court script Python. Vérifier sur le programme.
 
 ## Fil rouge : coffre v2, en statique
 

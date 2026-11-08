@@ -189,21 +189,46 @@ Une DLL (ou un `.exe` qui en expose) publie des fonctions via sa **table d'expor
 
 Les exercices ELF sont testables ici (`readelf`, `objdump`, `strings`, `strip`). Les exercices PE sont conceptuels : décrivez la démarche et les valeurs attendues ; vérifiez-les sur votre machine Windows ou avec `rabin2 -I`, `pev`, PE-bear si vous en disposez.
 
-**Exercice 13.1 (niveau 1)** Compiler n'importe quel programme C du cours (`gcc -no-pie prog.c -o prog`). Avec `readelf -h`, relever : la classe (32/64 bits), le type (`EXEC`/`DYN`/`REL`) et l'adresse du point d'entrée. Confirmer les quatre premiers octets du magic avec `xxd prog | head -1`.
+Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#formats-elf-pe).
 
-**Exercice 13.2 (niveau 2)** Sur le même binaire, lister les segments avec `readelf -l`. Pour chaque segment `PT_LOAD`, donner ses permissions (`R`, `R E`, `RW`) et dire ce qu'il contient. Montrer qu'aucun segment n'est à la fois `W` et `E`, et expliquer pourquoi c'est une bonne chose.
+### Exercice 13.1 - l'en-tête ELF (niveau 1)
 
-**Exercice 13.3 (niveau 2)** Avec `readelf -S`, repérer `.text`, `.rodata`, `.data`, `.bss`. Expliquer pourquoi `.bss` est de type `NOBITS` et ne pèse rien sur le disque. Avec `readelf -d`, lister les bibliothèques `NEEDED` du binaire.
+- **À faire :** compiler un programme du cours (`gcc -no-pie prog.c -o prog`), puis lire son en-tête avec `readelf -h`
+- **À produire :** la classe (32/64 bits), le type (`EXEC`/`DYN`/`REL`), l'adresse du point d'entrée, et les quatre premiers octets du magic (`xxd prog | head -1`)
 
-**Exercice 13.4 (niveau 2)** Avec `readelf -s`, relever l'adresse et la taille d'une de vos fonctions (par exemple `main`). Puis `strip` le binaire dans une copie et montrer que la fonction a disparu de `readelf -s`, alors que les symboles externes de la libc (`.dynsym`) sont toujours là. Expliquer la différence entre `.symtab` et `.dynsym`.
+### Exercice 13.2 - les segments (niveau 2)
 
-**Exercice 13.5 (niveau 3)** Packer un binaire du cours avec le dépaqueteur zlib du chapitre 9 (ou n'importe quel packer). Comparer, entre l'original et la version packée : l'adresse du point d'entrée (`readelf -h`) et la présence d'une chaîne connue (`strings`). Conclure sur ce que le seul couple en-tête + `strings` permet de dire d'un binaire avant désassemblage.
+- **À faire :** lister les segments avec `readelf -l`
+- **À produire :** pour chaque `PT_LOAD`, ses permissions (`R`, `R E`, `RW`) et son contenu ; la preuve qu'aucun segment n'est à la fois `W` et `E`, et pourquoi c'est une bonne chose
 
-**Exercice 13.6 (niveau 2, conceptuel PE)** On vous donne la table d'import d'un `.exe` Windows : `kernel32.dll` (`VirtualAlloc`, `VirtualProtect`, `CreateThread`), `wininet.dll` (`InternetOpenUrlA`, `InternetReadFile`), `advapi32.dll` (`RegSetValueExA`). Décrire, import par import, le comportement probable du programme, et formuler une hypothèse en une phrase sur sa nature.
+### Exercice 13.3 - les sections (niveau 2)
 
-**Exercice 13.7 (niveau 2, conceptuel PE)** Établir la correspondance, pour un même programme compilé sous Linux puis sous Windows, entre : le magic ELF et la signature PE ; le point d'entrée ELF et le couple `ImageBase`/`AddressOfEntryPoint` ; `.rodata` et `.rdata` ; `readelf -d` (NEEDED) et la table d'import. Dire où, dans chacun des deux formats, on va chercher les chaînes de caractères et la liste des fonctions externes.
+- **À faire :** avec `readelf -S`, repérer `.text`, `.rodata`, `.data`, `.bss` ; avec `readelf -d`, lister les bibliothèques `NEEDED`
+- **À produire :** pourquoi `.bss` est de type `NOBITS` et ne pèse rien sur le disque
 
-**Exercice 13.8 (niveau 3, conceptuel PE)** Un échantillon PE présente une table d'import ne contenant que `kernel32.dll!LoadLibraryA` et `kernel32.dll!GetProcAddress`, et rien d'autre. Pourquoi est-ce suspect alors que la liste est courte ? Quelle technique l'échantillon emploie-t-il probablement, et comment adapteriez-vous l'analyse (statique puis dynamique) pour découvrir ses vraies capacités ?
+### Exercice 13.4 - symtab contre dynsym (niveau 2)
+
+- **À faire :** relever l'adresse et la taille de `main` avec `readelf -s`, `strip` une copie, et montrer que la fonction a disparu de `readelf -s` alors que les symboles de la libc (`.dynsym`) restent
+- **À produire :** la différence entre `.symtab` et `.dynsym`
+
+### Exercice 13.5 - en-tête et strings d'un packé (niveau 3)
+
+- **À faire :** packer un binaire du cours (dépaqueteur zlib du chapitre 9 ou tout packer), puis comparer à l'original le point d'entrée (`readelf -h`) et la présence d'une chaîne connue (`strings`)
+- **À produire :** ce que le seul couple en-tête + `strings` permet de dire d'un binaire avant désassemblage
+
+### Exercice 13.6 - lire une table d'import PE (niveau 2, conceptuel PE)
+
+- **À produire :** import par import, le comportement probable, et une hypothèse en une phrase sur la nature du programme
+
+Table d'import : `kernel32.dll` (`VirtualAlloc`, `VirtualProtect`, `CreateThread`), `wininet.dll` (`InternetOpenUrlA`, `InternetReadFile`), `advapi32.dll` (`RegSetValueExA`).
+
+### Exercice 13.7 - ELF et PE côte à côte (niveau 2, conceptuel PE)
+
+- **À produire :** la correspondance, pour un même programme sous Linux puis Windows, entre le magic ELF et la signature PE ; le point d'entrée ELF et le couple `ImageBase`/`AddressOfEntryPoint` ; `.rodata` et `.rdata` ; `readelf -d` (NEEDED) et la table d'import ; et où, dans chaque format, chercher les chaînes et les fonctions externes
+
+### Exercice 13.8 - une table d'import minuscule (niveau 3, conceptuel PE)
+
+- **À produire :** pourquoi une table d'import réduite à `kernel32.dll!LoadLibraryA` et `kernel32.dll!GetProcAddress` est suspecte, la technique probablement employée, et comment adapter l'analyse (statique puis dynamique) pour découvrir ses vraies capacités
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#formats-elf-pe)
 

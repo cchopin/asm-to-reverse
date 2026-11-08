@@ -207,17 +207,41 @@ Combiner cette observation avec une lecture rapide du code dans Ghidra est la ma
 
 ## Exercices
 
-**Exercice 3.1 (N1)** Lancer `mystere` dans GDB avec l'argument `12345678`. Placer un point d'arrêt sur `verifier`, puis avancer avec `ni` jusqu'à la première comparaison. Que vaut `[rbp-0x4]` à ce moment ? (`x/dw $rbp-4`)
+Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#chapitres-2-et-3).
 
-**Exercice 3.2 (N2)** Toujours sur `mystere`, avec un code invalide, faire afficher "Code accepte" en modifiant uniquement la valeur de retour de `verifier` (indice : `finish`, puis `set`).
+### Exercice 3.1 - première comparaison (N1)
 
-**Exercice 3.3 (N1)** Lancer `mystere` sous GDB avec l'argument `12345678` et s'arrêter sur `main`. Afficher `argc` (premier argument de `main`, donc dans `edi`) et la chaîne `argv[1]`. Indice : `rsi` contient `argv`, l'adresse d'un tableau de pointeurs de 8 octets ; `argv[1]` est donc en `$rsi+8`.
+- **À faire :** lancer `mystere` dans GDB avec `12345678`, point d'arrêt sur `verifier`, avancer avec `ni` jusqu'à la première comparaison
+- **À produire :** la valeur de `[rbp-0x4]` à ce moment (`x/dw $rbp-4`)
 
-**Exercice 3.4 (N2)** Recompiler `mystere` **sans** `-no-pie` (`gcc -O0 -fno-stack-protector mystere.c -o mystere_pie`). Relever avec `objdump -d` l'adresse de `verifier` dans le fichier, calculer son adresse sous GDB (section 3.3), poser le point d'arrêt sur cette adresse calculée (et non sur le symbole), puis vérifier avec `x/3i $pc` qu'on est bien au début de `verifier`. Confirmer la base avec `info proc mappings`.
+### Exercice 3.2 - forcer l'acceptation (N2)
 
-**Exercice 3.5 (N3)** Écrire un script GDB qui, pour `mystere` lancé avec `12345678`, affiche à chaque tour de la deuxième boucle la valeur de `i` et de `somme`.
+- **À faire :** sur `mystere` avec un code invalide, faire afficher "Code accepte" en modifiant uniquement la valeur de retour de `verifier`
 
-**Exercice 3.6 (N3)** Résoudre la même question sans repérer d'adresse dans la boucle, avec un **point d'observation** (*watchpoint*) : s'arrêter sur `verifier`, puis `watch -l *(int *)($rbp-0x8)` (la variable `somme`, d'après le chapitre 7 de la partie 2). Chaque `continue` s'arrête alors au moment précis où la variable change, en affichant l'ancienne et la nouvelle valeur. Quelle est la valeur finale de `somme` pour `12345678`, et pourquoi le code est-il refusé ?
+Indice : `finish`, puis `set`.
+
+### Exercice 3.3 - lire argc et argv (N1)
+
+- **À faire :** lancer `mystere` sous GDB avec `12345678`, s'arrêter sur `main`, afficher `argc` (dans `edi`) et la chaîne `argv[1]`
+
+Indice : `rsi` contient `argv`, l'adresse d'un tableau de pointeurs de 8 octets ; `argv[1]` est donc en `$rsi+8`.
+
+### Exercice 3.4 - un point d'arrêt sur une adresse calculée (N2)
+
+- **À faire :** recompiler `mystere` **sans** `-no-pie`, relever l'adresse de `verifier` avec `objdump -d`, calculer son adresse sous GDB (section 3.3), poser le point d'arrêt sur cette adresse calculée (et non sur le symbole)
+- **À produire :** la vérification avec `x/3i $pc` qu'on est au début de `verifier`, et la confirmation de la base avec `info proc mappings`
+
+### Exercice 3.5 - un script GDB (N3)
+
+- **Fichier à rendre :** un script GDB
+- **À faire :** pour `mystere` lancé avec `12345678`, afficher à chaque tour de la deuxième boucle la valeur de `i` et de `somme`
+
+### Exercice 3.6 - un point d'observation (N3)
+
+- **À faire :** même question sans repérer d'adresse dans la boucle, avec un watchpoint : `watch -l *(int *)($rbp-0x8)` (la variable `somme`, d'après le chapitre 7 de la partie 2)
+- **À produire :** la valeur finale de `somme` pour `12345678`, et pourquoi le code est refusé
+
+Chaque `continue` s'arrête au moment précis où la variable change, en affichant l'ancienne et la nouvelle valeur.
 
 ## Fil rouge : coffre v2, en dynamique
 

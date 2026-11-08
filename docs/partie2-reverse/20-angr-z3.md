@@ -86,17 +86,37 @@ En pratique : z3 quand on comprend la vérification et qu'on sait l'écrire en �
 
 Scripts dans `angr-z3/`. Les exercices z3 comme ceux avec angr sont jouables directement dans l'image du laboratoire (`reverse-lab`), où les deux outils sont fournis.
 
-**Exercice 12.1 (niveau 1)** Lancer `solve_crack05.py` et vérifier qu'il donne `9218`. Modifier une contrainte (par exemple la somme à 21) et observer si z3 répond encore `sat`.
+Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#angr-z3).
 
-**Exercice 12.2 (niveau 2)** Compiler `rotor.c` et retrouver, dans son désassemblage, les trois opérations appliquées à chaque caractère et l'adresse du tableau cible. Lancer ensuite `solve_rotor.py` et vérifier que le mot trouvé est accepté. Expliquer pourquoi on n'a pas eu besoin d'inverser `rol8` et le `+9` à la main. Bonus : écrire aussi l'inversion manuelle en Python et comparer.
+### Exercice 12.1 - jouer avec les contraintes (niveau 1)
 
-**Exercice 12.3 (niveau 2)** Modéliser avec z3 le fil rouge `coffre0` de la partie 1 : trouver une clé telle que `cle[i] + i == cible[i]` pour la cible `43 6d 67 70 69 73 69 6c`. Vérifier qu'on retrouve `Clemence`.
+- **À faire :** lancer `solve_crack05.py` et vérifier qu'il donne `9218`, puis modifier une contrainte (par exemple la somme à 21)
+- **À produire :** si z3 répond encore `sat`
 
-**Exercice 12.4 (niveau 3)** Écrire un check volontairement pénible à inverser (plusieurs XOR, additions et rotations enchaînés sur chaque octet), calculer la cible pour un mot choisi, puis laisser z3 retrouver le mot à partir de la seule cible et des contraintes.
+### Exercice 12.2 - résoudre rotor avec z3 (niveau 2)
 
-**Exercice 12.5 (niveau 3)** Installer angr et résoudre un petit crackme avec `solve_angr.py` : relever les adresses `find` (succès) et `avoid` (échec) dans le désassemblage, lancer l'exploration, récupérer l'entrée gagnante. Comparer le temps et l'effort avec la résolution manuelle.
+- **À faire :** compiler `rotor.c`, retrouver dans son désassemblage les trois opérations par caractère et l'adresse de la cible, lancer `solve_rotor.py` et vérifier le mot trouvé
+- **À produire :** pourquoi on n'a pas eu besoin d'inverser `rol8` et le `+9` à la main. Bonus : l'inversion manuelle en Python, comparée
 
-**Exercice 12.6 (niveau 2)** Pour trois crackmes du cours (par exemple `crack01` comparaison directe, `crack05` contraintes, `rotor` transformation par caractère), dire pour chacun si z3, angr ou l'analyse manuelle est le plus adapté, et pourquoi.
+### Exercice 12.3 - modéliser coffre0 (niveau 2)
+
+- **Fichier à rendre :** un script z3
+- **À faire :** trouver une clé telle que `cle[i] + i == cible[i]` pour la cible `43 6d 67 70 69 73 69 6c`, et vérifier qu'on retrouve `Clemence`
+
+### Exercice 12.4 - un check pénible à inverser (niveau 3)
+
+- **Fichier à rendre :** un programme C (le check) et un script z3
+- **À faire :** enchaîner plusieurs XOR, additions et rotations sur chaque octet, calculer la cible pour un mot choisi, puis laisser z3 retrouver le mot à partir de la seule cible et des contraintes
+
+### Exercice 12.5 - résoudre avec angr (niveau 3)
+
+- **Fichier à rendre :** `solve_angr.py`
+- **À faire :** relever les adresses `find` (succès) et `avoid` (échec), lancer l'exploration, récupérer l'entrée gagnante
+- **À produire :** la comparaison du temps et de l'effort avec la résolution manuelle
+
+### Exercice 12.6 - choisir le bon outil (niveau 2)
+
+- **À produire :** pour `crack01` (comparaison directe), `crack05` (contraintes) et `rotor` (transformation par caractère), si z3, angr ou l'analyse manuelle est le plus adapté, et pourquoi
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#angr-z3)
 

@@ -84,17 +84,34 @@ Le packing sert surtout à **échapper à l'analyse** : signatures antivirus ino
 
 Outils : `packing/packer.py`, `packing/packed.c`, `packing/payload.asm`, et [solutions/scripts/entropie.py](../solutions/scripts/entropie.py).
 
-**Exercice 9.1 (niveau 1)** Mesurer avec `entropie.py` l'entropie d'un binaire normal, puis d'une version compressée du même binaire (`python3 -c "import zlib,sys;open('c.bin','wb').write(zlib.compress(open(sys.argv[1],'rb').read()))" binaire`). Quelle valeur sépare clairement les deux ?
+Solutions à part, dans [solutions/partie2.md](../solutions/partie2.md#packing-upx).
 
-**Exercice 9.2 (niveau 2)** Compiler le packer de démonstration (`gcc -O2 -s packed.c -o packed -lz`), l'exécuter, puis vérifier avec `strings packed` que son message n'apparaît pas dans le fichier. Expliquer pourquoi il n'est visible qu'à l'exécution.
+### Exercice 9.1 - l'entropie trahit la compression (niveau 1)
 
-**Exercice 9.3 (niveau 2)** Comparer, avec `objdump -h` et `readelf -h`, un binaire normal et le binaire packé : sections, taille de la zone de données, point d'entrée. Quels éléments mettraient la puce à l'oreille sur un échantillon inconnu ?
+- **À faire :** mesurer avec `entropie.py` l'entropie d'un binaire normal, puis d'une version compressée (`python3 -c "import zlib,sys;open('c.bin','wb').write(zlib.compress(open(sys.argv[1],'rb').read()))" binaire`)
+- **À produire :** la valeur qui sépare clairement les deux
 
-**Exercice 9.4 (niveau 3)** Dépaqueter le binaire de démonstration **statiquement** : relever les octets compressés, les décompresser en Python (`zlib.decompress`), désassembler le résultat et retrouver le message, sans jamais exécuter le binaire.
+### Exercice 9.2 - un message invisible dans le fichier (niveau 2)
 
-**Exercice 9.5 (niveau 3, méthode)** Décrire, étape par étape, comment dépaqueter un binaire dont on ne connaît pas l'algorithme : où poser le point d'arrêt, quoi dumper, et pourquoi cette méthode fonctionne quel que soit le packer. En quoi diffère-t-elle de `upx -d` ?
+- **À faire :** compiler le packer de démonstration (`gcc -O2 -s packed.c -o packed -lz`), l'exécuter, puis vérifier avec `strings packed` que son message n'apparaît pas
+- **À produire :** l'explication de pourquoi il n'est visible qu'à l'exécution
 
-**Exercice 9.6 (niveau 1, lecture)** On mesure l'entropie de la section de données de trois binaires : 4.9, 6.1 et 7.8 bits/octet. Lequel est le plus probablement packé, et pourquoi ?
+### Exercice 9.3 - en-têtes d'un binaire packé (niveau 2)
+
+- **À produire :** avec `objdump -h` et `readelf -h`, les différences (sections, taille des données, point d'entrée) entre un binaire normal et le binaire packé, et les éléments qui mettraient la puce à l'oreille
+
+### Exercice 9.4 - dépaqueter statiquement (niveau 3)
+
+- **Fichier à rendre :** un script Python de dépaquetage
+- **À faire :** relever les octets compressés, les décompresser (`zlib.decompress`), désassembler le résultat et retrouver le message, sans jamais exécuter le binaire
+
+### Exercice 9.5 - méthode générale de dépaquetage (niveau 3, méthode)
+
+- **À produire :** la description, étape par étape, du dépaquetage d'un binaire dont on ignore l'algorithme (où poser le point d'arrêt, quoi dumper, pourquoi cela marche quel que soit le packer), et en quoi cela diffère de `upx -d`
+
+### Exercice 9.6 - repérer le binaire packé (niveau 1, lecture)
+
+- **À produire :** parmi trois binaires d'entropie 4.9, 6.1 et 7.8 bits/octet, lequel est le plus probablement packé, et pourquoi
 
 Solutions : [solutions/partie2.md](../solutions/partie2.md#packing-upx)
 
