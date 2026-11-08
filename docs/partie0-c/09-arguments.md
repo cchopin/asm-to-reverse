@@ -35,41 +35,111 @@ Même `42` arrive sous forme de chaîne (`'4'`, `'2'`, `'\0'`), pas comme le nom
 
 ## Exercices
 
-**Exercice 9.1 (N1)** Écrire un programme qui affiche ses arguments un par ligne, en commençant à `argv[1]` (sans le nom du programme). Tester avec `./prog un deux trois`.
+Un fichier `.c` par exercice, compilé avec `gcc -Wall -Wextra` et testé en ligne de commande. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-09).
 
-**Exercice 9.2 (N1)** Écrire un programme qui affiche le nombre d'arguments reçus (hors nom du programme), c'est-à-dire `argc - 1`.
+### Exercice 9.1 - afficher les arguments (N1)
 
-**Exercice 9.3 (N2)** Écrire `int my_getnbr(const char *s)` qui convertit une chaîne en entier. Ignorer d'éventuels espaces en tête, lire une suite de signes `+`/`-` (chaque `-` inverse le signe), puis les chiffres, et s'arrêter au premier caractère non numérique. Exemples : `"42"` donne 42, `"  -42abc"` donne -42, `"+-+-13"` donne 13.
+- **Fichier à rendre :** `mes_arguments.c`
+- **Prototype :** programme complet (`int main(int argc, char **argv)`)
+- **Fonctions autorisées :** `my_putstr`, `my_putchar`
 
-!!! warning "Contraintes"
-    `atoi` et les autres fonctions de conversion de la libc sont interdites.
+Afficher les arguments un par ligne, en commençant à `argv[1]` (sans le nom du programme).
 
-**Exercice 9.4 (N2)** Écrire un programme qui additionne tous ses arguments (supposés numériques) avec `my_getnbr` et affiche la somme. `./somme 10 20 12` affiche 42.
+Exemple d'exécution attendu :
 
-**Exercice 9.5 (N3)** Écrire un premier mini-crackme : le programme attend un nombre en argument, et affiche `Gagne` s'il vaut 1337, `Perdu` sinon. C'est la structure exacte des premiers défis de la partie 3, vue cette fois côté source.
+```text
+$ ./mes_arguments un deux trois
+un
+deux
+trois
+```
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-09)
+### Exercice 9.2 - compter les arguments (N1)
+
+- **Fichier à rendre :** `compter_arguments.c`
+- **Prototype :** programme complet
+- **Fonctions autorisées :** `printf`
+
+Afficher le nombre d'arguments reçus hors nom du programme, c'est-à-dire `argc - 1`.
+
+Exemple d'exécution attendu :
+
+```text
+$ ./compter_arguments un deux trois
+3
+```
+
+### Exercice 9.3 - my_getnbr (N2)
+
+- **Fichier à rendre :** `my_getnbr.c`
+- **Prototype :** `int my_getnbr(const char *s);`
+- **Fonctions autorisées :** aucune (`atoi` et les conversions de la libc sont interdites)
+
+Convertir une chaîne en entier. Ignorer d'éventuels espaces en tête, lire une suite de signes `+`/`-` (chaque `-` inverse le signe), puis les chiffres, et s'arrêter au premier caractère non numérique.
+
+Exemple d'exécution attendu (appels sur `"42"`, `"  -42abc"`, `"+-+-13"`) :
+
+```text
+42 -42 13
+```
+
+### Exercice 9.4 - somme des arguments (N2)
+
+- **Fichier à rendre :** `somme_args.c`
+- **Prototype :** programme complet
+- **Fonctions autorisées :** `my_getnbr` (votre fonction du 9.3), `printf`
+
+Additionner tous les arguments (supposés numériques) et afficher la somme.
+
+Exemple d'exécution attendu :
+
+```text
+$ ./somme_args 10 20 12
+42
+```
+
+### Exercice 9.5 - premier mini-crackme (N3)
+
+- **Fichier à rendre :** `crackme0.c`
+- **Prototype :** programme complet
+- **Fonctions autorisées :** `my_getnbr`, `printf`
+
+Le programme attend un nombre en argument et affiche `Gagne` s'il vaut 1337, `Perdu` sinon. C'est la structure exacte des premiers défis de la partie 3, vue cette fois côté source.
+
+Exemple d'exécution attendu :
+
+```text
+$ ./crackme0 1337
+Gagne
+$ ./crackme0 42
+Perdu
+```
 
 ## Fil rouge : le coffre lit la clé
 
 On branche enfin `verifier` sur la ligne de commande. Le coffre devient utilisable : `./coffre0 <cle>`.
 
-```c
-int main(int argc, char **argv)
-{
-    if (argc != 2) {
-        my_putstr("Usage : ./coffre0 <cle>\n");
-        return 1;
-    }
-    if (verifier(argv[1]))
-        my_putstr("Coffre ouvert\n");
-    else
-        my_putstr("Refuse\n");
-    return 0;
-}
-```
+À vous de compléter `coffre0` :
 
-`./coffre0 Clemence` affiche `Coffre ouvert`, tout le reste `Refuse`. Le crackme est fonctionnel. Il reste à le ranger proprement (chapitre 10) et à le compiler en projet (chapitre 12).
+- **Fichier à rendre :** `coffre0.c`
+- **Prototype :** programme complet (`int main(int argc, char **argv)`)
+- **Fonctions autorisées :** `verifier` (des chapitres précédents), `my_putstr`
+
+Consignes :
+
+- Si le programme ne reçoit pas exactement un argument (`argc != 2`), afficher `Usage : ./coffre0 <cle>` et renvoyer 1.
+- Sinon, appeler `verifier(argv[1])` et afficher `Coffre ouvert` si elle renvoie 1, `Refuse` sinon.
+
+Le crackme est fonctionnel : `./coffre0 Clemence` affiche `Coffre ouvert`, tout le reste `Refuse`. Il reste à le ranger proprement (chapitre 10) et à le compiler en projet (chapitre 12).
+
+Exemple d'exécution attendu :
+
+```text
+$ ./coffre0 Clemence
+Coffre ouvert
+$ ./coffre0 mauvais
+Refuse
+```
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-09)
 

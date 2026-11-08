@@ -28,36 +28,114 @@ int somme(const int *tab, int n)   // int tab[] signifierait la même chose
 
 ## Exercices
 
-!!! warning "Contraintes"
-    Chaque fonction reçoit le tableau et sa taille. Interdiction d'utiliser des fonctions de bibliothèque de tri ou de recherche : on écrit les algorithmes à la main.
+Un fichier `.c` par exercice, testé depuis votre propre `main`, compilé avec `gcc -Wall -Wextra`. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-08).
 
-**Exercice 8.1 (N1)** Écrire `int somme_tableau(const int *tab, int n)` qui renvoie la somme des `n` éléments.
+!!! warning "Contraintes de la série"
+    Chaque fonction reçoit le tableau et sa taille. Les « fonctions autorisées » excluent toute fonction de bibliothèque de tri ou de recherche : on écrit les algorithmes à la main.
 
-**Exercice 8.2 (N1)** Écrire `int max_tableau(const int *tab, int n)` qui renvoie le plus grand élément (on suppose `n >= 1`).
+### Exercice 8.1 - somme_tableau (N1)
 
-**Exercice 8.3 (N2)** Écrire `void inverser_tableau(int *tab, int n)` qui inverse l'ordre des éléments sur place.
+- **Fichier à rendre :** `somme_tableau.c`
+- **Prototype :** `int somme_tableau(const int *tab, int n);`
+- **Fonctions autorisées :** aucune
 
-**Exercice 8.4 (N2)** Écrire `int compte_occurrences(const int *tab, int n, int x)` qui renvoie le nombre de fois où `x` apparaît.
+Renvoyer la somme des `n` éléments.
 
-**Exercice 8.5 (N3)** Écrire `void tri_bulles(int *tab, int n)` qui trie le tableau en ordre croissant par la méthode du tri à bulles (échanger deux voisins mal ordonnés, en répétant jusqu'à ce que plus rien ne bouge).
+Exemple d'exécution attendu (tableau `{10, 20, 30, 40, 50}`, `n = 5`) :
 
-**Exercice 8.6 (N3)** Écrire `int recherche_dicho(const int *tab, int n, int x)` qui, sur un tableau **déjà trié**, renvoie l'indice de `x` par recherche dichotomique (couper l'intervalle en deux à chaque étape), ou `-1` si absent.
+```text
+150
+```
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-08)
+### Exercice 8.2 - max_tableau (N1)
+
+- **Fichier à rendre :** `max_tableau.c`
+- **Prototype :** `int max_tableau(const int *tab, int n);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer le plus grand élément (on suppose `n >= 1`).
+
+Exemple d'exécution attendu (tableau `{3, 41, 7, 18}`, `n = 4`) :
+
+```text
+41
+```
+
+### Exercice 8.3 - inverser_tableau (N2)
+
+- **Fichier à rendre :** `inverser_tableau.c`
+- **Prototype :** `void inverser_tableau(int *tab, int n);`
+- **Fonctions autorisées :** aucune
+
+Inverser l'ordre des éléments sur place.
+
+Exemple d'exécution attendu (tableau `{1, 2, 3, 4, 5}` avant l'appel) :
+
+```text
+5 4 3 2 1
+```
+
+### Exercice 8.4 - compte_occurrences (N2)
+
+- **Fichier à rendre :** `compte_occurrences.c`
+- **Prototype :** `int compte_occurrences(const int *tab, int n, int x);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer le nombre de fois où `x` apparaît.
+
+Exemple d'exécution attendu (tableau `{1, 3, 3, 7, 3}`, `n = 5`, `x = 3`) :
+
+```text
+3
+```
+
+### Exercice 8.5 - tri_bulles (N3)
+
+- **Fichier à rendre :** `tri_bulles.c`
+- **Prototype :** `void tri_bulles(int *tab, int n);`
+- **Fonctions autorisées :** aucune
+
+Trier le tableau en ordre croissant par la méthode du tri à bulles (échanger deux voisins mal ordonnés, en répétant jusqu'à ce que plus rien ne bouge).
+
+Exemple d'exécution attendu (tableau `{5, 2, 8, 1, 9, 3}` avant l'appel) :
+
+```text
+1 2 3 5 8 9
+```
+
+### Exercice 8.6 - recherche_dicho (N3)
+
+- **Fichier à rendre :** `recherche_dicho.c`
+- **Prototype :** `int recherche_dicho(const int *tab, int n, int x);`
+- **Fonctions autorisées :** aucune
+
+Sur un tableau **déjà trié**, renvoyer l'indice de `x` par recherche dichotomique (couper l'intervalle en deux à chaque étape), ou `-1` si absent.
+
+Exemple d'exécution attendu (tableau trié `{1, 4, 7, 9, 12, 20}`, appels sur `9` puis `5`) :
+
+```text
+3 -1
+```
 
 ## Fil rouge : retrouver la clé à partir de la cible
 
-Jusqu'ici on connaît la clé et on vérifie. Un reverser fait l'inverse : il a la cible (les huit octets du binaire) et doit en déduire la clé. Comme la règle est `cle[i] + i == cible[i]`, il suffit de calculer `cible[i] - i` pour chaque position.
+Jusqu'ici on connaît la clé et on vérifie. Un reverser fait l'inverse : il a la cible (les huit octets du binaire) et doit en déduire la clé. Comme la règle est `cle[i] + i == cible[i]`, il suffit de calculer `cible[i] - i` pour chaque position. C'est exactement la démarche que vous appliquerez en partie 3 : lire la contrainte dans le code désassemblé, puis l'inverser pour fabriquer la clé (un keygen).
 
-```c
-unsigned char cible[8] = {67, 109, 103, 112, 105, 115, 105, 108};
+À vous d'écrire ce petit programme :
 
-for (int i = 0; i < 8; i++)
-    my_putchar((char)(cible[i] - i));
-my_putchar('\n');
+- **Fichier à rendre :** `keygen0.c`
+- **Fonctions autorisées :** `my_putchar`
+
+Consignes :
+
+- Reprendre le tableau `cible`.
+- Pour chaque position `i`, afficher le caractère `(char)(cible[i] - i)`, puis un retour à la ligne final.
+
+Exemple d'exécution attendu :
+
+```text
+Clemence
 ```
-
-Ce petit programme affiche `Clemence`. C'est exactement la démarche que vous appliquerez en partie 3 : lire la contrainte dans le code désassemblé, puis l'inverser pour fabriquer la clé (un keygen).
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-08)
 

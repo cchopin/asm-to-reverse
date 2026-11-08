@@ -46,29 +46,88 @@ char *my_strdup(const char *s)
 
 ## Exercices
 
-!!! warning "Contraintes"
+Un fichier `.c` par exercice, testé depuis votre propre `main`, compilé avec `gcc -Wall -Wextra`. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-11).
+
+!!! warning "Contraintes de la série"
     `strdup` et les fonctions de `<string.h>` restent interdites. Chaque `malloc` doit avoir son `free` ; vérifiez vos programmes, par exemple avec `valgrind` dans le conteneur.
 
-**Exercice 11.1 (N1)** Écrire `int *tableau_rempli(int n)` qui alloue un tableau de `n` entiers, le remplit avec les carrés (`t[i] = i * i`), et le renvoie. Dans le `main`, l'utiliser puis le libérer.
+### Exercice 11.1 - tableau_rempli (N1)
 
-**Exercice 11.2 (N2)** Écrire `char *my_strdup(const char *s)` qui renvoie une copie allouée de `s`. Ne pas oublier le `'\0'` ni le `free` dans l'appelant.
+- **Fichier à rendre :** `tableau_rempli.c`
+- **Prototype :** `int *tableau_rempli(int n);`
+- **Fonctions autorisées :** `malloc`, `free`
 
-**Exercice 11.3 (N2)** Écrire `char *concat(const char *a, const char *b)` qui renvoie une nouvelle chaîne allouée contenant `a` suivi de `b`. `concat("Cle", "mence")` donne `"Clemence"`.
+Allouer un tableau de `n` entiers, le remplir avec les carrés (`t[i] = i * i`), et le renvoyer. Dans le `main`, l'utiliser puis le libérer.
 
-**Exercice 11.4 (N3)** Écrire `int *copie_agrandie(const int *tab, int n)` qui renvoie un nouveau tableau de taille `n + 1`, copie de `tab`, avec une case supplémentaire à la fin valant la somme des `n` premières. Libérer l'ancien si besoin dans l'appelant.
+Exemple d'exécution attendu (appel `tableau_rempli(5)` puis affichage) :
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-11)
+```text
+0 1 4 9 16
+```
+
+### Exercice 11.2 - my_strdup (N2)
+
+- **Fichier à rendre :** `my_strdup.c`
+- **Prototype :** `char *my_strdup(const char *s);`
+- **Fonctions autorisées :** `malloc`, `my_strlen`
+
+Renvoyer une copie allouée de `s`. Ne pas oublier le `'\0'` ni le `free` dans l'appelant.
+
+Exemple d'exécution attendu (copie de `"reverse"` puis affichage) :
+
+```text
+reverse
+```
+
+### Exercice 11.3 - concat (N2)
+
+- **Fichier à rendre :** `concat.c`
+- **Prototype :** `char *concat(const char *a, const char *b);`
+- **Fonctions autorisées :** `malloc`, `my_strlen`
+
+Renvoyer une nouvelle chaîne allouée contenant `a` suivi de `b`.
+
+Exemple d'exécution attendu (appel `concat("Cle", "mence")`) :
+
+```text
+Clemence
+```
+
+### Exercice 11.4 - copie_agrandie (N3)
+
+- **Fichier à rendre :** `copie_agrandie.c`
+- **Prototype :** `int *copie_agrandie(const int *tab, int n);`
+- **Fonctions autorisées :** `malloc`, `free`
+
+Renvoyer un nouveau tableau de taille `n + 1`, copie de `tab`, avec une case supplémentaire à la fin valant la somme des `n` premières.
+
+Exemple d'exécution attendu (tableau `{1, 2, 3, 4}`, `n = 4`, puis affichage du résultat) :
+
+```text
+1 2 3 4 10
+```
 
 ## Fil rouge : copie défensive de la clé
 
 Avant de vérifier la clé, on en fait une copie allouée avec `my_strdup`. Ici ce n'est pas indispensable, mais c'est un réflexe utile : travailler sur une copie plutôt que sur la donnée reçue, puis libérer.
 
-```c
-char *copie = my_strdup(argv[1]);
-if (copie == NULL)
-    return 1;
-int ouvert = verifier(&coffre, copie);
-free(copie);
+À vous de compléter `coffre0` :
+
+- **Fichier à rendre :** `coffre0.c`
+- **Fonctions autorisées :** `my_strdup`, `free`, `verifier`
+
+Consignes :
+
+- Dans le `main`, dupliquer `argv[1]` avec `my_strdup` (renvoyer 1 en cas d'échec de l'allocation).
+- Appeler `verifier` sur cette copie, puis libérer la copie avec `free`.
+
+Le comportement visible ne change pas : `./coffre0 Clemence` affiche toujours `Coffre ouvert`.
+
+Exemple d'exécution attendu :
+
+```text
+$ ./coffre0 Clemence
+Coffre ouvert
 ```
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-11)

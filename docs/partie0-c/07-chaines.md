@@ -33,44 +33,131 @@ mot[0] = 'R';             // autorisé
 
 ## Exercices
 
-Série de fonctions à recoder. Les contraintes sont volontairement strictes, comme en piscine.
+Série de fonctions à recoder, dans un fichier `.c` chacune, testées depuis votre propre `main` et compilées avec `gcc -Wall -Wextra`. Les contraintes sont volontairement strictes, comme en piscine. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-07).
 
-!!! warning "Contraintes"
-    Dans tous ces exercices, les fonctions de `<string.h>` (`strlen`, `strcmp`, `strcpy`...) sont **interdites** : c'est tout l'intérêt de les réécrire. Seuls `my_putchar` et, quand c'est précisé, vos propres fonctions des exercices précédents sont autorisés.
+!!! warning "Contraintes de la série"
+    Dans tous ces exercices, les fonctions de `<string.h>` (`strlen`, `strcmp`, `strcpy`...) sont **interdites** : c'est tout l'intérêt de les réécrire. Les « fonctions autorisées » de chaque sujet se limitent à `my_putchar` et, quand c'est précisé, à vos propres fonctions des exercices précédents.
 
-**Exercice 7.1 (N1)** Écrire `int my_strlen(const char *s)` qui renvoie la longueur d'une chaîne. Vérifier sur `"Clemence"` (8).
+### Exercice 7.1 - my_strlen (N1)
 
-**Exercice 7.2 (N1)** Écrire `void my_putstr(const char *s)` qui affiche une chaîne caractère par caractère avec `my_putchar`.
+- **Fichier à rendre :** `my_strlen.c`
+- **Prototype :** `int my_strlen(const char *s);`
+- **Fonctions autorisées :** aucune
 
-**Exercice 7.3 (N2)** Écrire `int my_strcmp(const char *a, const char *b)` qui renvoie 0 si les chaînes sont égales, un nombre négatif si `a` est « avant » `b`, positif sinon (comparer caractère par caractère, s'arrêter à la première différence ou au `'\0'`).
+Renvoyer la longueur d'une chaîne (sans compter le `'\0'`).
 
-**Exercice 7.4 (N2)** Écrire `char *my_strcpy(char *dest, const char *src)` qui copie `src` dans `dest` (terminateur compris) et renvoie `dest`. On suppose `dest` assez grand.
+Exemple d'exécution attendu (appel `my_strlen("Clemence")`) :
 
-**Exercice 7.5 (N2)** Écrire `char *my_revstr(char *s)` qui inverse une chaîne sur place (sans tableau intermédiaire) et renvoie `s`. Indice : deux indices, l'un au début, l'autre à la fin, qui avancent l'un vers l'autre en échangeant. `"assembleur"` devient `"ruelbmessa"`.
+```text
+8
+```
 
-**Exercice 7.6 (N3)** Écrire `int est_palindrome(const char *s)` qui renvoie 1 si la chaîne se lit pareil dans les deux sens (`"kayak"`), 0 sinon.
+### Exercice 7.2 - my_putstr (N1)
 
-**Exercice 7.7 (N3)** Écrire `void my_upcase(char *s)` qui met toutes les lettres minuscules en majuscules, sur place. Indice : une lettre minuscule et sa majuscule diffèrent de 32 dans la table ASCII.
+- **Fichier à rendre :** `my_putstr.c`
+- **Prototype :** `void my_putstr(const char *s);`
+- **Fonctions autorisées :** `my_putchar`
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-07)
+Afficher une chaîne caractère par caractère.
+
+Exemple d'exécution attendu (appel `my_putstr("reverse\n")`) :
+
+```text
+reverse
+```
+
+### Exercice 7.3 - my_strcmp (N2)
+
+- **Fichier à rendre :** `my_strcmp.c`
+- **Prototype :** `int my_strcmp(const char *a, const char *b);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer 0 si les chaînes sont égales, un nombre négatif si `a` est « avant » `b`, positif sinon. Comparer caractère par caractère, en s'arrêtant à la première différence ou au `'\0'`.
+
+Exemple d'exécution attendu (appels `my_strcmp("abc", "abc")`, `my_strcmp("abc", "abd")`) :
+
+```text
+0 negatif
+```
+
+### Exercice 7.4 - my_strcpy (N2)
+
+- **Fichier à rendre :** `my_strcpy.c`
+- **Prototype :** `char *my_strcpy(char *dest, const char *src);`
+- **Fonctions autorisées :** aucune
+
+Copier `src` dans `dest` (terminateur compris) et renvoyer `dest`. On suppose `dest` assez grand.
+
+Exemple d'exécution attendu (copie de `"reverse"` puis affichage de `dest`) :
+
+```text
+reverse
+```
+
+### Exercice 7.5 - my_revstr (N2)
+
+- **Fichier à rendre :** `my_revstr.c`
+- **Prototype :** `char *my_revstr(char *s);`
+- **Fonctions autorisées :** aucune
+
+Inverser une chaîne sur place (sans tableau intermédiaire) et renvoyer `s`. Indice : deux indices, l'un au début, l'autre à la fin, qui avancent l'un vers l'autre en échangeant.
+
+Exemple d'exécution attendu (appel sur `"assembleur"`) :
+
+```text
+ruelbmessa
+```
+
+### Exercice 7.6 - est_palindrome (N3)
+
+- **Fichier à rendre :** `est_palindrome.c`
+- **Prototype :** `int est_palindrome(const char *s);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer 1 si la chaîne se lit pareil dans les deux sens, 0 sinon.
+
+Exemple d'exécution attendu (appels `est_palindrome("kayak")`, `est_palindrome("reverse")`) :
+
+```text
+1 0
+```
+
+### Exercice 7.7 - my_upcase (N3)
+
+- **Fichier à rendre :** `my_upcase.c`
+- **Prototype :** `void my_upcase(char *s);`
+- **Fonctions autorisées :** aucune
+
+Mettre toutes les lettres minuscules en majuscules, sur place. Indice : une lettre minuscule et sa majuscule diffèrent de 32 dans la table ASCII.
+
+Exemple d'exécution attendu (appel sur `"reverse 42"`) :
+
+```text
+REVERSE 42
+```
 
 ## Fil rouge : vérifier la longueur
 
-Un bon crackme rejette d'emblée une clé de mauvaise taille. On ajoute cette garde en tête de `verifier`, avec le `my_strlen` qu'on vient d'écrire :
+Un bon crackme rejette d'emblée une clé de mauvaise taille. On ajoute cette garde en tête de `verifier`, avec le `my_strlen` qu'on vient d'écrire.
 
-```c
-int verifier(const char *cle)
-{
-    if (my_strlen(cle) != 8)
-        return 0;
-    for (int i = 0; i < 8; i++)
-        if ((unsigned char)(cle[i] + i) != cible[i])
-            return 0;
-    return 1;
-}
-```
+À vous de compléter `coffre0` :
+
+- **Fichier à rendre :** `coffre0.c`
+- **Prototype :** `int verifier(const char *cle);`
+- **Fonctions autorisées :** `my_strlen` (votre fonction du 7.1)
+
+Consignes :
+
+- Ajouter, en tête de `verifier`, un test : si la longueur de `cle` n'est pas 8, renvoyer 0 immédiatement.
+- Conserver ensuite la boucle de vérification position par position.
 
 Sans cette garde, une clé plus courte que 8 ferait lire la fonction au-delà du `'\0'`, en mémoire quelconque : exactement le genre de défaut qu'on cherche, plus tard, à exploiter.
+
+Exemple d'exécution attendu (affichage de `verifier("Clem")` puis `verifier("Clemence")`) :
+
+```text
+0 1
+```
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-07)
 

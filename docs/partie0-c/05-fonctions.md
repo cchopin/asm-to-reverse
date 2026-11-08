@@ -72,37 +72,116 @@ Chaque appel empile ses propres variables locales ; on verra cet empilement conc
 
 ## Exercices
 
-**Exercice 5.1 (N1)** Écrire `int my_abs(int n)` qui renvoie la valeur absolue de `n`.
+Rappel de la méthode : un fichier `.c` par exercice, la fonction testée depuis votre propre `main`, compilation avec `gcc -Wall -Wextra`. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-05).
 
-**Exercice 5.2 (N1)** Écrire `long puissance(int base, int exposant)` (exposant positif ou nul) avec une boucle. Vérifier `puissance(2, 10)` vaut 1024.
+### Exercice 5.1 - my_abs (N1)
 
-**Exercice 5.3 (N2)** Écrire `int pgcd(int a, int b)` par l'algorithme d'Euclide : tant que `b` n'est pas nul, remplacer le couple `(a, b)` par `(b, a % b)`. Vérifier `pgcd(48, 36)` vaut 12.
+- **Fichier à rendre :** `my_abs.c`
+- **Prototype :** `int my_abs(int n);`
+- **Fonctions autorisées :** aucune
 
-**Exercice 5.4 (N2)** Écrire `long somme_rec(int n)` qui calcule la somme de 1 à `n` de façon récursive. Vérifier `somme_rec(100)` vaut 5050.
+Renvoyer la valeur absolue de `n`.
 
-**Exercice 5.5 (N3)** Écrire `long fibonacci(int n)` de façon récursive (`fib(0) = 0`, `fib(1) = 1`, `fib(n) = fib(n-1) + fib(n-2)`). Vérifier `fibonacci(10)` vaut 55. En bonus, en écrire une version avec une boucle, bien plus rapide.
+Exemple d'exécution attendu (appels `my_abs(-7)`, `my_abs(7)`) :
 
-**Exercice 5.6 (N3)** Écrire `void rate_echange(int a, int b)` qui tente d'échanger `a` et `b`, puis constater dans un `main` que `x` et `y` ne changent pas. Expliquer pourquoi. Ce constat motive le chapitre suivant.
+```text
+7 7
+```
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-05)
+### Exercice 5.2 - puissance (N1)
+
+- **Fichier à rendre :** `puissance.c`
+- **Prototype :** `long puissance(int base, int exposant);`
+- **Fonctions autorisées :** aucune
+
+Calculer `base` élevé à la puissance `exposant` (exposant positif ou nul) avec une boucle.
+
+Exemple d'exécution attendu (appel `puissance(2, 10)`) :
+
+```text
+1024
+```
+
+### Exercice 5.3 - pgcd (N2)
+
+- **Fichier à rendre :** `pgcd.c`
+- **Prototype :** `int pgcd(int a, int b);`
+- **Fonctions autorisées :** aucune
+
+Calculer le plus grand commun diviseur par l'algorithme d'Euclide : tant que `b` n'est pas nul, remplacer le couple `(a, b)` par `(b, a % b)`.
+
+Exemple d'exécution attendu (appel `pgcd(48, 36)`) :
+
+```text
+12
+```
+
+### Exercice 5.4 - somme_rec (N2)
+
+- **Fichier à rendre :** `somme_rec.c`
+- **Prototype :** `long somme_rec(int n);`
+- **Fonctions autorisées :** aucune (fonction récursive)
+
+Calculer la somme de 1 à `n` de façon récursive (un cas d'arrêt, puis un appel à soi-même).
+
+Exemple d'exécution attendu (appel `somme_rec(100)`) :
+
+```text
+5050
+```
+
+### Exercice 5.5 - fibonacci (N3)
+
+- **Fichier à rendre :** `fibonacci.c`
+- **Prototype :** `long fibonacci(int n);`
+- **Fonctions autorisées :** aucune
+
+Écrire la version récursive (`fib(0) = 0`, `fib(1) = 1`, `fib(n) = fib(n-1) + fib(n-2)`). En bonus, écrire une version avec une boucle, bien plus rapide.
+
+Exemple d'exécution attendu (appel `fibonacci(10)`) :
+
+```text
+55
+```
+
+### Exercice 5.6 - rate_echange (N3)
+
+- **Fichier à rendre :** `rate_echange.c`
+- **Prototype :** `void rate_echange(int a, int b);`
+- **Fonctions autorisées :** `printf` (pour le constat dans le `main`)
+
+Tenter d'échanger `a` et `b`, puis constater dans un `main` que les variables `x` et `y` passées à l'appel ne changent pas. Expliquer pourquoi en commentaire (le passage par valeur). Ce constat motive le chapitre suivant.
+
+Exemple d'exécution attendu (avec `x = 3`, `y = 8`) :
+
+```text
+avant : 3 8
+apres : 3 8
+```
 
 ## Fil rouge : une fonction de vérification
 
-On transforme la boucle du chapitre 4 en une fonction propre, qui reçoit la clé et renvoie 1 si elle ouvre le coffre, 0 sinon. La clé est reçue par une adresse (`const char *`) ; on l'utilise comme un tableau de caractères, le chapitre 6 détaillera pourquoi.
+On transforme la boucle du chapitre 4 en une fonction propre, qui reçoit la clé et renvoie 1 si elle ouvre le coffre, 0 sinon.
 
-```c
-unsigned char cible[8] = {67, 109, 103, 112, 105, 115, 105, 108};
+À vous de compléter `coffre0` :
 
-int verifier(const char *cle)
-{
-    for (int i = 0; i < 8; i++)
-        if ((unsigned char)(cle[i] + i) != cible[i])
-            return 0;
-    return 1;
-}
+- **Fichier à rendre :** `coffre0.c`
+- **Prototype :** `int verifier(const char *cle);`
+- **Fonctions autorisées :** aucune
+
+Consignes :
+
+- Garder le tableau `cible` accessible à la fonction.
+- Écrire `verifier`, qui parcourt les 8 positions et renvoie 0 dès qu'une position ne correspond pas, 1 si toutes correspondent.
+- La clé est reçue par une adresse (`const char *`), que l'on utilise comme un tableau de caractères ; le chapitre 6 détaillera pourquoi.
+
+Vous pouvez la tester avec `verifier("Clemence")` (renvoie 1). Le chapitre 7 ajoutera la vérification de la longueur.
+
+Exemple d'exécution attendu (affichage de `verifier("Clemence")` puis `verifier("mauvais")`) :
+
+```text
+1 0
 ```
-
-On peut la tester avec `verifier("Clemence")` (renvoie 1). Le chapitre 7 ajoutera la vérification de la longueur.
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-05)
 

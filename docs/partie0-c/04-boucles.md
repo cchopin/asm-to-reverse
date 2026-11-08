@@ -76,44 +76,159 @@ Les chiffres sortent dans l'ordre inverse, donc on les stocke avant de les affic
 
 ## Exercices
 
-**Exercice 4.1 (N1)** Écrire `void compter(int n)` qui affiche les entiers de 1 à `n`, séparés par un espace (vous pouvez utiliser `printf("%d ")` ici).
+Rappel de la méthode : un fichier `.c` par exercice, la fonction testée depuis votre propre `main`, compilation avec `gcc -Wall -Wextra`. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-04).
 
-**Exercice 4.2 (N1)** Écrire `void table(int n)` qui affiche la table de multiplication de `n`, de 1 à 9, une ligne par produit, sous la forme `n x i = resultat`.
+### Exercice 4.1 - compter (N1)
 
-**Exercice 4.3 (N2)** Écrire `void my_putnbr(int n)` qui affiche un entier (positif ou négatif) avec `my_putchar` uniquement. Le tester avec `0`, `42`, `-42` et `-2147483648`.
+- **Fichier à rendre :** `compter.c`
+- **Prototype :** `void compter(int n);`
+- **Fonctions autorisées :** `printf`
 
-**Exercice 4.4 (N2)** Écrire `long factorielle(int n)` qui calcule `n!` (produit de 1 à `n`) avec une boucle. Vérifier `factorielle(10)` vaut `3628800`.
+Afficher les entiers de 1 à `n`, séparés par une espace.
 
-**Exercice 4.5 (N2)** Écrire `int somme_chiffres(int n)` qui renvoie la somme des chiffres de `n` (en valeur absolue). Exemple : `somme_chiffres(-12345)` vaut 15.
+Exemple d'exécution attendu (appel `compter(5)`) :
 
-**Exercice 4.6 (N3)** Écrire `int est_premier(int n)` qui renvoie 1 si `n` est premier, 0 sinon. Optimiser en ne testant les diviseurs que jusqu'à la racine de `n` (condition `d * d <= n`).
+```text
+1 2 3 4 5
+```
 
-**Exercice 4.7 (N3)** Écrire `void triangle(int h)` qui affiche un triangle de hauteur `h` fait d'étoiles (ligne 1 : une étoile, ligne 2 : deux, etc.), avec des boucles imbriquées.
+### Exercice 4.2 - table (N1)
 
-**Exercice 4.8 (N3)** Écrire `void fizzbuzz(void)` qui affiche les nombres de 1 à 100, en remplaçant les multiples de 3 par `Fizz`, les multiples de 5 par `Buzz`, et les multiples de 3 et 5 par `FizzBuzz`. C'est un grand classique d'entretien.
+- **Fichier à rendre :** `table.c`
+- **Prototype :** `void table(int n);`
+- **Fonctions autorisées :** `printf`
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-04)
+Afficher la table de multiplication de `n`, de 1 à 9, une ligne par produit, sous la forme `n x i = resultat`.
+
+Exemple d'exécution attendu (appel `table(7)`) :
+
+```text
+7 x 1 = 7
+7 x 2 = 14
+...
+7 x 9 = 63
+```
+
+### Exercice 4.3 - my_putnbr (N2)
+
+- **Fichier à rendre :** `my_putnbr.c`
+- **Prototype :** `void my_putnbr(int n);`
+- **Fonctions autorisées :** `my_putchar`
+
+Afficher un entier (positif ou négatif) avec `my_putchar` uniquement. Gérer le signe et le cas `0`. Attention au plus petit entier (`-2147483648`), dont l'opposé n'est pas représentable : calculer dans un `long`.
+
+Exemple d'exécution attendu (appels sur `0`, `42`, `-42`, `-2147483648`, un par ligne) :
+
+```text
+0
+42
+-42
+-2147483648
+```
+
+### Exercice 4.4 - factorielle (N2)
+
+- **Fichier à rendre :** `factorielle.c`
+- **Prototype :** `long factorielle(int n);`
+- **Fonctions autorisées :** aucune
+
+Calculer `n!` (produit de 1 à `n`) avec une boucle.
+
+Exemple d'exécution attendu (appel `factorielle(10)`) :
+
+```text
+3628800
+```
+
+### Exercice 4.5 - somme_chiffres (N2)
+
+- **Fichier à rendre :** `somme_chiffres.c`
+- **Prototype :** `int somme_chiffres(int n);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer la somme des chiffres de `n` (en valeur absolue).
+
+Exemple d'exécution attendu (appel `somme_chiffres(-12345)`) :
+
+```text
+15
+```
+
+### Exercice 4.6 - est_premier (N3)
+
+- **Fichier à rendre :** `est_premier.c`
+- **Prototype :** `int est_premier(int n);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer 1 si `n` est premier, 0 sinon. Optimiser en ne testant les diviseurs que jusqu'à la racine de `n` (condition `d * d <= n`).
+
+Exemple d'exécution attendu (appels sur `1`, `2`, `17`, `18`) :
+
+```text
+0 1 1 0
+```
+
+### Exercice 4.7 - triangle (N3)
+
+- **Fichier à rendre :** `triangle.c`
+- **Prototype :** `void triangle(int h);`
+- **Fonctions autorisées :** `my_putchar`
+
+Afficher un triangle de hauteur `h` fait d'étoiles (ligne 1 : une étoile, ligne 2 : deux, etc.), avec des boucles imbriquées.
+
+Exemple d'exécution attendu (appel `triangle(4)`) :
+
+```text
+*
+**
+***
+****
+```
+
+### Exercice 4.8 - fizzbuzz (N3)
+
+- **Fichier à rendre :** `fizzbuzz.c`
+- **Prototype :** `void fizzbuzz(void);`
+- **Fonctions autorisées :** `printf`
+
+Afficher les nombres de 1 à 100, en remplaçant les multiples de 3 par `Fizz`, les multiples de 5 par `Buzz`, et les multiples de 3 et 5 par `FizzBuzz`. C'est un grand classique d'entretien.
+
+Exemple d'exécution attendu (début de la sortie) :
+
+```text
+1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+...
+```
 
 ## Fil rouge : la boucle de vérification
 
 On généralise la vérification d'une position (chapitre 3) à toutes les positions, avec une boucle. On utilise ici une clé candidate fixe ; la lecture de la vraie clé viendra au chapitre 9.
 
-```c
-unsigned char cible[8] = {67, 109, 103, 112, 105, 115, 105, 108};
-char cle[8] = {'C', 'l', 'e', 'm', 'e', 'n', 'c', 'e'};
+À vous de compléter `coffre0` :
 
-int ok = 1;
-for (int i = 0; i < 8; i++)
-    if ((unsigned char)(cle[i] + i) != cible[i])
-        ok = 0;
+- **Fichier à rendre :** `coffre0.c`
+- **Fonctions autorisées :** `printf`
 
-if (ok)
-    printf("Coffre ouvert\n");
-else
-    printf("Refuse\n");
+Consignes :
+
+- Reprendre le tableau `cible`.
+- Déclarer une clé candidate de 8 caractères (par exemple `'C','l','e','m','e','n','c','e'`).
+- Parcourir les 8 positions : si, pour une position `i`, `(unsigned char)(cle[i] + i)` diffère de `cible[i]`, la clé est refusée.
+- Afficher `Coffre ouvert` si toutes les positions correspondent, `Refuse` sinon.
+
+Essayez de changer un caractère de la clé : le coffre refuse. C'est déjà un mini-crackme fonctionnel. Les chapitres suivants vont le rendre propre : une fonction de vérification (chapitre 5), une vraie clé lue en argument (chapitre 9), rangée dans une structure (chapitre 10).
+
+Exemple d'exécution attendu (avec la clé ci-dessus) :
+
+```text
+Coffre ouvert
 ```
-
-Essayez de changer un caractère de `cle` : le coffre refuse. C'est déjà un mini-crackme fonctionnel. Les chapitres suivants vont le rendre propre : une fonction de vérification (0.5), une vraie clé lue en argument (0.9), rangée dans une structure (0.10).
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-04)
 

@@ -61,35 +61,100 @@ Le `break` est indispensable : sans lui, l'exécution « tombe » dans le cas su
 
 ## Exercices
 
-**Exercice 3.1 (N1)** Écrire `int signe(int n)` qui renvoie `1` si `n` est positif, `-1` s'il est négatif, `0` s'il est nul.
+Rappel de la méthode : un fichier `.c` par exercice, la fonction testée depuis votre propre `main`, compilation avec `gcc -Wall -Wextra`. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-03).
 
-**Exercice 3.2 (N1)** Écrire `int max2(int a, int b)` qui renvoie le plus grand des deux, puis `int max3(int a, int b, int c)` qui réutilise `max2`.
+### Exercice 3.1 - signe (N1)
 
-**Exercice 3.3 (N2)** Écrire `int est_bissextile(int annee)` qui renvoie 1 si l'année est bissextile, 0 sinon. Règle : divisible par 4, sauf les multiples de 100 qui ne sont pas multiples de 400. Tester 2000 (oui), 1900 (non), 2024 (oui).
+- **Fichier à rendre :** `signe.c`
+- **Prototype :** `int signe(int n);`
+- **Fonctions autorisées :** aucune
 
-**Exercice 3.4 (N2)** Écrire `const char *categorie(int age)` qui renvoie `"enfant"` (moins de 12), `"adolescent"` (moins de 18), `"adulte"` (moins de 65), `"senior"` au-delà, et `"invalide"` si l'âge est négatif.
+Renvoyer `1` si `n` est positif, `-1` s'il est négatif, `0` s'il est nul.
 
-**Exercice 3.5 (N3)** Écrire `int applique(int a, int b, char op)` qui renvoie le résultat de l'opération `op` (`'+'`, `'-'`, `'*'`, `'/'`) entre `a` et `b`, avec un `switch`. Pour `'/'`, renvoyer 0 si `b` vaut 0 (éviter la division par zéro).
+Exemple d'exécution attendu (appels `signe(-5)`, `signe(0)`, `signe(42)`) :
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-03)
+```text
+-1 0 1
+```
+
+### Exercice 3.2 - max2 et max3 (N1)
+
+- **Fichier à rendre :** `max.c`
+- **Prototypes :** `int max2(int a, int b);` et `int max3(int a, int b, int c);`
+- **Fonctions autorisées :** aucune (`max3` doit réutiliser `max2`)
+
+Renvoyer le plus grand de deux entiers, puis le plus grand de trois en réutilisant `max2`.
+
+Exemple d'exécution attendu (appels `max2(3, 9)`, `max3(4, 7, 2)`) :
+
+```text
+9 7
+```
+
+### Exercice 3.3 - est_bissextile (N2)
+
+- **Fichier à rendre :** `est_bissextile.c`
+- **Prototype :** `int est_bissextile(int annee);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer 1 si l'année est bissextile, 0 sinon. Règle : divisible par 4, sauf les multiples de 100 qui ne sont pas multiples de 400.
+
+Exemple d'exécution attendu (appels `est_bissextile(2000)`, `est_bissextile(1900)`, `est_bissextile(2024)`) :
+
+```text
+1 0 1
+```
+
+### Exercice 3.4 - categorie (N2)
+
+- **Fichier à rendre :** `categorie.c`
+- **Prototype :** `const char *categorie(int age);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer `"enfant"` (moins de 12 ans), `"adolescent"` (moins de 18), `"adulte"` (moins de 65), `"senior"` au-delà, et `"invalide"` si l'âge est négatif.
+
+Exemple d'exécution attendu (appels `categorie(8)`, `categorie(15)`, `categorie(40)`, `categorie(70)`, `categorie(-1)`) :
+
+```text
+enfant adolescent adulte senior invalide
+```
+
+### Exercice 3.5 - applique (N3)
+
+- **Fichier à rendre :** `applique.c`
+- **Prototype :** `int applique(int a, int b, char op);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer le résultat de l'opération `op` (`'+'`, `'-'`, `'*'`, `'/'`) entre `a` et `b`, à l'aide d'un `switch`. Pour `'/'`, renvoyer 0 si `b` vaut 0 (éviter la division par zéro).
+
+Exemple d'exécution attendu (appels `applique(6, 2, '+')`, `applique(6, 2, '/')`, `applique(6, 0, '/')`) :
+
+```text
+8 3 0
+```
 
 ## Fil rouge : vérifier une position
 
-Le coffre validera la clé position par position. La règle est la suivante : pour chaque position `i`, le caractère de la clé plus `i` doit être égal à `cible[i]`.
+Le coffre validera la clé position par position. La règle : pour chaque position `i`, le caractère de la clé augmenté de `i` doit être égal à `cible[i]`. On vérifie ici une seule position, la première.
 
-On vérifie ici une seule position, la première. `cible[0]` vaut 67, donc le bon caractère est celui tel que `c + 0 == 67`, c'est-à-dire `'C'`.
+À vous de compléter `coffre0` :
 
-```c
-unsigned char cible[8] = {67, 109, 103, 112, 105, 115, 105, 108};
-char c = 'C';   // caractère candidat pour la position 0
+- **Fichier à rendre :** `coffre0.c`
+- **Fonctions autorisées :** `printf`
 
-if ((unsigned char)(c + 0) == cible[0])
-    printf("position 0 correcte\n");
-else
-    printf("position 0 incorrecte\n");
+Consignes :
+
+- Reprendre le tableau `cible` du chapitre 2.
+- Choisir un caractère candidat `c` pour la position 0.
+- Afficher `position 0 correcte` si `(unsigned char)(c + 0)` est égal à `cible[0]`, sinon `position 0 incorrecte`.
+
+Indice : `cible[0]` vaut 67, donc le bon caractère est celui tel que `c + 0 == 67`, c'est-à-dire `'C'`. Essayez d'autres caractères pour voir le message changer. Le chapitre 4 généralisera cette vérification à toutes les positions avec une boucle.
+
+Exemple d'exécution attendu (avec `c = 'C'`) :
+
+```text
+position 0 correcte
 ```
-
-Essayez avec d'autres caractères pour voir le message changer. Le chapitre 4 généralisera cette vérification à toutes les positions avec une boucle.
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-03)
 

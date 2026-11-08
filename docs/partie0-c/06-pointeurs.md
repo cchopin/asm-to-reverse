@@ -85,33 +85,101 @@ void echange_pointeurs(int **a, int **b)
 
 ## Exercices
 
-**Exercice 6.1 (N1)** Écrire `void echange(int *a, int *b)` qui échange les valeurs pointées. Le tester et vérifier que les variables de l'appelant changent bien.
+Rappel de la méthode : un fichier `.c` par exercice, la fonction testée depuis votre propre `main`, compilation avec `gcc -Wall -Wextra`. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-06).
 
-**Exercice 6.2 (N1)** Écrire `void incremente(int *p)` qui ajoute 1 à la valeur pointée.
+### Exercice 6.1 - echange (N1)
 
-**Exercice 6.3 (N2)** Écrire `void div_mod(int a, int b, int *q, int *r)` qui range le quotient de `a / b` dans `*q` et le reste dans `*r`. C'est l'exemple type d'une fonction à deux résultats.
+- **Fichier à rendre :** `echange.c`
+- **Prototype :** `void echange(int *a, int *b);`
+- **Fonctions autorisées :** `printf` (pour le test dans le `main`)
 
-**Exercice 6.4 (N2)** Écrire `void rotate3(int *a, int *b, int *c)` qui décale les trois valeurs vers la droite : l'ancien `c` va dans `a`, l'ancien `a` dans `b`, l'ancien `b` dans `c`. Sur `(1, 2, 3)` on obtient `(3, 1, 2)`.
+Échanger les valeurs pointées. Le tester et vérifier que les variables de l'appelant changent bien, cette fois.
 
-**Exercice 6.5 (N3)** Écrire `void echange_pointeurs(int **a, int **b)` qui échange deux pointeurs eux-mêmes (pas les valeurs pointées). Vérifier qu'après l'appel, le premier pointeur désigne ce que désignait le second.
+Exemple d'exécution attendu (avec `x = 1`, `y = 2`) :
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-06)
+```text
+avant : 1 2
+apres : 2 1
+```
+
+### Exercice 6.2 - incremente (N1)
+
+- **Fichier à rendre :** `incremente.c`
+- **Prototype :** `void incremente(int *p);`
+- **Fonctions autorisées :** aucune
+
+Ajouter 1 à la valeur pointée.
+
+Exemple d'exécution attendu (une variable valant `41`, puis `incremente`, puis affichage) :
+
+```text
+42
+```
+
+### Exercice 6.3 - div_mod (N2)
+
+- **Fichier à rendre :** `div_mod.c`
+- **Prototype :** `void div_mod(int a, int b, int *q, int *r);`
+- **Fonctions autorisées :** aucune
+
+Ranger le quotient de `a / b` dans `*q` et le reste dans `*r`. C'est l'exemple type d'une fonction à deux résultats.
+
+Exemple d'exécution attendu (appel `div_mod(17, 5, &q, &r)` puis affichage de `q` et `r`) :
+
+```text
+3 2
+```
+
+### Exercice 6.4 - rotate3 (N2)
+
+- **Fichier à rendre :** `rotate3.c`
+- **Prototype :** `void rotate3(int *a, int *b, int *c);`
+- **Fonctions autorisées :** aucune
+
+Décaler les trois valeurs vers la droite : l'ancien `c` va dans `a`, l'ancien `a` dans `b`, l'ancien `b` dans `c`.
+
+Exemple d'exécution attendu (valeurs `1, 2, 3` avant l'appel) :
+
+```text
+3 1 2
+```
+
+### Exercice 6.5 - echange_pointeurs (N3)
+
+- **Fichier à rendre :** `echange_pointeurs.c`
+- **Prototype :** `void echange_pointeurs(int **a, int **b);`
+- **Fonctions autorisées :** `printf` (pour le test)
+
+Échanger deux pointeurs eux-mêmes (pas les valeurs pointées). Vérifier qu'après l'appel, le premier pointeur désigne ce que désignait le second.
+
+Exemple d'exécution attendu (`p` pointe vers une variable valant `10`, `q` vers une valant `20`, puis échange des pointeurs et affichage de `*p` et `*q`) :
+
+```text
+20 10
+```
 
 ## Fil rouge : lire la clé par pointeur
 
-La fonction `verifier` reçoit la clé par une adresse. On peut accéder à ses caractères de deux façons équivalentes : `cle[i]` ou `*(cle + i)`. La seconde montre bien ce qui se passe : on part de l'adresse de la clé, on avance de `i`, on déréférence.
+La fonction `verifier` reçoit la clé par une adresse. On peut accéder à ses caractères de deux façons équivalentes : `cle[i]` ou `*(cle + i)`. La seconde montre bien ce qui se passe : on part de l'adresse de la clé, on avance de `i`, on déréférence. C'est exactement ce calcul d'adresse (base plus décalage) que l'on retrouvera en assembleur au chapitre 6 de la partie 2.
 
-```c
-int verifier(const char *cle)
-{
-    for (int i = 0; i < 8; i++)
-        if ((unsigned char)(*(cle + i) + i) != cible[i])
-            return 0;
-    return 1;
-}
+À vous de compléter `coffre0` :
+
+- **Fichier à rendre :** `coffre0.c`
+- **Prototype :** `int verifier(const char *cle);`
+- **Fonctions autorisées :** aucune
+
+Consignes :
+
+- Reprendre la fonction `verifier` du chapitre 5.
+- Remplacer l'accès `cle[i]` par la forme équivalente `*(cle + i)`, pour bien voir le calcul d'adresse à l'œuvre.
+
+Le comportement ne change pas : `verifier("Clemence")` renvoie toujours 1.
+
+Exemple d'exécution attendu (affichage de `verifier("Clemence")`) :
+
+```text
+1
 ```
-
-C'est exactement ce calcul d'adresse (base plus décalage) que l'on retrouvera en assembleur au chapitre 6 de la partie 2.
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-06)
 

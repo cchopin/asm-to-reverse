@@ -965,7 +965,7 @@ my_putstr(ouvert ? "Coffre ouvert\n" : "Refuse\n");
 
 ### Fil rouge 12 {#fil-rouge-12}
 
-Le coffre assemblé en projet (`libmy` + `coffre0.c` + `Makefile`) est donné en entier au chapitre [0.13](../partie0-c/13-projet.md) et reproduit ci-dessous.
+Le coffre assemblé en projet (`libmy` + `coffre0.c` + `Makefile`) est reproduit en entier plus bas, dans [le projet le coffre](#projet-coffre).
 
 ## Projet : ma_libc {#projet-malibc}
 
@@ -1025,4 +1025,93 @@ Un `main.c` de test et un `Makefile` sur le modèle de celui du coffre complète
 
 ## Projet : le coffre {#projet-coffre}
 
-Le code complet (`libmy.h`, `libmy.c`, `coffre0.c`, `Makefile`) est donné au chapitre [0.13](../partie0-c/13-projet.md). `./coffre0 Clemence` affiche `Coffre ouvert`, tout le reste `Refuse`.
+Le coffre complet, aboutissement du fil rouge. Il réutilise `libmy` et range sa cible dans une structure. La clé valide est `Clemence`, mais, comme pour un vrai crackme, c'est la cible qui est dans le binaire, pas la clé.
+
+`libmy.h`
+
+```c
+#ifndef LIBMY_H
+#define LIBMY_H
+
+void my_putchar(char c);
+void my_putstr(const char *s);
+int  my_strlen(const char *s);
+
+#endif
+```
+
+`libmy.c`
+
+```c
+#include <unistd.h>
+#include "libmy.h"
+
+void my_putchar(char c) { write(1, &c, 1); }
+void my_putstr(const char *s) { for (int i = 0; s[i]; i++) my_putchar(s[i]); }
+int  my_strlen(const char *s) { int i = 0; while (s[i]) i++; return i; }
+```
+
+`coffre0.c`
+
+```c
+#include "libmy.h"
+
+struct coffre
+{
+    unsigned char cible[8];
+};
+
+static int verifier(const struct coffre *c, const char *cle)
+{
+    if (my_strlen(cle) != 8)
+        return 0;
+    for (int i = 0; i < 8; i++)
+        if ((unsigned char)(cle[i] + i) != c->cible[i])
+            return 0;
+    return 1;
+}
+
+int main(int argc, char **argv)
+{
+    struct coffre c = {{67, 109, 103, 112, 105, 115, 105, 108}};
+
+    if (argc != 2) {
+        my_putstr("Usage : ./coffre0 <cle>\n");
+        return 1;
+    }
+    if (verifier(&c, argv[1]))
+        my_putstr("Coffre ouvert\n");
+    else
+        my_putstr("Refuse\n");
+    return 0;
+}
+```
+
+`Makefile`
+
+```make
+CC = gcc
+CFLAGS = -Wall -Wextra
+
+coffre0: coffre0.o libmy.o
+	$(CC) $(CFLAGS) -o coffre0 coffre0.o libmy.o
+
+coffre0.o: coffre0.c libmy.h
+	$(CC) $(CFLAGS) -c coffre0.c
+
+libmy.o: libmy.c libmy.h
+	$(CC) $(CFLAGS) -c libmy.c
+
+clean:
+	rm -f *.o coffre0
+
+.PHONY: clean
+```
+
+Construction et essais :
+
+```bash
+make
+./coffre0 Clemence     # Coffre ouvert
+./coffre0 autrechose   # Refuse
+```

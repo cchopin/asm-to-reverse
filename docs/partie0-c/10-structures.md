@@ -47,35 +47,87 @@ On le parcourt comme tout tableau : `classe[i].note`.
 
 ## Exercices
 
-**Exercice 10.1 (N1)** Définir `struct point { int x; int y; };` puis écrire `int distance_carre(const struct point *a, const struct point *b)` qui renvoie `(ax-bx)^2 + (ay-by)^2` (on reste en entiers, sans racine). Entre `{1,2}` et `{4,6}`, le résultat est 25.
+Un fichier `.c` par exercice, testé depuis votre propre `main`, compilé avec `gcc -Wall -Wextra`. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-10).
 
-**Exercice 10.2 (N2)** Écrire `void augmente(struct point *p, int dx, int dy)` qui déplace un point en modifiant la structure via le pointeur. Vérifier l'effet dans un `main`.
+### Exercice 10.1 - distance_carre (N1)
 
-**Exercice 10.3 (N2)** Définir `struct etudiant { const char *nom; int note; };` puis écrire `double moyenne(const struct etudiant *tab, int n)` qui renvoie la moyenne des notes.
+- **Fichier à rendre :** `distance_carre.c`
+- **Type à définir :** `struct point { int x; int y; };`
+- **Prototype :** `int distance_carre(const struct point *a, const struct point *b);`
+- **Fonctions autorisées :** aucune
 
-**Exercice 10.4 (N3)** Ajouter `const char *meilleur(const struct etudiant *tab, int n)` qui renvoie le nom de l'étudiant ayant la meilleure note.
+Renvoyer `(ax-bx)^2 + (ay-by)^2` (on reste en entiers, sans racine).
 
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-10)
+Exemple d'exécution attendu (points `{1, 2}` et `{4, 6}`) :
+
+```text
+25
+```
+
+### Exercice 10.2 - augmente (N2)
+
+- **Fichier à rendre :** `augmente.c`
+- **Prototype :** `void augmente(struct point *p, int dx, int dy);`
+- **Fonctions autorisées :** `printf` (pour le test)
+
+Déplacer un point en modifiant la structure via le pointeur. Vérifier l'effet dans un `main`.
+
+Exemple d'exécution attendu (point `{1, 2}`, appel `augmente(&p, 3, 4)`) :
+
+```text
+4 6
+```
+
+### Exercice 10.3 - moyenne (N2)
+
+- **Fichier à rendre :** `moyenne.c`
+- **Type à définir :** `struct etudiant { const char *nom; int note; };`
+- **Prototype :** `double moyenne(const struct etudiant *tab, int n);`
+- **Fonctions autorisées :** `printf` (pour le test)
+
+Renvoyer la moyenne des notes.
+
+Exemple d'exécution attendu (notes `12`, `15`, `18`) :
+
+```text
+15.00
+```
+
+### Exercice 10.4 - meilleur (N3)
+
+- **Fichier à rendre :** `meilleur.c`
+- **Prototype :** `const char *meilleur(const struct etudiant *tab, int n);`
+- **Fonctions autorisées :** aucune
+
+Renvoyer le nom de l'étudiant ayant la meilleure note.
+
+Exemple d'exécution attendu (étudiants `{"Ada", 12}`, `{"Bo", 18}`, `{"Cy", 15}`) :
+
+```text
+Bo
+```
 
 ## Fil rouge : ranger le coffre dans une structure
 
 On regroupe les données du coffre (sa cible) dans une structure, et `verifier` reçoit un pointeur vers ce coffre. C'est plus propre, et surtout c'est la forme qu'on retrouvera désassemblée : un pointeur vers une zone de données, lu à décalages fixes.
 
-```c
-struct coffre
-{
-    unsigned char cible[8];
-};
+À vous de compléter `coffre0` :
 
-int verifier(const struct coffre *c, const char *cle)
-{
-    if (my_strlen(cle) != 8)
-        return 0;
-    for (int i = 0; i < 8; i++)
-        if ((unsigned char)(cle[i] + i) != c->cible[i])
-            return 0;
-    return 1;
-}
+- **Fichier à rendre :** `coffre0.c`
+- **Type à définir :** `struct coffre { unsigned char cible[8]; };`
+- **Prototype :** `int verifier(const struct coffre *c, const char *cle);`
+- **Fonctions autorisées :** `my_strlen`
+
+Consignes :
+
+- Définir la structure `coffre` qui contient le tableau `cible`.
+- Adapter `verifier` pour qu'elle reçoive un pointeur vers un `struct coffre` et lise la cible via `c->cible[i]`.
+- Conserver la garde de longueur du chapitre 7.
+
+Exemple d'exécution attendu (coffre initialisé avec la cible, affichage de `verifier(&c, "Clemence")`) :
+
+```text
+1
 ```
 
 Solution de l'étape : [solutions/partie0.md](../solutions/partie0.md#fil-rouge-10)

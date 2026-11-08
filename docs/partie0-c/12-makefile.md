@@ -80,16 +80,49 @@ Chaque règle a une **cible**, ses **dépendances**, et une **commande** (préc�
 
 ## Exercices
 
-**Exercice 12.1 (N1)** Répartir `my_putchar`, `my_putstr` et `my_strlen` dans `libmy.c` et `libmy.h`, et écrire un `main.c` qui les utilise. Compiler à la main en passant par les `.o`.
+Ces exercices se suivent : on construit un petit module et son `Makefile`. Solutions à part, dans [solutions/partie0.md](../solutions/partie0.md#chapitre-12).
 
-**Exercice 12.2 (N2)** Écrire un `Makefile` qui construit ce programme, avec une règle `clean`. Vérifier que `make` ne recompile que les fichiers modifiés.
+### Exercice 12.1 - un module libmy (N1)
 
-**Exercice 12.3 (N3)** Ajouter au module une ou deux fonctions de votre choix (par exemple `my_putnbr`), mettre à jour le `.h`, et constater que seuls les fichiers concernés sont recompilés.
+- **Fichiers à rendre :** `libmy.h`, `libmy.c`, `main.c`
+- **Fonctions du module :** `my_putchar`, `my_putstr`, `my_strlen`
+- **Fonctions autorisées :** `write`
+
+Répartir `my_putchar`, `my_putstr` et `my_strlen` dans `libmy.c` et `libmy.h` (avec garde d'inclusion), et écrire un `main.c` qui les utilise. Compiler à la main en passant par les `.o`.
+
+Exemple d'exécution attendu (un `main` qui appelle `my_putstr("salut\n")`) :
+
+```text
+salut
+```
+
+### Exercice 12.2 - un Makefile (N2)
+
+- **Fichier à rendre :** `Makefile`
+- **Fonctions autorisées :** `make`, `gcc`
+
+Écrire un `Makefile` qui construit le programme du 12.1, avec une règle `clean`. Vérifier que `make` ne recompile que les fichiers modifiés (attention : les commandes doivent commencer par une vraie tabulation).
+
+Exemple d'exécution attendu :
+
+```text
+$ make
+gcc -Wall -Wextra -c main.c
+gcc -Wall -Wextra -c libmy.c
+gcc -Wall -Wextra -o prog main.o libmy.o
+$ make
+make: 'prog' is up to date.
+```
+
+### Exercice 12.3 - étendre le module (N3)
+
+- **Fichiers à rendre :** `libmy.h`, `libmy.c` (mis à jour)
+- **Fonctions autorisées :** `write`
+
+Ajouter au module une ou deux fonctions de votre choix (par exemple `my_putnbr`), mettre à jour le `.h`, et constater que `make` ne recompile que les fichiers concernés.
 
 !!! tip "Le manuel"
     Les fonctions de la libc ont un manuel : `man 3 printf`, `man 3 malloc`, `man 2 write` (la section 2 regroupe les appels système, la section 3 les fonctions de bibliothèque). Savoir lire un `man` fait partie du métier.
-
-Solutions : [solutions/partie0.md](../solutions/partie0.md#chapitre-12)
 
 ## Fil rouge : le coffre en projet
 
