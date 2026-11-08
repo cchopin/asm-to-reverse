@@ -31,8 +31,10 @@ La solution est de faire tourner Docker dans une **vraie machine virtuelle x86-6
 Avec [Homebrew](https://brew.sh) :
 
 ```bash
-brew install colima docker
+brew install colima docker qemu lima-additional-guestagents
 ```
+
+`qemu` et `lima-additional-guestagents` sont nécessaires à Colima pour créer une machine virtuelle x86-64 sur un Mac Apple Silicon.
 
 Créer et démarrer une machine virtuelle x86-64 dédiée au cours (le nom `reverse` est un profil Colima) :
 
@@ -40,7 +42,7 @@ Créer et démarrer une machine virtuelle x86-64 dédiée au cours (le nom `reve
 colima start reverse --arch x86_64 --cpu 4 --memory 6 --disk 30
 ```
 
-Le premier démarrage prend quelques minutes. Colima configure ensuite le client `docker` pour utiliser cette machine virtuelle (contexte `colima-reverse`). Vérification :
+Le premier démarrage prend quelques minutes. Si `docker` ne répond pas ensuite (message du type `cannot restart, VM not previously started`), un `colima stop reverse` suivi de `colima start reverse` règle le problème. Colima configure ensuite le client `docker` pour utiliser cette machine virtuelle (contexte `colima-reverse`). Vérification :
 
 ```bash
 docker context ls                      # le contexte actif est marqué d'une étoile
@@ -72,7 +74,7 @@ Depuis le dossier du cours (le dossier `docs` du dépôt GitHub) :
 ./environnement/lab.sh
 ```
 
-Le script construit l'image `reverse-lab` au premier lancement (quelques minutes, plus longtemps sous émulation), puis ouvre un shell dans le conteneur. Le dossier du cours est partagé dans `/cours` : les fichiers créés ou modifiés d'un côté sont visibles de l'autre. On peut donc éditer avec un éditeur macOS et compiler dans le conteneur.
+Le script construit l'image `reverse-lab` au premier lancement (quelques minutes, plus longtemps sous émulation), puis ouvre un shell dans le conteneur. Le dossier du cours est partagé dans `/cours` : les fichiers créés ou modifiés d'un côté sont visibles de l'autre. Colima ne partage avec sa machine virtuelle que le dossier personnel (`/Users/<nom>`) : le dépôt doit donc se trouver quelque part sous `~` (par exemple `~/asm-to-reverse`). Ailleurs, dans `/tmp` par exemple, `/cours` apparaît vide dans le conteneur. On peut donc éditer avec un éditeur macOS et compiler dans le conteneur.
 
 Les commandes équivalentes, sans le script (toujours depuis ce dossier) :
 
