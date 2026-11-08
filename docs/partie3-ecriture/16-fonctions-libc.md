@@ -125,28 +125,50 @@ Côté reverse, cette règle explique des instructions qui semblent inutiles dan
 
 ## Exercices
 
-**Exercice 2.1** Écrire en assembleur une fonction `long maximum(long a, long b)` (indice : `cmp` puis `cmovl`, ou un saut), l'appeler depuis un programme C sur le modèle de `test_somme3.c`, et la tester avec des valeurs négatives.
+Ces exercices demandent d'écrire de l'assembleur NASM, souvent appelé depuis un programme C de test. Solutions à part, dans [solutions/partie3.md](../solutions/partie3.md#chapitre-2).
 
-**Exercice 2.2** Écrire un `main` en assembleur qui affiche `argc vaut N` avec `printf`, où `N` est le nombre d'arguments. Tester avec `./programme a b c`.
+### Exercice 2.1 - maximum (N2)
 
-**Exercice 2.3** Assembler `desaligne.asm`, observer le plantage dans GDB, puis afficher `p/x $rsp` à l'entrée de `main` (`break main`, `run`). Vérifier que la valeur se termine par 8. Corriger le programme et vérifier que `rsp` se termine par 0 juste avant le `call`.
+- **Fichier à rendre :** `maximum.asm` (plus un test C sur le modèle de `test_somme3.c`)
+- **Prototype :** `long maximum(long a, long b);`
 
-### Exercices gradués (style piscine)
+Renvoyer le plus grand des deux (indice : `cmp` puis `cmovl`, ou un saut). Tester avec des valeurs négatives.
 
-**Exercice 2.4 (niveau 1)** Écrire `long cube(long n)` en assembleur (deux `imul`), l'appeler depuis un programme C et vérifier le résultat avec une valeur négative.
+### Exercice 2.2 - afficher argc (N2)
 
-!!! note "Contraintes"
-    Fonction feuille : pas de cadre de pile, pas de `call`. Ajouter `section .note.GNU-stack noalloc noexec nowrite progbits` en fin de fichier.
+- **Fichier à rendre :** `argc.asm`
 
-**Exercice 2.5 (niveau 2)** Écrire `long somme_tableau(const long *t, long n)` qui additionne les `n` premiers éléments d'un tableau de `long`. L'appeler depuis C sur un tableau mêlant valeurs positives et négatives.
+Écrire un `main` en assembleur qui affiche `argc vaut N` avec `printf`, où `N` est le nombre d'arguments. Tester avec `./programme a b c`.
 
-!!! note "Contraintes"
-    Une seule boucle. Accéder au tableau avec l'adressage indexé `[rdi + rcx*8]` (un `long` occupe 8 octets).
+### Exercice 2.3 - alignement de pile (N2)
 
-**Exercice 2.6 (niveau 3)** Écrire un `main` en assembleur qui affiche chaque argument de la ligne de commande sur sa propre ligne, avec `printf("%s\n", ...)`. Tester avec `./programme alpha beta gamma`.
+- **Fichier de départ :** `desaligne.asm`
+- **À produire :** la correction, et la vérification que `rsp` se termine par 0 juste avant le `call`
 
-!!! note "Contraintes"
-    Respecter l'alignement de la pile sur 16 octets avant chaque `call printf`. Conserver `argc`, `argv` et l'indice de boucle dans des registres *callee-saved* (`rbx`, `r12`, `r13`) pour qu'ils survivent aux appels. Astuce : trois `push` en entrée réalignent la pile et sauvegardent ces trois registres d'un coup.
+Assembler `desaligne.asm`, observer le plantage dans GDB, afficher `p/x $rsp` à l'entrée de `main` (`break main`, `run`) et vérifier qu'elle se termine par 8. Corriger le programme.
+
+### Exercice 2.4 - cube (niveau 1)
+
+- **Fichier à rendre :** `cube.asm`
+- **Prototype :** `long cube(long n);`
+- **Contraintes :** fonction feuille (pas de cadre de pile, pas de `call`) ; ajouter `section .note.GNU-stack noalloc noexec nowrite progbits` en fin de fichier
+
+Calculer `n*n*n` (deux `imul`), appeler depuis C et vérifier avec une valeur négative.
+
+### Exercice 2.5 - somme_tableau (niveau 2)
+
+- **Fichier à rendre :** `somme_tableau.asm`
+- **Prototype :** `long somme_tableau(const long *t, long n);`
+- **Contraintes :** une seule boucle ; adressage indexé `[rdi + rcx*8]` (un `long` occupe 8 octets)
+
+Additionner les `n` premiers éléments. Tester depuis C sur un tableau mêlant valeurs positives et négatives.
+
+### Exercice 2.6 - afficher les arguments (niveau 3)
+
+- **Fichier à rendre :** `args.asm`
+- **Contraintes :** aligner la pile sur 16 octets avant chaque `call printf` ; conserver `argc`, `argv` et l'indice dans des registres *callee-saved* (`rbx`, `r12`, `r13`). Astuce : trois `push` en entrée réalignent la pile et sauvegardent ces trois registres d'un coup
+
+Écrire un `main` en assembleur qui affiche chaque argument sur sa propre ligne, avec `printf("%s\n", ...)`. Tester avec `./programme alpha beta gamma`.
 
 ## Fil rouge partie 4 : le keygen complet
 

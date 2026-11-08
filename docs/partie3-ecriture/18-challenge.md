@@ -4,6 +4,9 @@ Ce challenge clôt la partie 4. Il ne s'agit plus de petits exercices isolés, m
 
 ## L'objectif
 
+- **Fichier à rendre :** `filtre_majuscules.asm` (assemblé avec `nasm -f elf64` puis `ld`)
+- **Outils autorisés :** `nasm`, `ld`, `objdump` (aucune libc)
+
 Écrire `filtre_majuscules`, un filtre Unix qui lit l'entrée standard, met en majuscules chaque lettre minuscule (`a`-`z` vers `A`-`Z`), laisse tout le reste intact, et écrit le résultat sur la sortie standard. Comme tout filtre, il doit fonctionner dans un tube :
 
 ```

@@ -250,38 +250,58 @@ C'est la technique 2 de la section 5.2 de la partie 3, appliquée pas à pas. Da
 
 ## Exercices
 
-**Exercice 1.1** Modifier `bonjour.asm` pour qu'il se termine avec le code de retour 42. Vérifier avec `echo $?` juste après l'exécution.
+Ces exercices demandent d'écrire ou de modifier de l'assembleur NASM, assemblé avec `nasm -f elf64 fichier.asm -o f.o && ld f.o -o programme`. Solutions à part, dans [solutions/partie3.md](../solutions/partie3.md#chapitre-1).
 
-**Exercice 1.2** Écrire un programme qui affiche deux lignes différentes, la première sur la sortie standard et la seconde sur la sortie d'erreur. Vérifier avec `./programme 2>/dev/null`, qui masque la sortie d'erreur.
+### Exercice 1.1 - code de retour 42 (N1)
 
-**Exercice 1.3** Compiler un programme C contenant uniquement `puts("Bonjour")` dans `main`, puis comparer `strace -c ./programme` et `strace -c ./bonjour`. Combien d'appels système chacun effectue-t-il ? Lequel correspond à l'affichage ?
+- **Fichier à rendre :** une copie modifiée de `bonjour.asm`
+- **À produire :** la vérification avec `echo $?`
 
-**Exercice 1.4** Contourner l'anti-debug de `detecte` de deux autres façons, en s'aidant de `objdump -d -M intel detecte` pour les adresses :
+Modifier le programme pour qu'il se termine avec le code de retour 42.
+
+### Exercice 1.2 - deux sorties (N1)
+
+- **Fichier à rendre :** `deux_sorties.asm`
+
+Afficher deux lignes différentes, la première sur la sortie standard et la seconde sur la sortie d'erreur. Vérifier avec `./programme 2>/dev/null`, qui masque la sortie d'erreur.
+
+### Exercice 1.3 - compter les appels système (N2)
+
+- **Fichier à rendre :** un programme C contenant `puts("Bonjour")`
+- **À produire :** le nombre d'appels système de chaque version (comparer `strace -c ./programme` et `strace -c ./bonjour`), et lequel correspond à l'affichage
+
+### Exercice 1.4 - contourner l'anti-debug (N3)
+
+- **À faire :** contourner l'anti-debug de `detecte` de deux autres façons, en s'aidant de `objdump -d -M intel detecte` pour les adresses
 
 1. poser un point d'arrêt sur l'instruction qui suit le `syscall`, puis modifier `rax` ;
 2. poser un point d'arrêt sur le `js`, puis faire sauter l'exécution à l'instruction suivante avec `set $pc = adresse` (`$pc` désigne `rip`), ce qui revient à ignorer le saut.
 
-### Exercices gradués (style piscine)
-
-Ces trois exercices construisent une mini-bibliothèque d'affichage sans libc, qui sera réutilisée par la suite. Tout se compile avec `nasm -f elf64 fichier.asm -o f.o && ld f.o -o programme`.
+Les trois exercices suivants forment une mini-série piscine : ils construisent une petite bibliothèque d'affichage sans libc, réutilisée par la suite.
 
 !!! tip "L'avertissement `.note.GNU-stack`"
     Depuis les versions récentes de `ld`, un objet NASM sans section de pile explicite déclenche un avertissement (`missing .note.GNU-stack section implies executable stack`). Il est sans danger ici, mais pour une sortie propre, ajouter en fin de fichier : `section .note.GNU-stack noalloc noexec nowrite progbits`.
 
-**Exercice 1.5 (niveau 1)** Écrire `ma_putchar`, une routine qui affiche l'octet présent dans `dil` sur la sortie standard. L'utiliser pour afficher `A` puis un retour à la ligne.
+### Exercice 1.5 - ma_putchar (niveau 1)
 
-!!! note "Contraintes"
-    Pas de libc, pas de section `.data`. Pour que `rsi` pointe sur l'octet, le pousser d'abord sur la pile. Un seul `write` par appel.
+- **Fichier à rendre :** `ma_putchar.asm`
+- **Contraintes :** pas de libc, pas de section `.data` ; pousser l'octet sur la pile pour que `rsi` pointe dessus ; un seul `write` par appel
 
-**Exercice 1.6 (niveau 2)** Écrire `ma_putstr`, qui reçoit dans `rdi` l'adresse d'une chaîne terminée par `\0`, calcule sa longueur avec une boucle, puis l'affiche en un seul `write`. La tester sur deux chaînes différentes.
+Écrire une routine qui affiche l'octet présent dans `dil` sur la sortie standard. L'utiliser pour afficher `A` puis un retour à la ligne.
 
-!!! note "Contraintes"
-    Interdit d'écrire la longueur en dur : elle doit être calculée. Un seul `write` par chaîne.
+### Exercice 1.6 - ma_putstr (niveau 2)
 
-**Exercice 1.7 (niveau 3)** Écrire un mini-`cat` : lire l'entrée standard par blocs avec `read`, recopier chaque bloc sur la sortie standard avec `write`, et s'arrêter quand `read` renvoie 0 (fin de fichier). Tester avec `printf 'un\ndeux\n' | ./moncat` et avec `./moncat < fichier.txt`.
+- **Fichier à rendre :** `ma_putstr.asm`
+- **Contraintes :** interdit d'écrire la longueur en dur (elle doit être calculée) ; un seul `write` par chaîne
 
-!!! note "Contraintes"
-    Pas de libc. Utiliser un tampon en section `.bss`. Bien traiter le retour de `read` : `0` signifie EOF, une valeur négative une erreur.
+Recevoir dans `rdi` l'adresse d'une chaîne terminée par `\0`, calculer sa longueur avec une boucle, puis l'afficher en un seul `write`. La tester sur deux chaînes différentes.
+
+### Exercice 1.7 - mini-cat (niveau 3)
+
+- **Fichier à rendre :** `moncat.asm`
+- **Contraintes :** pas de libc ; un tampon en section `.bss` ; bien traiter le retour de `read` (`0` = EOF, négatif = erreur)
+
+Lire l'entrée standard par blocs avec `read`, recopier chaque bloc sur la sortie standard avec `write`, et s'arrêter quand `read` renvoie 0. Tester avec `printf 'un\ndeux\n' | ./moncat` et avec `./moncat < fichier.txt`.
 
 ## Fil rouge partie 4 : réécrire le keygen du coffre v3
 

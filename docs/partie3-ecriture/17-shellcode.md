@@ -147,27 +147,47 @@ Les deux méthodes doivent donner exactement les mêmes octets : c'est la vérif
 
 ## Exercices
 
-**Exercice 3.1** Assembler `flag.asm`, extraire `flag.bin` avec `objcopy`, et vérifier avec Python qu'il ne contient aucun octet nul. Modifier le message, réassembler, et confirmer que le lanceur affiche le nouveau texte.
+Ces exercices demandent d'écrire de l'assembleur, des scripts Python et un loader C. Solutions à part, dans [solutions/partie3.md](../solutions/partie3.md#chapitre-3).
 
-**Exercice 3.2** Écrire un shellcode qui termine le processus avec le code de retour 42 (`exit(42)`), en un minimum d'octets et sans aucun octet nul. Le tester avec le lanceur, puis `echo $?`.
+### Exercice 3.1 - un shellcode sans octet nul (N1)
 
-**Exercice 3.3** Dans `shell.asm`, remplacer `push 59 / pop rax` par `mov rax, 59` et comparer les octets avec `objdump`. Combien d'octets nuls apparaissent, et pourquoi ?
+- **Fichier de départ :** `flag.asm`
+- **À faire :** assembler, extraire `flag.bin` avec `objcopy`, vérifier en Python l'absence d'octet nul, puis modifier le message, réassembler et confirmer que le lanceur affiche le nouveau texte
 
-**Exercice 3.4** Reprendre `flag.asm`, chiffrer ses octets avec une clé XOR au choix (un court script Python), puis écrire un loader en C qui les déchiffre dans une page `mmap` et saute dessus, sur le modèle du fil rouge. Vérifier que le flag s'affiche bien.
+### Exercice 3.2 - exit(42) minimal (N2)
 
-### Exercices gradués (style piscine)
+- **Fichier à rendre :** un shellcode assembleur
+- **À faire :** terminer le processus avec le code de retour 42, en un minimum d'octets et sans octet nul, puis le tester (`echo $?`)
 
-**Exercice 3.5 (niveau 1)** Écrire un shellcode qui affiche `hey\n` puis quitte, sans aucun octet nul. Le tester avec le lanceur et vérifier `count(0) == 0` sur les octets extraits.
+### Exercice 3.3 - d'où viennent les octets nuls (N2)
 
-!!! note "Contraintes"
-    Pas de section `.data` : la chaîne (4 octets) est poussée sur la pile par une seule instruction `push`. Petites constantes via `push imm8 / pop`.
+- **À produire :** combien d'octets nuls apparaissent, et pourquoi
 
-**Exercice 3.6 (niveau 2)** Même programme avec une chaîne de 8 octets (`reverse\n`), chargée dans un registre puis poussée. Vérifier à nouveau l'absence d'octet nul.
+Dans `shell.asm`, remplacer `push 59 / pop rax` par `mov rax, 59` et comparer les octets avec `objdump`.
 
-!!! note "Contraintes"
-    `mov r64, imm64` est autorisé ici, car les 8 octets de la chaîne sont tous non nuls. Observer dans `objdump` pourquoi cela ne vaut pas pour une chaîne plus courte.
+### Exercice 3.4 - un loader chiffré (N3)
 
-**Exercice 3.7 (niveau 3, analyse)** On vous remet un shellcode chiffré par un XOR *roulant* : la clé change à chaque octet selon `cle_i = 0x5A XOR i`. Sans jamais l'exécuter, écrire un script qui le déchiffre, puis désassembler le résultat et décrire ce qu'il fait.
+- **Fichiers à rendre :** un script Python de chiffrement et un loader C
+- **À faire :** chiffrer les octets de `flag.asm` avec une clé XOR au choix, puis écrire un loader qui les déchiffre dans une page `mmap` et saute dessus, sur le modèle du fil rouge. Vérifier que le flag s'affiche
+
+### Exercice 3.5 - afficher hey (niveau 1)
+
+- **Fichier à rendre :** un shellcode assembleur
+- **Contraintes :** pas de section `.data` (la chaîne de 4 octets est poussée par une seule instruction `push`) ; petites constantes via `push imm8 / pop`
+
+Afficher `hey\n` puis quitter, sans octet nul. Tester avec le lanceur et vérifier `count(0) == 0` sur les octets extraits.
+
+### Exercice 3.6 - une chaîne de 8 octets (niveau 2)
+
+- **Fichier à rendre :** un shellcode assembleur
+- **Contraintes :** `mov r64, imm64` est autorisé ici car les 8 octets sont tous non nuls ; observer dans `objdump` pourquoi cela ne vaut pas pour une chaîne plus courte
+
+Même programme avec la chaîne `reverse\n`, chargée dans un registre puis poussée. Vérifier à nouveau l'absence d'octet nul.
+
+### Exercice 3.7 - déchiffrer un shellcode (niveau 3, analyse)
+
+- **Fichier à rendre :** un script de déchiffrement
+- **À faire :** sans jamais l'exécuter, déchiffrer un shellcode chiffré par un XOR roulant (`cle_i = 0x5A XOR i`), puis désassembler le résultat et décrire ce qu'il fait
 
 Octets chiffrés :
 

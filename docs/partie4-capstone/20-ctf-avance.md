@@ -18,6 +18,10 @@ make            # produit serrure, machine, oignon
 ./serrure <nom> <serial-hex>
 ```
 
+- **Binaire :** `serrure`
+- **Fichier à rendre :** un keygen
+- **À produire :** le flag `FLAG{serrure_XXXXXX}`
+
 Le programme attend un nom et un serial hexadécimal. Pour un nom donné, un seul serial est accepté. Le flag est `FLAG{serrure_XXXXXX}` où `XXXXXX` est ce serial.
 
 **Objectif** : retrouver l'algorithme qui transforme le nom en serial, puis écrire un *keygen* (en Python, ou en assembleur pour les plus ambitieux, sur le modèle du fil rouge de la partie 4) qui donne le serial de n'importe quel nom, à commencer par `Clemence`.
@@ -33,6 +37,9 @@ Le programme attend un nom et un serial hexadécimal. Pour un nom donné, un seu
 ./machine <mot-de-passe>
 ```
 
+- **Binaire :** `machine`
+- **À produire :** le mot de passe accepté et le flag
+
 Ce défi ne compare pas le mot de passe à une chaîne, et n'applique pas non plus un simple XOR. Il embarque une **petite machine virtuelle** : un tableau d'octets est interprété comme un programme qui transforme chaque caractère de l'entrée, et le résultat est comparé à une cible stockée.
 
 **Objectif** : comprendre le jeu d'instructions de la VM (quelques opcodes), extraire le programme et la cible, puis inverser la transformation pour reconstruire le mot de passe.
@@ -47,6 +54,9 @@ Ce défi ne compare pas le mot de passe à une chaîne, et n'applique pas non pl
 ```bash
 ./oignon <mot-de-passe>
 ```
+
+- **Binaire :** `oignon`
+- **À produire :** le mot de passe reconstitué et le flag
 
 Le plus retors. Il se protège d'un débogueur et ne stocke le mot de passe attendu nulle part en clair : celui-ci est **reconstruit à l'exécution** par combinaison de plusieurs tableaux.
 
