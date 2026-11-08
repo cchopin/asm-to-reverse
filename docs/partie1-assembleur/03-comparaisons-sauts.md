@@ -224,7 +224,11 @@ Dans un crackme, cherchez la chaîne de succès ("Bravo", "Correct", "flag") et 
 
 ## Exercices
 
-**Exercice 3.1** Pour chaque cas, le saut est-il pris ?
+Donnez votre réponse par écrit, puis vérifiez-la dans GDB ou en désassemblant quand c'est possible. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#chapitre-3).
+
+### Exercice 3.1 - le saut est-il pris ? (N1)
+
+- **À produire :** pour chaque cas, « pris » ou « non pris »
 
 ```
 a) mov eax, 5   ; cmp eax, 5   ; je  cible
@@ -234,7 +238,9 @@ d) mov eax, -1  ; cmp eax, 1   ; jb  cible      (attention)
 e) mov eax, 0   ; test eax, eax; jne cible
 ```
 
-**Exercice 3.2** Traduire en C :
+### Exercice 3.2 - traduire un min/max (N2)
+
+- **À produire :** le C équivalent, et ce que calcule le fragment si `[rbp-0x4]` est `a` et `[rbp-0x8]` est `b`
 
 ```
     mov  eax, DWORD PTR [rbp-0x4]
@@ -247,9 +253,9 @@ L1:
 L2:
 ```
 
-Que calcule ce fragment si `[rbp-0x4]` est `a` et `[rbp-0x8]` est `b` ?
+### Exercice 3.3 - setg (N2)
 
-**Exercice 3.3** Traduire en C (une seule ligne, avec un opérateur ternaire ou un booléen) :
+- **À produire :** une seule ligne de C (opérateur ternaire ou booléen)
 
 ```
 cmp   edi, 0x41
@@ -257,7 +263,13 @@ setg  al
 movzx eax, al
 ```
 
-**Exercice 3.4** Écrire en C une fonction `int categorie(int age)` qui renvoie 0 si `age < 12`, 1 si `age < 18`, 2 sinon. Compiler en `-O0`, désassembler et annoter chaque instruction. Recompiler ensuite en `-O2` et expliquer les différences.
+### Exercice 3.4 - categorie (N2)
+
+- **Fichier à rendre :** `categorie.c`
+- **Prototype :** `int categorie(int age);`
+- **Outils autorisés :** `gcc`, `objdump`
+
+Renvoyer 0 si `age < 12`, 1 si `age < 18`, 2 sinon. Compiler en `-O0`, désassembler et annoter chaque instruction. Recompiler ensuite en `-O2` et expliquer les différences.
 
 ## Exercices de lecture
 
@@ -282,13 +294,23 @@ FIN:
   ret
 ```
 
-**Exercice 3.L1 (N1)** Quelles instructions sont les comparaisons, lesquelles sont les sauts ? Que teste `jns` (rappel : le saut est pris quand le résultat n'est pas négatif) ?
+### Exercice 3.L1 - comparaisons et sauts (N1)
 
-**Exercice 3.L2 (N2)** Dérouler l'exécution pour `n = -5`, `n = 0`, puis `n = 7` : quelle valeur se retrouve dans `eax` à la fin dans chaque cas ? Rappel : `0xffffffff` est l'écriture non signée de `-1`.
+- **À analyser :** le listing de `classer` ci-dessus
 
-**Exercice 3.L3 (N3)** Reconstituer la fonction `classer` en C.
+Quelles instructions sont les comparaisons, lesquelles sont les sauts ? Que teste `jns` (rappel : le saut est pris quand le résultat n'est pas négatif) ?
 
-Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-03)
+### Exercice 3.L2 - dérouler l'exécution (N2)
+
+- **À produire :** la valeur finale de `eax` pour `n = -5`, `n = 0`, `n = 7`
+
+Rappel : `0xffffffff` est l'écriture non signée de `-1`.
+
+### Exercice 3.L3 - reconstituer la fonction (N3)
+
+- **À produire :** la fonction `classer` en C
+
+Réponses : [solutions/partie1.md](../solutions/partie1.md#lecture-03)
 
 ## Fil rouge : la première condition
 

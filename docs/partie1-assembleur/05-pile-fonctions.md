@@ -233,7 +233,11 @@ Il s'agit du **canari** (stack protector) : une valeur secrète placée sur la p
 
 ## Exercices
 
-**Exercice 5.1** Donner le prototype C probable de cette fonction :
+Donnez votre réponse par écrit, puis vérifiez-la en désassemblant ou dans GDB. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#chapitre-5).
+
+### Exercice 5.1 - retrouver un prototype (N2)
+
+- **À produire :** le prototype C probable de la fonction
 
 ```
 push   rbp
@@ -247,7 +251,9 @@ pop    rbp
 ret
 ```
 
-**Exercice 5.2** Que fait ce code avant l'appel ? Écrire l'appel en C.
+### Exercice 5.2 - un appel à memcmp (N2)
+
+- **À produire :** ce que fait le code avant l'appel, et l'appel écrit en C
 
 ```
 mov    edx,0x10
@@ -258,11 +264,24 @@ test   eax,eax
 je     ok
 ```
 
-**Exercice 5.3** Écrire en C un programme comportant une fonction `int carre(int x)` et une fonction `main` qui appelle `printf("%d\n", carre(7))`. Compiler en `-O0`, désassembler `main`, et retrouver : le prologue, l'appel à `carre` avec son argument, la récupération du résultat, la préparation des deux arguments de `printf`.
+### Exercice 5.3 - un appel vu de main (N2)
 
-**Exercice 5.4** En 64 bits, après `push rbp` dans une fonction qui vient d'être appelée, à quelle adresse (par rapport à `rsp`) se trouve l'adresse de retour ?
+- **Fichier à rendre :** `appel.c`
+- **Outils autorisés :** `gcc`, `objdump`
 
-**Exercice 5.5** Observer la pile dans GDB, sur le modèle de la section 2.6. Le fichier [exemples/pile.c](../exemples/pile.c) contient :
+Écrire un programme comportant une fonction `int carre(int x)` et un `main` qui appelle `printf("%d\n", carre(7))`. Compiler en `-O0`, désassembler `main`, et retrouver : le prologue, l'appel à `carre` avec son argument, la récupération du résultat, la préparation des deux arguments de `printf`.
+
+### Exercice 5.4 - où est l'adresse de retour ? (N1)
+
+- **À produire :** une adresse exprimée par rapport à `rsp`
+
+En 64 bits, après `push rbp` dans une fonction qui vient d'être appelée, à quelle adresse (par rapport à `rsp`) se trouve l'adresse de retour ?
+
+### Exercice 5.5 - observer la pile dans GDB (N2)
+
+- **Outils autorisés :** `gcc`, `gdb`
+
+Observer la pile dans GDB, sur le modèle de la section 2.6. Le fichier [exemples/pile.c](../exemples/pile.c) contient :
 
 ```c
 long carre(long x) { return x * x; }
@@ -322,13 +341,25 @@ Retrouver le prototype d'une fonction, c'est lire la taille des registres d'argu
   ret
 ```
 
-**Exercice 5.L1 (N1)** Repérer le prologue et l'épilogue. À quoi servent `push %rbp` / `mov %rsp,%rbp` au début, et `pop %rbp` / `ret` à la fin ?
+### Exercice 5.L1 - prologue et épilogue (N1)
 
-**Exercice 5.L2 (N2)** Le premier argument est sauvé sur 8 octets (`mov %rdi,...`), le deuxième sur 4 (`mov %esi,...`), et le retour se fait dans `eax`. Quels types C cela suggère-t-il pour les deux arguments et pour le retour ?
+- **À analyser :** le listing de `element` ci-dessus
 
-**Exercice 5.L3 (N3)** En déduire un prototype plausible pour `element`. Que calcule la fonction, d'après l'accès mémoire final (on détaille ce calcul au chapitre 6) ?
+Repérer le prologue et l'épilogue. À quoi servent `push %rbp` / `mov %rsp,%rbp` au début, et `pop %rbp` / `ret` à la fin ?
 
-Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-05)
+### Exercice 5.L2 - deviner les types (N2)
+
+- **À produire :** les types C des deux arguments et du retour
+
+Le premier argument est sauvé sur 8 octets (`mov %rdi,...`), le deuxième sur 4 (`mov %esi,...`), et le retour se fait dans `eax`.
+
+### Exercice 5.L3 - prototype et calcul (N3)
+
+- **À produire :** un prototype plausible pour `element`, et ce qu'elle calcule
+
+D'après l'accès mémoire final (ce calcul est détaillé au chapitre 6).
+
+Réponses : [solutions/partie1.md](../solutions/partie1.md#lecture-05)
 
 ## Fil rouge : le prototype de verifier
 

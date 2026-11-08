@@ -103,23 +103,50 @@ Face à du code `-O2`/`-O3` :
 
 C'est un entraînement : plus on lit de code optimisé, plus ces motifs deviennent immédiats.
 
-## Exercices gradués
+## Exercices
 
-Compiler aux deux niveaux : `gcc -O0 -c f.c -o f0.o` et `gcc -O2 -c f.c -o f2.o`, puis `objdump -d -M intel`.
+Pour chaque exercice, compiler aux deux niveaux : `gcc -O0 -c f.c -o f0.o` et `gcc -O2 -c f.c -o f2.o`, puis `objdump -d -M intel`. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#optimisations).
 
-**Exercice 11.1 (niveau 1)** Compiler `int fois18(int x){ return x*18; }` en `-O0` et `-O2`. Expliquer, instruction par instruction, comment la version `-O2` calcule `x*18` avec un `lea` et un `add`.
+### Exercice 11.1 - fois18 (niveau 1)
 
-**Exercice 11.2 (niveau 2)** Compiler `unsigned div3(unsigned x){ return x/3; }` en `-O2`. Il n'y a pas de division : identifier le nombre magique et le décalage, et vérifier que `magique ≈ 2^décalage / 3`.
+- **Fichier à rendre :** `fois18.c` contenant `int fois18(int x){ return x*18; }`
+- **Outils autorisés :** `gcc`, `objdump`
 
-**Exercice 11.3 (niveau 2)** Compiler `int maxi(int a,int b){ return a>b?a:b; }` en `-O2`. Repérer l'instruction conditionnelle utilisée et expliquer pourquoi il n'y a aucun saut.
+Expliquer, instruction par instruction, comment la version `-O2` calcule `x*18` avec un `lea` et un `add`.
 
-**Exercice 11.4 (niveau 2)** Compiler `int carre_plus(int x){ return x*x+2*x+1; }` en `-O2`. Montrer comment les deux instructions produites recomposent l'expression, et retrouver sa forme factorisée.
+### Exercice 11.2 - div3 (niveau 2)
 
-**Exercice 11.5 (niveau 3)** Compiler `long somme(const int *t,long n){ long s=0; for(long i=0;i<n;i++) s+=t[i]; return s; }` en `-O3`. Identifier les instructions vectorielles (`xmm`, `movdqu`, `paddq`) et expliquer en une phrase ce que fait la boucle principale, puis à quoi sert le bloc scalaire final.
+- **Fichier à rendre :** `div3.c` contenant `unsigned div3(unsigned x){ return x/3; }`
+- **Outils autorisés :** `gcc`, `objdump`, `python3`
 
-**Exercice 11.6 (niveau 3, lecture)** On lit dans un binaire : `imul rax, 0xCCCCCCCD` puis `shr rax, 0x23` (35). Quelle division par constante ce code réalise-t-il ? (Indice : `2^35 / 0xCCCCCCCD`.)
+En `-O2`, il n'y a pas de division : identifier le nombre magique et le décalage, et vérifier que `magique ≈ 2^décalage / 3`.
 
-Solutions : [solutions/partie1.md](../solutions/partie1.md#optimisations)
+### Exercice 11.3 - maxi sans saut (niveau 2)
+
+- **Fichier à rendre :** `maxi.c` contenant `int maxi(int a,int b){ return a>b?a:b; }`
+- **Outils autorisés :** `gcc`, `objdump`
+
+En `-O2`, repérer l'instruction conditionnelle utilisée et expliquer pourquoi il n'y a aucun saut.
+
+### Exercice 11.4 - carre_plus (niveau 2)
+
+- **Fichier à rendre :** `carre_plus.c` contenant `int carre_plus(int x){ return x*x+2*x+1; }`
+- **Outils autorisés :** `gcc`, `objdump`
+
+En `-O2`, montrer comment les deux instructions produites recomposent l'expression, et retrouver sa forme factorisée.
+
+### Exercice 11.5 - vectorisation (niveau 3)
+
+- **Fichier à rendre :** `somme.c` contenant `long somme(const int *t,long n){ long s=0; for(long i=0;i<n;i++) s+=t[i]; return s; }`
+- **Outils autorisés :** `gcc` (`-O3`), `objdump`
+
+Identifier les instructions vectorielles (`xmm`, `movdqu`, `paddq`), expliquer en une phrase ce que fait la boucle principale, puis à quoi sert le bloc scalaire final.
+
+### Exercice 11.6 - division magique (niveau 3, lecture)
+
+- **À produire :** la division par constante réalisée par le code
+
+On lit dans un binaire : `imul rax, 0xCCCCCCCD` puis `shr rax, 0x23` (35). Indice : `2^35 / 0xCCCCCCCD`.
 
 ## Suivi
 

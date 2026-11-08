@@ -100,29 +100,52 @@ mystere:
 
 Sans voir la source, on reconstruit la structure : un `int` à l'offset 0, un `char` (non signé, car `movzx`) à l'offset 4, un `long` à l'offset 8, le tout d'une taille de 16 octets. On en déduit `struct { int a; unsigned char b; long c; }`. Les tailles d'accès (`DWORD`, `BYTE`, `QWORD`) et les extensions (`movsxd` signé, `movzx` non signé) donnent les types exacts. C'est ainsi que Ghidra propose des types, et savoir le faire à la main permet de le corriger.
 
-## Exercices gradués
+## Exercices
 
-Compilation : `nasm -f elf64 ex.asm -o ex.o && gcc -no-pie test.c ex.o -o test`. Les structures sont définies côté C et passées par pointeur.
+Ces exercices demandent d'écrire des fonctions en assembleur NASM. Compilation : `nasm -f elf64 ex.asm -o ex.o && gcc -no-pie test.c ex.o -o test`. Les structures sont définies côté C et passées par pointeur. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#structures-tableaux).
 
-**Exercice 10.1 (niveau 1)** Avec `struct Point { int x, y; }`, écrire `int lire_y(Point *p)` qui renvoie `p->y`. Vérifier qu'il lit bien l'offset 4.
+### Exercice 10.1 - lire_y (niveau 1)
 
-**Exercice 10.2 (niveau 2)** Écrire `void double_x(Point *p)` qui double `p->x` **en place** (modification via le pointeur). Vérifier depuis C que la structure est modifiée.
+- **Fichier à rendre :** `lire_y.asm`
+- **Prototype :** `int lire_y(Point *p);` avec `struct Point { int x, y; }`
 
-**Exercice 10.3 (niveau 2)** Avec `struct Enr { int id; long val; }`, écrire `long somme_val(Enr *t, long n)` qui additionne les `val` des `n` éléments. Déterminer d'abord la taille d'un `Enr` et l'offset de `val`.
+Renvoyer `p->y`. Vérifier qu'il lit bien l'offset 4.
 
-!!! note "Contraintes"
-    L'adresse de `t[i].val` se calcule comme `base + i*taille + offset`. Ne pas supposer que la taille vaut 12 : vérifier avec `sizeof`.
+### Exercice 10.2 - double_x (niveau 2)
 
-**Exercice 10.4 (niveau 3)** Écrire `int element(int *m, int ncol, int i, int j)` qui renvoie `m[i][j]` d'un tableau 2D ligne-majeur. Tester avec un `int m[2][3]`.
+- **Fichier à rendre :** `double_x.asm`
+- **Prototype :** `void double_x(Point *p);`
 
-!!! note "Contraintes"
-    Penser à étendre l'index en 64 bits (`cdqe` ou `movsxd`) avant l'accès mémoire. Utiliser l'échelle `*4` de l'adressage.
+Doubler `p->x` **en place** (modification via le pointeur). Vérifier depuis C que la structure est modifiée.
 
-**Exercice 10.5 (niveau 2)** Avec `struct Drapeau { unsigned char flags; int n; }`, écrire `int lire_flags(Drapeau *p)` qui renvoie `flags` étendu à un `int`. Pourquoi `movzx` et non `movsx` ?
+### Exercice 10.3 - somme_val (niveau 2)
 
-**Exercice 10.6 (niveau 3, lecture)** Reconstruire la structure manipulée par la fonction `mystere` de la section 10.6 : donner l'offset, la taille et le caractère signé de chaque champ, puis proposer une déclaration C compatible.
+- **Fichier à rendre :** `somme_val.asm`
+- **Prototype :** `long somme_val(Enr *t, long n);` avec `struct Enr { int id; long val; }`
+- **Contraintes :** l'adresse de `t[i].val` se calcule comme `base + i*taille + offset`. Ne pas supposer que la taille vaut 12 : vérifier avec `sizeof`.
 
-Solutions : [solutions/partie1.md](../solutions/partie1.md#structures-tableaux)
+Additionner les `val` des `n` éléments. Déterminer d'abord la taille d'un `Enr` et l'offset de `val`.
+
+### Exercice 10.4 - element 2D (niveau 3)
+
+- **Fichier à rendre :** `element.asm`
+- **Prototype :** `int element(int *m, int ncol, int i, int j);`
+- **Contraintes :** étendre l'index en 64 bits (`cdqe` ou `movsxd`) avant l'accès mémoire. Utiliser l'échelle `*4` de l'adressage.
+
+Renvoyer `m[i][j]` d'un tableau 2D ligne-majeur. Tester avec un `int m[2][3]`.
+
+### Exercice 10.5 - lire_flags (niveau 2)
+
+- **Fichier à rendre :** `lire_flags.asm`
+- **Prototype :** `int lire_flags(Drapeau *p);` avec `struct Drapeau { unsigned char flags; int n; }`
+
+Renvoyer `flags` étendu à un `int`. Pourquoi `movzx` et non `movsx` ?
+
+### Exercice 10.6 - reconstruire une structure (niveau 3, lecture)
+
+- **À produire :** l'offset, la taille et le caractère signé de chaque champ, puis une déclaration C compatible
+
+Reconstruire la structure manipulée par la fonction `mystere` de la section 10.6.
 
 ## Suivi
 

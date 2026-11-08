@@ -82,23 +82,46 @@ jmp [rax]             ; saute directement sur vtable[0] (tail call)
 
 Le `jmp [rax]` au lieu de `call` est une optimisation d'appel terminal : `calcule` n'a plus rien à faire après, donc il saute dans `aire()` qui renverra directement à l'appelant de `calcule`. Le compilateur ne **dévirtualise** (remplace par un appel direct) que s'il peut prouver le type dynamique, ce qui n'est pas le cas ici puisque `f` peut pointer sur n'importe quelle sous-classe de `Forme`.
 
-## Exercices gradués
+## Exercices
 
-Compiler avec `g++ -O0 ...` (et `-O2` quand demandé), puis `objdump -d -M intel` et `objdump -t`. Utiliser une petite hiérarchie : une base `Forme` avec `virtual int aire() const`, et une dérivée `Carre` qui la redéfinit.
+Compiler avec `g++ -O0 ...` (et `-O2` quand demandé), puis `objdump -d -M intel` et `objdump -t`. Utiliser une petite hiérarchie : une base `Forme` avec `virtual int aire() const`, et une dérivée `Carre` qui la redéfinit. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#cpp-vtables).
 
-**Exercice 12.1 (niveau 1)** Compiler la hiérarchie, lister les symboles avec `objdump -t`, et traduire trois symboles décorés avec `c++filt`. Lesquels correspondent à `calcule`, à `Carre::aire`, à la vtable de `Carre` ?
+### Exercice 12.1 - démangler les symboles (niveau 1)
 
-**Exercice 12.2 (niveau 2)** Désassembler `Carre::aire`. À quel offset lit-il le champ `cote` ? En déduire la disposition complète d'un objet `Carre` (vptr, `tag`, `cote`) et expliquer pourquoi `cote` n'est pas à l'offset 0.
+- **Fichier à rendre :** `formes.cpp` (la hiérarchie `Forme`/`Carre`)
+- **Outils autorisés :** `g++`, `objdump`, `c++filt`
 
-**Exercice 12.3 (niveau 2)** Désassembler `calcule` en `-O0`. Repérer les trois instructions qui, à partir de `this`, mènent au `call` : chargement du vptr, chargement de l'entrée de vtable, appel. Expliquer chacune.
+Lister les symboles avec `objdump -t`, et traduire trois symboles décorés avec `c++filt`. Lesquels correspondent à `calcule`, à `Carre::aire`, à la vtable de `Carre` ?
 
-**Exercice 12.4 (niveau 2)** Trouver le symbole de la vtable de `Carre` (`objdump -t`, puis `c++filt`). Que contient cette table, et pourquoi deux classes différentes ont-elles des vtables différentes ?
+### Exercice 12.2 - disposition d'un objet (niveau 2)
 
-**Exercice 12.5 (niveau 3)** Comparer `calcule` en `-O0` et `-O2`. Expliquer le `jmp [rax]` de la version `-O2` (tail call) et pourquoi le compilateur n'a pas remplacé l'appel virtuel par un appel direct.
+- **À produire :** l'offset du champ `cote` et la disposition complète d'un objet `Carre`
 
-**Exercice 12.6 (niveau 3, lecture)** Dans un binaire, on lit `mov rax, [rdi]` suivi de `call [rax+0x10]`. Qu'est-ce qui est appelé ? Combien de méthodes virtuelles précèdent celle-ci dans la vtable ?
+Désassembler `Carre::aire`. À quel offset lit-il le champ `cote` ? En déduire la disposition complète (vptr, `tag`, `cote`) et expliquer pourquoi `cote` n'est pas à l'offset 0.
 
-Solutions : [solutions/partie1.md](../solutions/partie1.md#cpp-vtables)
+### Exercice 12.3 - l'appel virtuel (niveau 2)
+
+- **À produire :** l'explication des trois instructions qui mènent au `call`
+
+Désassembler `calcule` en `-O0`. Repérer, à partir de `this` : le chargement du vptr, le chargement de l'entrée de vtable, l'appel. Expliquer chacune.
+
+### Exercice 12.4 - la vtable (niveau 2)
+
+- **À produire :** le contenu de la vtable de `Carre` et pourquoi deux classes ont des vtables différentes
+
+Trouver le symbole de la vtable de `Carre` (`objdump -t`, puis `c++filt`).
+
+### Exercice 12.5 - tail call en -O2 (niveau 3)
+
+- **À produire :** l'explication du `jmp [rax]` et de l'absence de dévirtualisation
+
+Comparer `calcule` en `-O0` et `-O2`. Expliquer le `jmp [rax]` de la version `-O2` (tail call) et pourquoi le compilateur n'a pas remplacé l'appel virtuel par un appel direct.
+
+### Exercice 12.6 - lire un appel virtuel (niveau 3, lecture)
+
+- **À produire :** ce qui est appelé, et le nombre de méthodes virtuelles qui précèdent
+
+Dans un binaire, on lit `mov rax, [rdi]` suivi de `call [rax+0x10]`.
 
 ## Suivi
 

@@ -189,17 +189,48 @@ readelf -S /bin/ls    # liste des sections
 
 ## Exercices
 
-**Exercice 1.1** Convertir à la main (puis vérifier avec Python) : 200 en hexadécimal, 0x7F en décimal, 0b10110011 en hexadécimal.
+Les exercices de cette partie sont surtout des analyses : lire un listing, traduire en C, prédire une valeur. Donnez votre réponse par écrit, et vérifiez-la en compilant ou dans GDB quand c'est possible. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#chapitre-1).
 
-Méthode. Vers l'hexadécimal, on divise par 16 en notant les restes de bas en haut : 200 = 12*16 + 8, soit `0xC8` (12 = C, 8). Du binaire vers l'hexadécimal, on regroupe les bits par quatre depuis la droite, chaque groupe donnant un chiffre hexadécimal : `1011 0011` donne `0xB3`. De l'hexadécimal vers le décimal, chaque chiffre pèse une puissance de 16 : `0x7F = 7*16 + 15 = 127`.
+### Exercice 1.1 - conversions de bases (N1)
 
-**Exercice 1.2** Quelle est la valeur de l'octet signé `0x80` ? Et de `0xFE` ?
+- **À produire :** les trois conversions, à la main puis vérifiées
+- **Outils autorisés :** papier, `python3`
 
-**Exercice 1.3** Un programme compare un entier de 8 octets à `0x2165737265766572`. Quelle chaîne de 8 caractères cela représente-t-il en mémoire ?
+Convertir : 200 en hexadécimal, `0x7F` en décimal, `0b10110011` en hexadécimal.
 
-**Exercice 1.4** Les octets `0x55 0x7f 0x72 0x74` forment un mot de 4 lettres chiffré par un XOR avec une clé d'un seul octet. On sait que le mot commence par `'F'`. Retrouver la clé (une seule opération suffit), puis le mot entier.
+### Exercice 1.2 - octets signés (N1)
 
-**Exercice 1.5** Écrire une fonction Python `xor(data, cle)` qui applique un XOR d'un octet à tous les octets d'une chaîne `bytes`. La conserver : elle servira souvent.
+- **À produire :** deux valeurs décimales
+
+Quelle est la valeur de l'octet signé `0x80` ? Et de `0xFE` ?
+
+### Exercice 1.3 - un entier qui cache une chaîne (N2)
+
+- **À produire :** la chaîne de 8 caractères
+
+Un programme compare un entier de 8 octets à `0x2165737265766572`. Quelle chaîne de 8 caractères cela représente-t-il en mémoire ? Attention à l'ordre des octets.
+
+### Exercice 1.4 - XOR à clair connu (N2)
+
+- **À produire :** la clé, puis le mot entier
+- **Outils autorisés :** `python3`
+
+Les octets `0x55 0x7f 0x72 0x74` forment un mot de 4 lettres chiffré par un XOR avec une clé d'un seul octet. On sait que le mot commence par `'F'`. Retrouver la clé (une seule opération suffit), puis le mot entier.
+
+### Exercice 1.5 - la fonction xor en Python (N2)
+
+- **Fichier à rendre :** `xor.py`
+- **Prototype :** `def xor(data: bytes, cle: int) -> bytes`
+- **Outils autorisés :** `python3`
+
+Appliquer un XOR d'un octet à tous les octets d'une chaîne `bytes`. La conserver : elle servira souvent.
+
+Exemple d'exécution attendu :
+
+```text
+>>> xor(b"Flag", 0x13)
+b'U\x7frt'
+```
 
 ## Fil rouge : préparation du terrain
 

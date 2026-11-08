@@ -162,29 +162,52 @@ Au-delà de 16 octets, le mécanisme change : l'appelant réserve la place et pa
 
 Toute cette mécanique sert un objectif unique : **reconstruire la signature d'une fonction à partir de son code**. En lisant quels registres une fonction consomme avant tout calcul (`rdi`, puis `rsi`, puis `xmm0`...), combien d'arguments pile elle touche, ce qu'elle laisse dans `rax`, on retrouve son prototype C sans jamais voir la source. C'est ce que fait Ghidra automatiquement, et savoir le faire à la main permet de corriger ses erreurs.
 
-## Exercices gradués
+## Exercices
 
-Tous se compilent en liant un objet NASM avec un programme C : `nasm -f elf64 ex.asm -o ex.o && gcc -no-pie test.c ex.o -o test`.
+Ces exercices demandent d'écrire des fonctions en assembleur NASM. Chacune se compile en liant l'objet NASM avec un programme C de test : `nasm -f elf64 ex.asm -o ex.o && gcc -no-pie test.c ex.o -o test`. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#convention-appel).
 
-**Exercice 9.1 (niveau 1)** Écrire `long septieme(long a, ..., long g)` qui renvoie son septième argument. Vérifier depuis C que `septieme(1,2,3,4,5,6,777)` renvoie `777`.
+### Exercice 9.1 - septieme (niveau 1)
 
-!!! note "Contraintes"
-    Le 7e argument n'est pas dans un registre : le lire sur la pile, au bon décalage par rapport à `rsp` à l'entrée de la fonction.
+- **Fichier à rendre :** `septieme.asm` (plus un `test.c`)
+- **Prototype :** `long septieme(long a, long b, long c, long d, long e, long f, long g);`
+- **Contraintes :** le 7e argument n'est pas dans un registre ; le lire sur la pile, au bon décalage par rapport à `rsp` à l'entrée de la fonction.
 
-**Exercice 9.2 (niveau 2)** Écrire `long somme8(a, b, c, d, e, f, g, h)` qui additionne ses huit arguments (six en registres, deux sur la pile). Vérifier `somme8(1..8) == 36`.
+Renvoyer le septième argument. Vérifier depuis C que `septieme(1,2,3,4,5,6,777)` renvoie `777`.
 
-**Exercice 9.3 (niveau 2)** Écrire `double moyenne(double a, double b)` qui renvoie `(a+b)/2`, en travaillant dans les registres `xmm`. Vérifier `moyenne(3.0, 8.0) == 5.50`.
+### Exercice 9.2 - somme8 (niveau 2)
 
-!!! note "Contraintes"
-    Arguments dans `xmm0` et `xmm1`, résultat dans `xmm0`. Utiliser `addsd` et `divsd`.
+- **Fichier à rendre :** `somme8.asm`
+- **Prototype :** `long somme8(long a, long b, long c, long d, long e, long f, long g, long h);`
 
-**Exercice 9.4 (niveau 3)** Écrire un `main` en assembleur qui affiche un entier et un flottant avec un seul `printf`. Faire fonctionner la version correcte (`al = 1`), puis mettre `al = 0` et constater que le flottant s'affiche faux. Expliquer pourquoi.
+Additionner les huit arguments (six en registres, deux sur la pile). Vérifier `somme8(1..8) == 36`.
 
-**Exercice 9.5 (niveau 2)** Écrire `struct P { long x, y; } paire(long a, long b)` qui renvoie `{a, 2*b}`, et vérifier depuis C que les deux champs sont corrects. Dans quels registres chaque champ revient-il ?
+### Exercice 9.3 - moyenne (niveau 2)
 
-**Exercice 9.6 (niveau 3)** Écrire une fonction feuille `long rouge(long a, long b)` qui range ses deux arguments dans la red zone (`[rsp-8]`, `[rsp-16]`) **sans** modifier `rsp`, puis renvoie leur somme. Vérifier, et expliquer pourquoi cela resterait valide ici mais deviendrait faux si la fonction appelait une autre fonction.
+- **Fichier à rendre :** `moyenne.asm`
+- **Prototype :** `double moyenne(double a, double b);`
+- **Contraintes :** arguments dans `xmm0` et `xmm1`, résultat dans `xmm0`. Utiliser `addsd` et `divsd`.
 
-Solutions : [solutions/partie1.md](../solutions/partie1.md#convention-appel)
+Renvoyer `(a+b)/2`. Vérifier `moyenne(3.0, 8.0) == 5.50`.
+
+### Exercice 9.4 - printf mixte (niveau 3)
+
+- **Fichier à rendre :** `mixte.asm`
+
+Écrire un `main` en assembleur qui affiche un entier et un flottant avec un seul `printf`. Faire fonctionner la version correcte (`al = 1`), puis mettre `al = 0` et constater que le flottant s'affiche faux. Expliquer pourquoi.
+
+### Exercice 9.5 - paire (niveau 2)
+
+- **Fichier à rendre :** `paire.asm`
+- **Prototype :** `struct P { long x, y; } paire(long a, long b);`
+
+Renvoyer `{a, 2*b}`, et vérifier depuis C que les deux champs sont corrects. Dans quels registres chaque champ revient-il ?
+
+### Exercice 9.6 - red zone (niveau 3)
+
+- **Fichier à rendre :** `rouge.asm`
+- **Prototype :** `long rouge(long a, long b);`
+
+Écrire une fonction feuille qui range ses deux arguments dans la red zone (`[rsp-8]`, `[rsp-16]`) **sans** modifier `rsp`, puis renvoie leur somme. Vérifier, et expliquer pourquoi cela resterait valide ici mais deviendrait faux si la fonction appelait une autre fonction.
 
 ## Suivi
 

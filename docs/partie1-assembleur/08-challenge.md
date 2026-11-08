@@ -30,7 +30,11 @@ Toutes les fonctions ci-dessous sont compilées avec `gcc -O0 -fno-stack-protect
   ret
 ```
 
-**Challenge 1 (N2)** Deux arguments entiers, une seule expression renvoyée. Laquelle ? La simplifier mathématiquement.
+### Challenge 1 - g1 (N2)
+
+- **À produire :** l'expression renvoyée, puis sa forme simplifiée
+
+Deux arguments entiers, une seule expression renvoyée. Laquelle ? La simplifier mathématiquement.
 
 ## Fonction g2
 
@@ -54,7 +58,11 @@ TEST:
   ret
 ```
 
-**Challenge 2 (N3)** Un argument, un accumulateur initialisé à 1, une boucle qui multiplie et décrémente. Quelle fonction mathématique classique est-ce ? Donner le C, et la valeur renvoyée pour l'argument 5.
+### Challenge 2 - g2 (N3)
+
+- **À produire :** la fonction mathématique reconnue, le C équivalent, et la valeur renvoyée pour l'argument 5
+
+Un argument, un accumulateur initialisé à 1, une boucle qui multiplie et décrémente.
 
 ## Fonction g3
 
@@ -90,7 +98,11 @@ TEST:
   ret
 ```
 
-**Challenge 3 (N3)** L'argument est un pointeur (8 octets). Deux compteurs, une boucle sur les caractères jusqu'au `'\0'`, et une comparaison à `0x61`. Que vaut `0x61` en ASCII ? Que compte la fonction ? Donner le C.
+### Challenge 3 - g3 (N3)
+
+- **À produire :** la valeur de `0x61` en ASCII, ce que compte la fonction, et le C équivalent
+
+L'argument est un pointeur (8 octets). Deux compteurs, une boucle sur les caractères jusqu'au `'\0'`, et une comparaison à `0x61`.
 
 ## Vérification
 

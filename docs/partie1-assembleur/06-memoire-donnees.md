@@ -168,7 +168,11 @@ Deux lectures mémoire successives (`mov rax, [rax]`) correspondent à deux nive
 
 ## Exercices
 
-**Exercice 6.1** Pour chaque accès, proposer le type des données et une expression C :
+Donnez votre réponse par écrit, puis vérifiez-la en désassemblant ou dans GDB. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#chapitre-6).
+
+### Exercice 6.1 - lire des accès mémoire (N2)
+
+- **À produire :** pour chaque accès, le type des données et une expression C
 
 ```
 a) movzx eax, BYTE PTR [rdi+rcx]
@@ -178,7 +182,9 @@ d) mov   eax, DWORD PTR [rdi+0x20]   (rdi pointe sur une structure)
 e) movsx eax, WORD PTR [rdi+rcx*2]
 ```
 
-**Exercice 6.2** Traduire en C. Quel est le type de `[rbp-0x18]` ? Que calcule la boucle ?
+### Exercice 6.2 - une somme de tableau (N2)
+
+- **À produire :** le C équivalent, le type de `[rbp-0x18]`, et ce que calcule la boucle
 
 ```
     mov    QWORD PTR [rbp-0x18],rdi
@@ -200,9 +206,18 @@ L2:
     mov    eax,DWORD PTR [rbp-0x4]
 ```
 
-**Exercice 6.3** Écrire en C une structure `struct point { int x; int y; char nom[8]; long id; };` et une fonction qui renvoie `p->id + p->y`. Avant de compiler, prédire l'offset de chaque champ, puis vérifier en désassemblant. (Indice : un `long` doit être aligné sur 8 octets.)
+### Exercice 6.3 - prédire les offsets (N2)
 
-**Exercice 6.4** Décoder cette chaîne construite sur la pile :
+- **Fichier à rendre :** `point.c`
+- **Type à définir :** `struct point { int x; int y; char nom[8]; long id; };`
+- **Outils autorisés :** `gcc`, `objdump`
+
+Écrire une fonction qui renvoie `p->id + p->y`. Avant de compiler, prédire l'offset de chaque champ, puis vérifier en désassemblant. Indice : un `long` doit être aligné sur 8 octets.
+
+### Exercice 6.4 - décoder une chaîne de pile (N2)
+
+- **À produire :** la chaîne décodée
+- **Outils autorisés :** `python3`
 
 ```
 movabs rax,0x5f67616c665f6e75
@@ -241,13 +256,23 @@ Puis la boucle de `longueur` (une chaîne) :
   jne    ...
 ```
 
-**Exercice 6.L1 (N1)** Dans la ligne (A), d'où vient le facteur `4` du `lea ...,%rax,4` ? Que représentent ensemble (A) et (B) ?
+### Exercice 6.L1 - le facteur d'échelle (N1)
 
-**Exercice 6.L2 (N2)** Expliquer (D) `movslq`, (E) `movzbl (%rax),%eax`, et (F) `test %al,%al` suivi de `jne`. Pourquoi lit-on un seul octet, et non quatre ?
+- **À analyser :** les listings ci-dessus
 
-**Exercice 6.L3 (N3)** Reconstituer `element` en C (une seule ligne de calcul).
+Dans la ligne (A), d'où vient le facteur `4` du `lea ...,%rax,4` ? Que représentent ensemble (A) et (B) ?
 
-Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-06)
+### Exercice 6.L2 - extensions et test d'octet (N2)
+
+- **À produire :** l'explication de (D) `movslq`, (E) `movzbl (%rax),%eax`, (F) `test %al,%al` suivi de `jne`
+
+Pourquoi lit-on un seul octet, et non quatre ?
+
+### Exercice 6.L3 - reconstituer la fonction (N3)
+
+- **À produire :** `element` en C (une seule ligne de calcul)
+
+Réponses : [solutions/partie1.md](../solutions/partie1.md#lecture-06)
 
 ## Fil rouge : les accès à s[i]
 

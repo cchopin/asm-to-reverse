@@ -6,6 +6,8 @@ Une solution ne se consulte qu'après une recherche sérieuse. Une réponse diff
 
 **1.1** 200 = `0xC8`. `0x7F` = 127. `0b10110011` = `1011 0011` = `0xB3`.
 
+Méthode : vers l'hexadécimal, on divise par 16 en notant les restes de bas en haut (200 = 12*16 + 8, soit `0xC8`). Du binaire vers l'hexadécimal, on regroupe les bits par quatre depuis la droite, chaque groupe donnant un chiffre (`1011 0011` donne `0xB3`). De l'hexadécimal vers le décimal, chaque chiffre pèse une puissance de 16 (`0x7F = 7*16 + 15 = 127`).
+
 **1.2** `0x80` signé sur 8 bits = -128 (le plus petit). `0xFE` = -2 (car `0xFF` = -1).
 
 **1.3** `(0x2165737265766572).to_bytes(8, 'little')` donne `b'reverse!'`. Les octets en mémoire sont `72 65 76 65 72 73 65 21`.

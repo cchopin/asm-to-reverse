@@ -232,7 +232,11 @@ L'étape 8 est souvent négligée. Elle est pourtant précieuse : si le C recomp
 
 ## Exercices
 
-**Exercice 7.1** Que calcule cette fonction ?
+Donnez votre réponse par écrit, puis vérifiez-la en désassemblant, dans GDB ou en Python. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#chapitre-7).
+
+### Exercice 7.1 - une division cachée (N2)
+
+- **À produire :** ce que calcule la fonction
 
 ```
 mov    eax, edi
@@ -242,7 +246,9 @@ sar    eax, 1
 ret
 ```
 
-**Exercice 7.2** Que fait ce code (32 bits) ? Écrire l'appel en C. Quelle est la convention d'appel ?
+### Exercice 7.2 - un appel Windows (N2)
+
+- **À produire :** ce que fait le code, l'appel écrit en C, et la convention d'appel
 
 ```
 push   0x0
@@ -252,13 +258,25 @@ push   0x0
 call   DWORD PTR [MessageBoxA]
 ```
 
-(Rappel : `int MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)`. `HWND` est un identifiant de fenêtre, et `LPCSTR` un simple pointeur de chaîne : ce sont des noms de types Windows détaillés au chapitre 6 de la partie 3. `call DWORD PTR [MessageBoxA]` est un **appel indirect** : l'adresse de la fonction n'est pas écrite dans l'instruction mais lue en mémoire, à l'emplacement `MessageBoxA` de la table des imports, puisqu'une fonction de DLL n'est connue qu'au chargement.)
+Rappel : `int MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)`. `HWND` est un identifiant de fenêtre, et `LPCSTR` un simple pointeur de chaîne : ce sont des noms de types Windows détaillés au chapitre 6 de la partie 3. `call DWORD PTR [MessageBoxA]` est un **appel indirect** : l'adresse de la fonction n'est pas écrite dans l'instruction mais lue en mémoire, à l'emplacement `MessageBoxA` de la table des imports, puisqu'une fonction de DLL n'est connue qu'au chargement.
 
-**Exercice 7.3** Écrire un petit programme C avec un `switch` de 6 cas sur un caractère (`'a'` à `'f'`) qui appelle 6 fonctions différentes. Compiler en `-O0` et `-O2`, et retrouver la table de sauts. Comment le compilateur fait-il commencer la table à l'indice 0 alors que `'a'` vaut `0x61` ?
+### Exercice 7.3 - une table de sauts (N3)
 
-**Exercice 7.4** Compiler `int div10(int x) { return x / 10; }` en `-O2` et vérifier en Python que la suite d'instructions donne bien `x / 10` pour `x = 1234` et pour `x = -1234`.
+- **Fichier à rendre :** `switch6.c`
+- **Outils autorisés :** `gcc`, `objdump`
 
-**Exercice 7.5** Que fait cette boucle, rencontrée dans un shellcode ? Écrire l'équivalent en C, en supposant que `rsi` pointe sur un tableau `buf`.
+Écrire un programme avec un `switch` de 6 cas sur un caractère (`'a'` à `'f'`) qui appelle 6 fonctions différentes. Compiler en `-O0` et `-O2`, et retrouver la table de sauts. Comment le compilateur fait-il commencer la table à l'indice 0 alors que `'a'` vaut `0x61` ?
+
+### Exercice 7.4 - division par 10 sans diviser (N2)
+
+- **Fichier à rendre :** `div10.c`
+- **Outils autorisés :** `gcc`, `objdump`, `python3`
+
+Compiler `int div10(int x) { return x / 10; }` en `-O2` et vérifier en Python que la suite d'instructions donne bien `x / 10` pour `x = 1234` et pour `x = -1234`.
+
+### Exercice 7.5 - une boucle de shellcode (N3)
+
+- **À produire :** ce que fait la boucle, et son équivalent en C (`rsi` pointe sur un tableau `buf`)
 
 ```
     mov rdi, rsi
@@ -306,13 +324,21 @@ FIN:
   ret
 ```
 
-**Exercice 7.L1 (N1)** Comment le code aiguille-t-il selon la valeur de `k` ? Repérer les comparaisons à 0, 1, 2 et le saut vers `DEFAUT`.
+### Exercice 7.L1 - l'aiguillage (N1)
 
-**Exercice 7.L2 (N2)** Associer chaque étiquette `CAS0`, `CAS1`, `CAS2`, `DEFAUT` à l'opération effectuée (`add`, `sub`, `imul`, renvoyer 0).
+- **À analyser :** le listing de `op` ci-dessus
 
-**Exercice 7.L3 (N3)** Reconstituer `op` en C, sous forme d'un `switch` sur `k`.
+Comment le code aiguille-t-il selon la valeur de `k` ? Repérer les comparaisons à 0, 1, 2 et le saut vers `DEFAUT`.
 
-Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-07)
+### Exercice 7.L2 - associer cas et opération (N2)
+
+- **À produire :** l'opération de chaque étiquette `CAS0`, `CAS1`, `CAS2`, `DEFAUT` (`add`, `sub`, `imul`, renvoyer 0)
+
+### Exercice 7.L3 - reconstituer la fonction (N3)
+
+- **À produire :** `op` en C, sous forme d'un `switch` sur `k`
+
+Réponses : [solutions/partie1.md](../solutions/partie1.md#lecture-07)
 
 ## Fil rouge : réécrire verifier
 

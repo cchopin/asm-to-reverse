@@ -361,7 +361,13 @@ La commande `quit` (ou `q`) quitte GDB. La démarche est toujours la même : pr�
 
 ## Exercices
 
-**Exercice 2.1** Après ces instructions, que valent `eax` et `ebx` ?
+Donnez votre réponse par écrit, puis vérifiez-la dans GDB quand c'est possible. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#chapitre-2).
+
+### Exercice 2.1 - suivre les registres (N1)
+
+- **À produire :** les valeurs finales de `eax` et `ebx`
+
+Après ces instructions, que valent `eax` et `ebx` ?
 
 ```
 mov eax, 7
@@ -371,7 +377,11 @@ imul eax, ebx
 sub eax, 0x10
 ```
 
-**Exercice 2.2** Traduire en C (une seule ligne) :
+### Exercice 2.2 - traduire en C (N2)
+
+- **À produire :** une seule ligne de C
+
+Traduire cette suite d'instructions. Indice : suivre la valeur, et se demander ce que fait `add eax, eax`.
 
 ```
 mov eax, DWORD PTR [rbp-0x8]
@@ -380,9 +390,11 @@ add eax, DWORD PTR [rbp-0x8]
 shl eax, 2
 ```
 
-Indice : suivre la valeur. Que fait `add eax, eax` ?
+### Exercice 2.3 - division signée (N2)
 
-**Exercice 2.3** Que contient `eax` à la fin ? Et `edx` ?
+- **À produire :** les valeurs finales de `eax` et `edx`
+
+Que contient `eax` à la fin ? Et `edx` ?
 
 ```
 mov eax, 47
@@ -391,13 +403,20 @@ mov ecx, 5
 idiv ecx
 ```
 
-**Exercice 2.4** Que fait cette instruction, et quel est son équivalent avec `mov`, `shl` et `add` ?
+### Exercice 2.4 - lea et multiplication (N2)
+
+- **À produire :** l'effet de l'instruction et son équivalent avec `mov`, `shl` et `add`
 
 ```
 lea eax, [rdi+rdi*2]
 ```
 
-**Exercice 2.5** (la partie `f3` en `-O2` est un bonus, voir chapitre 7) Écrire ces trois fonctions en C, les compiler en `-O0` puis en `-O2`, et comparer. Noter à chaque fois ce que fait le compilateur.
+### Exercice 2.5 - le compilateur optimise (N2)
+
+- **Fichier à rendre :** `f.c` (les trois fonctions)
+- **Outils autorisés :** `gcc`, `objdump`
+
+Écrire ces trois fonctions en C, les compiler en `-O0` puis en `-O2`, et comparer. Noter à chaque fois ce que fait le compilateur. La partie `f3` en `-O2` est un bonus (voir chapitre 7).
 
 ```c
 int f1(int x) { return x * 8; }
@@ -407,7 +426,12 @@ int f3(int x) { return x / 2; }
 
 Pour `f3` en `-O2`, une instruction `shr eax, 0x1f` inattendue apparaît. Chercher à l'expliquer (indice : en C, la division entière d'un nombre négatif arrondit vers zéro, alors qu'un décalage arrondit vers moins l'infini).
 
-**Exercice 2.6** Après avoir résolu les exercices 2.1 et 2.3 sur papier, recopier `observe.asm` sous un autre nom, remplacer les instructions de `_start` (en gardant les trois dernières lignes, qui terminent le programme) par celles de l'exercice 2.1, puis vérifier les réponses dans GDB. Faire de même avec l'exercice 2.3 (en NASM, `cdq` et `idiv ecx` s'écrivent tels quels).
+### Exercice 2.6 - vérifier dans GDB (N2)
+
+- **Fichier à rendre :** une copie modifiée de `observe.asm`
+- **Outils autorisés :** `nasm`, `gdb`
+
+Après avoir résolu les exercices 2.1 et 2.3 sur papier, recopier `observe.asm` sous un autre nom, remplacer les instructions de `_start` (en gardant les trois dernières lignes, qui terminent le programme) par celles de l'exercice 2.1, puis vérifier les réponses dans GDB. Faire de même avec l'exercice 2.3 (en NASM, `cdq` et `idiv ecx` s'écrivent tels quels).
 
 ## Exercices de lecture
 
@@ -432,13 +456,25 @@ Fonction `calc`, compilée sans optimisation :
   ret
 ```
 
-**Exercice 2.L1 (N1)** Dans quels registres arrivent le premier et le deuxième argument ? À quels emplacements de la pile sont-ils recopiés ?
+### Exercice 2.L1 - les arguments (N1)
 
-**Exercice 2.L2 (N2)** Les instructions `mov %edx,%eax` puis `add %eax,%eax` puis `add %eax,%edx` calculent une valeur à partir du premier argument. Laquelle, et pourquoi (que fait `add %eax,%eax` sur `eax`) ?
+- **À analyser :** le listing de `calc` ci-dessus
 
-**Exercice 2.L3 (N3)** Reconstituer l'expression renvoyée par `calc` en fonction de ses deux arguments `a` et `b`.
+Dans quels registres arrivent le premier et le deuxième argument ? À quels emplacements de la pile sont-ils recopiés ?
 
-Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-02)
+### Exercice 2.L2 - suivre le calcul (N2)
+
+- **À analyser :** le listing de `calc`
+
+Les instructions `mov %edx,%eax` puis `add %eax,%eax` puis `add %eax,%edx` calculent une valeur à partir du premier argument. Laquelle, et pourquoi (que fait `add %eax,%eax` sur `eax`) ?
+
+### Exercice 2.L3 - reconstituer la fonction (N3)
+
+- **À produire :** l'expression C renvoyée par `calc`
+
+Reconstituer l'expression renvoyée par `calc` en fonction de ses deux arguments `a` et `b`.
+
+Réponses : [solutions/partie1.md](../solutions/partie1.md#lecture-02)
 
 ## Fil rouge : premières lignes de verifier
 

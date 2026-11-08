@@ -147,7 +147,11 @@ Le compilateur a **déroulé** la boucle : il effectue deux itérations par tour
 
 ## Exercices
 
-**Exercice 4.1** Traduire en C. Que calcule cette fonction pour `edi = 5` ?
+Donnez votre réponse par écrit, puis vérifiez-la en désassemblant ou dans GDB. Solutions à part, dans [solutions/partie1.md](../solutions/partie1.md#chapitre-4).
+
+### Exercice 4.1 - une boucle à reconnaître (N2)
+
+- **À produire :** le C équivalent, et la valeur calculée pour `edi = 5`
 
 ```
     mov  DWORD PTR [rbp-0x14],edi
@@ -164,9 +168,16 @@ L2:
     mov  eax,DWORD PTR [rbp-0x4]
 ```
 
-**Exercice 4.2** Écrire une fonction C qui compte les voyelles d'une chaîne. Compiler en `-O0`, puis repérer dans le listing : la boucle, le test de fin de chaîne, chaque comparaison avec une voyelle.
+### Exercice 4.2 - compter les voyelles (N2)
 
-**Exercice 4.3** Que fait ce code ? Quelle est la valeur finale de `eax` si `rdi` pointe sur la chaîne `"abc"` ?
+- **Fichier à rendre :** `voyelles.c`
+- **Outils autorisés :** `gcc`, `objdump`
+
+Écrire une fonction qui compte les voyelles d'une chaîne. Compiler en `-O0`, puis repérer dans le listing : la boucle, le test de fin de chaîne, chaque comparaison avec une voyelle.
+
+### Exercice 4.3 - somme d'octets (N2)
+
+- **À produire :** ce que fait le code, et la valeur finale de `eax` si `rdi` pointe sur `"abc"`
 
 ```
     xor  eax, eax
@@ -202,13 +213,23 @@ TEST:
   ret
 ```
 
-**Exercice 4.L1 (N1)** Repérer le saut qui revient en arrière : il marque la boucle. Parmi les trois emplacements `-0x4`, `-0x8`, `-0x14(%rbp)`, lequel est l'accumulateur, lequel le compteur, lequel l'argument ?
+### Exercice 4.L1 - repérer les rôles (N1)
 
-**Exercice 4.L2 (N2)** Expliquer les lignes (A), (B), (C), (D). Pourquoi le code saute-t-il d'abord vers `TEST` avant d'exécuter le corps ?
+- **À analyser :** le listing de `somme` ci-dessus
 
-**Exercice 4.L3 (N3)** Reconstituer `somme` en C, et dire ce que renvoie `somme(5)`.
+Repérer le saut qui revient en arrière : il marque la boucle. Parmi les trois emplacements `-0x4`, `-0x8`, `-0x14(%rbp)`, lequel est l'accumulateur, lequel le compteur, lequel l'argument ?
 
-Solutions : [solutions/partie1.md](../solutions/partie1.md#lecture-04)
+### Exercice 4.L2 - expliquer les lignes (N2)
+
+- **À produire :** l'explication des lignes (A), (B), (C), (D)
+
+Pourquoi le code saute-t-il d'abord vers `TEST` avant d'exécuter le corps ?
+
+### Exercice 4.L3 - reconstituer la fonction (N3)
+
+- **À produire :** `somme` en C, et la valeur de `somme(5)`
+
+Réponses : [solutions/partie1.md](../solutions/partie1.md#lecture-04)
 
 ## Fil rouge : les deux boucles
 
